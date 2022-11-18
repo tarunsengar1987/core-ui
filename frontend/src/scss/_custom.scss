@@ -1,0 +1,332 @@
+// Here you can add other styles
+.dropdown-item {
+  cursor: pointer;
+}
+.dashboardCards .card {
+  .card-body {
+    padding-bottom: 1rem !important;
+  }
+}
+
+.bg-primary {
+  background-color: #17505c !important;
+}
+.btn-primary {
+  background-color: #247081;
+  border-color: #0e2e34;
+}
+.btn-primary:hover {
+  background-color: #17505c;
+  border-color: #0e2e34;
+}
+.btn-primary.active {
+  background-color: #247081;
+  border-color: #0e2e34;
+}
+.cardTitle {
+  font-weight: 700;
+  color: #17505c;
+}
+.login-page .card,
+.register-page .card {
+  border-color: #2470815c;
+}
+.cardTitle + p {
+  font-weight: 600;
+  color: #17505c !important;
+  opacity: 80%;
+  font-size: 16px !important;
+}
+.sidebar {
+  background: #17505c;
+}
+.headUserBox {
+  display: flex;
+  align-items: center;
+  &__name {
+    font-size: 16px;
+    margin: 0;
+    color: #17505c;
+    font-weight: 700;
+  }
+}
+.dropdown-menu {
+  box-shadow: 0px 0px 20px 0px rgb(0 0 0 / 22%);
+  z-index: 11;
+  border: 1px solid #ccc !important;
+}
+.headUserBox .avatar {
+  box-shadow: 0px 0px 20px 0px rgb(0 0 0 / 22%);
+  z-index: 11;
+  border: 1px solid #ccc !important;
+}
+.breadcrumb {
+  a {
+    color: #247081;
+    font-weight: 500;
+    text-decoration: none;
+  }
+}
+.bg-darkGreen {
+  background-color: #17505c !important;
+}
+.border-darkGreen {
+  border-color: #17505c !important;
+}
+.bg-white {
+  background-color: #fff !important;
+}
+.border-white {
+  border-color: #fff !important;
+}
+.text-darkGreen {
+  color: #17505c !important;
+}
+.text-white {
+  color: #fff !important;
+}
+.font-bold {
+  font-weight: 600 !important;
+}
+.px-0 {
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+}
+.form-switch .form-check-input:checked {
+  border-color: #17505c !important;
+  background-color: #17505c !important;
+}
+.dashboardPage {
+  min-height: 100vh !important;
+  position: relative;
+  &__inner {
+    padding: 50px 25px;
+  }
+  &__root {
+    min-height: 100vh !important;
+    position: relative;
+  }
+  &__head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 30px;
+  }
+  &__title {
+    font-weight: 700;
+    color: #17505c;
+    font-size: 30px;
+    margin: 0;
+    line-height: 38px;
+  }
+  .footer {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    a {
+      color: #247081;
+    }
+  }
+}
+table {
+  border-collapse: separate;
+  border-spacing: 0 10px;
+  td,
+  th {
+    border: none !important;
+    padding: 10px 12px !important;
+    vertical-align: middle;
+    & > div {
+      margin-bottom: 0 !important;
+    }
+  }
+  thead {
+    tr th {
+      background-color: transparent !important;
+      font-size: 16px;
+      color: #000 !important;
+    }
+  }
+  tbody {
+    tr {
+      box-shadow: 0px 0px 8px 0px rgb(12 27 30 / 24%);
+      border-radius: 15px !important;
+      border: 1px solid rgba(36, 112, 129, 0.1882352941);
+      overflow: hidden;
+      &:nth-child(odd) {
+        td,
+        th {
+          background-color: rgb(36 112 129 / 11%);
+        }
+      }
+      td:first-child {
+        border-radius: 15px 0 0 15px;
+      }
+      td:last-child {
+        border-radius: 0 15px 15px 0;
+      }
+    }
+  }
+}
+.actionIconBtn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  span {
+    height: 28px;
+    width: 28px;
+    border: 2px solid #247081;
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    svg {
+      color: #247081;
+    }
+  }
+}
+
+.tutorialDetailsModule {
+  box-shadow: 0px 0px 8px 0px rgba(12, 27, 30, 0.24);
+  border-radius: 15px !important;
+  border: 1px solid rgb(190 203 209);
+  overflow: hidden;
+  &__header {
+    padding: 25px;
+    border-bottom: 1px solid rgb(190 203 209);
+    background: #17505c2b;
+    p {
+      font-size: 16px;
+      color: #666;
+      margin: 0;
+    }
+  }
+  &__title {
+    font-size: 24px;
+    color: #247081;
+    font-weight: 700;
+  }
+}
+.tutorialDetailsCard {
+  box-shadow: 0px 0px 12px 2px rgba(12, 27, 30, 0.24);
+  border-radius: 15px !important;
+  border: 1px solid rgb(190, 203, 209) !important;
+  overflow: hidden;
+  height: fit-content;
+  &__title {
+    font-weight: 700;
+    font-size: 20px;
+    margin: 0 0 20px;
+    color: #247081;
+  }
+}
+.tutorialDetailsList {
+  padding: 30px;
+  &__item {
+    font-size: 14px;
+    padding: 5px 0;
+    display: flex;
+    align-items: center;
+    margin: 0 !important;
+  }
+  &__title {
+    font-weight: 700;
+    min-width: 150px;
+    display: inline-block;
+    color: #12404e;
+  }
+  .accordion {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 22px;
+    .accordion-header {
+      button {
+        font-weight: 600;
+        color: #17505c;
+        font-size: 18px;
+        margin: 0;
+        line-height: 22px;
+
+        &:focus {
+          box-shadow: none !important;
+          border: none !important;
+        }
+      }
+    }
+    .accordion-collpase {
+      border-top: 1px solid rgb(190, 203, 209);
+    }
+    .accordion-body {
+      position: relative;
+    }
+    .actionIconBtn {
+      position: absolute;
+      right: 15px;
+      top: 15px;
+    }
+  }
+}
+.classFormBtn {
+  margin-top: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+.alertModel {
+  padding: 12px;
+  max-width: 400px;
+  position: fixed;
+  top: 0;
+  right: 0;
+  z-index: 9999;
+  width: 100%;
+}
+.lassonList-head {
+  margin-top: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: end;
+}
+.lassonList {
+  max-height: 220px;
+  overflow-y: scroll;
+  position: relative;
+  margin-top: 18px;
+  thead {
+    position: sticky;
+    background: #fff;
+    left: 0;
+    right: 0;
+    z-index: 1;
+    top: 0;
+  }
+}
+
+.lorderModule {
+  display: flex;
+  height: 100%;
+  width: 100%;
+  align-items: center;
+  justify-content: space-around;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 11;
+  background: #ffffff82;
+}
+
+.text-white {
+  color: white !important;
+}
+.text-offWhite {
+  color: #ddd !important;
+}
+
+.errorMsg {
+  font-size: 14px;
+  color: red;
+  line-height: 20px;
+  margin: 8px 0 0 !important;
+}
