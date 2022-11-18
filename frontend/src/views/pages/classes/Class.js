@@ -22,6 +22,7 @@ import {
   CTableHead,
   CTableHeaderCell,
   CTableRow,
+  CModalFooter,
 } from '@coreui/react'
 import axios from 'axios'
 import React, { useEffect, useState } from 'react'
@@ -36,7 +37,6 @@ export default function Classes({ classdata, tutorialData, setAlertMessage, setA
   const [visibleLesson, setVisibleLesson] = useState(false)
   const [loader, setLoader] = useState(false)
   const [classData, setClassData] = useState([])
-  console.log('classData: ', classData)
   const [lessonData, setLessonData] = useState([])
   const [classId, setClassId] = useState()
   const [toggle, setToggle] = useState(false)
@@ -66,6 +66,13 @@ export default function Classes({ classdata, tutorialData, setAlertMessage, setA
   const [fileData, setFileData] = useState({})
   const [playingIndex, setPlayingIndex] = useState(0)
   const [audioOnPuase, setAudioOnPuase] = useState([0])
+  const [deletePopup, setDeletePopup] = useState(false)
+  const [modalPopup, setModalPopup] = useState('')
+  const [deleteData, setDeleteData] = useState()
+  const [deleteClassData, setDeleteClassData] = useState()
+  const [deleteClassPopup, setDeleteClassPopup] = useState(false)
+  const [modalClassPopup, setModalClassPopup] = useState('')
+
   useEffect(() => {
     setClassData(classdata)
     getClasses()
@@ -135,7 +142,6 @@ export default function Classes({ classdata, tutorialData, setAlertMessage, setA
   }
 
   const handleSwitch = (e) => {
-    console.log('eeeee true', e.target.name)
     const { name, checked } = e.target
     setClassesData({ ...classesData, [name]: checked })
   }
@@ -159,8 +165,9 @@ export default function Classes({ classdata, tutorialData, setAlertMessage, setA
     setIsEditLesson(false)
   }
 
-  const handleDelete = (data) => {
-    axios.delete(`${process.env.REACT_APP_API_URL}/class/` + data.id).then((res) => {
+  const handleDeleteClass = () => {
+    axios.delete(`${process.env.REACT_APP_API_URL}/class/` + deleteClassData).then((res) => {
+      setDeleteClassPopup(false)
       setLoader(true)
       getClasses()
       setTimeout(() => {
@@ -174,9 +181,10 @@ export default function Classes({ classdata, tutorialData, setAlertMessage, setA
     })
   }
 
-  const handleDeleteLesson = (data) => {
-    axios.delete(`${process.env.REACT_APP_API_URL}/lesson/` + data.id).then((res) => {
+  const handleDeleteLesson = () => {
+    axios.delete(`${process.env.REACT_APP_API_URL}/lesson/` + deleteData).then((res) => {
       getLessons()
+      setDeletePopup(false)
       setLoader(true)
       setTimeout(() => {
         setLoader(false)
@@ -245,7 +253,6 @@ export default function Classes({ classdata, tutorialData, setAlertMessage, setA
         setValidated(true)
       } else {
         event.preventDefault()
-        console.log('classesData', classesData)
         if (!classesData.status) {
           classesData.status = 'inactive'
         } else {
@@ -319,7 +326,6 @@ export default function Classes({ classdata, tutorialData, setAlertMessage, setA
       audioOnPuase.push(index + 1)
     }
   }
-
 
   return (
     <>
@@ -473,7 +479,7 @@ export default function Classes({ classdata, tutorialData, setAlertMessage, setA
                           <span className="tutorialDetailsList__title">name:</span> {data.name}
                         </div>
                         <div className="tutorialDetailsList__item">
-                          <span className="tutorialDetailsList__title">description:</span>{' '}
+                          <span className="tutorialDetailsList__title">description:</span>
                           {data.descriptions}
                         </div>
                         <div className="tutorialDetailsList__item">
@@ -484,7 +490,13 @@ export default function Classes({ classdata, tutorialData, setAlertMessage, setA
                             <span onClick={() => handleEdit(data)}>
                               <CIcon icon={cilPencil} />
                             </span>
-                            <span onClick={() => handleDelete(data)}>
+                            <span
+                              onClick={() => {
+                                setDeleteClassPopup(true)
+                                setDeleteClassData(data.id)
+                                setModalClassPopup("are you sure delete class")
+                              }}
+                            >
                               <CIcon icon={cilDelete} />
                             </span>
                           </div>
@@ -492,7 +504,6 @@ export default function Classes({ classdata, tutorialData, setAlertMessage, setA
                           ''
                         )}
 
-                        {console.log}
                         {data.id === classId ? (
                           <CModal
                             alignment="center"
@@ -577,11 +588,6 @@ export default function Classes({ classdata, tutorialData, setAlertMessage, setA
                           ''
                         )}
                         <div className="lassonList">
-                          {/* {console.log('lessonDatalessonData', lessonData)}
-                      {data.id === classId
-                        ? 
-                        : ''} */}
-                          {/* {console.log('lessonData', lessonData)} */}
                           {data.id === classId && (
                             <CTable>
                               <CTableHead>
@@ -603,7 +609,6 @@ export default function Classes({ classdata, tutorialData, setAlertMessage, setA
                                 </CTableRow>
                               </CTableHead>
                               {/* <CTableBody>
-                                {console.log('lessonData', lessonData)}
                                 {lessonData.length > 0
                                   ? lessonData.map((item) => {
                                       return (
@@ -649,7 +654,6 @@ export default function Classes({ classdata, tutorialData, setAlertMessage, setA
                               </CTableBody> */}
 
                               <CTableBody>
-                                {console.log('lessonData', lessonData)}
                                 {lessonData.length > 0
                                   ? lessonData.map((item, index) => {
                                       return (
@@ -688,7 +692,15 @@ export default function Classes({ classdata, tutorialData, setAlertMessage, setA
                                             {user?.role !== '2' ? (
                                               <CTableDataCell style={{ position: 'relative' }}>
                                                 <div className="actionIconBtn">
-                                                  <span onClick={() => handleDeleteLesson(item)}>
+                                                  <span
+                                                    onClick={() => {
+                                                      setDeletePopup(true)
+                                                      setModalPopup(
+                                                        'Are you sure want to delete this tutorial ?',
+                                                      )
+                                                      setDeleteData(item?.id)
+                                                    }}
+                                                  >
                                                     <CIcon icon={cilDelete} />
                                                   </span>
                                                 </div>
@@ -712,6 +724,28 @@ export default function Classes({ classdata, tutorialData, setAlertMessage, setA
               ))
             : 'Classes Not Found'}
         </CAccordion>
+        <CModal visible={deletePopup} onClose={() => setDeletePopup(false)}>
+          <CModalBody>{modalPopup}</CModalBody>
+          <CModalFooter>
+            <CButton color="secondary" onClick={() => setDeletePopup(false)}>
+              Close
+            </CButton>
+            <CButton color="primary" onClick={() => handleDeleteLesson()}>
+              Delete
+            </CButton>
+          </CModalFooter>
+        </CModal>
+        <CModal visible={deleteClassPopup} onClose={() => setDeleteClassPopup(false)}>
+          <CModalBody>{modalClassPopup}</CModalBody>
+          <CModalFooter>
+            <CButton color="secondary" onClick={() => setDeleteClassPopup(false)}>
+              Close
+            </CButton>
+            <CButton color="primary" onClick={() => handleDeleteClass()}>
+              Delete
+            </CButton>
+          </CModalFooter>
+        </CModal>
       </div>
     </>
   )
