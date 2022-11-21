@@ -47,11 +47,14 @@ const Login = () => {
       axios.post(`${process.env.REACT_APP_API_URL}/auth/signin`, loginData).then((res) => {
         setLoader(true)
         if (res.data.status === 'active') {
-          setAlert(true)
-          setAlertMessage('SuccessFully Login')
+
           localStorage.setItem('userData', JSON.stringify(res.data))
           setTimeout(() => {
             setLoader(false)
+            setAlert(true)
+            setAlertMessage('SuccessFully Login')
+          }, 2000)
+          setTimeout(() => {
             setAlert(false)
             navigate('/dashboard')
           }, 3000)

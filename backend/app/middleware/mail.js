@@ -1,6 +1,6 @@
 var nodemailer = require("nodemailer");
 
-const sendMail = async (user, password, settingData, isRegister) => {
+const sendMail = async (user, password, settingData, settingPassword, isRegister) => {
   console.log("sendMaiOfUser", settingData);
 
   var transporter = nodemailer.createTransport({
@@ -9,7 +9,7 @@ const sendMail = async (user, password, settingData, isRegister) => {
     secure: true, // true for 465, false for other ports
     auth: {
       user: settingData.smtp, // generated ethereal user
-      pass: settingData.password, // generated ethereal password
+      pass: settingPassword, // generated ethereal password
     },
     tls: {
       rejectUnauthorized: false,

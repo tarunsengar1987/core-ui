@@ -22,7 +22,6 @@ const AppHeader = () => {
   const dispatch = useDispatch()
   const sidebarShow = useSelector((state) => state.sidebarShow)
   const userData = JSON.parse(localStorage.getItem('userData'))
-  console.log('userData', userData)
   return (
     <CHeader position="sticky">
       <CContainer fluid>

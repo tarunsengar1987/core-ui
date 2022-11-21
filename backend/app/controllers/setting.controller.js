@@ -1,5 +1,6 @@
 const db = require("../models");
 const Setting = db.setting;
+const { encrypt, decrypt } = require("../middleware/authJwt");
 
 //create setting
 exports.createSetting = (req, res) => {
@@ -7,7 +8,7 @@ exports.createSetting = (req, res) => {
         smtp: req.body.smtp,
         username: req.body.username,
         port:req.body.port,
-        password: req.body.password
+        password: encrypt(req.body.password),
     })
       .then(classes => {
         res.send(classes);
@@ -24,6 +25,7 @@ exports.createSetting = (req, res) => {
 //update Setting
 exports.updateSetting = (req, res) => {
     const id = req.params.id;
+    req.body.password = encrypt(req.body.password),
     Setting.update(req.body, {
         where: { id: id }
     })

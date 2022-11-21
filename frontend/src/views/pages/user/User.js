@@ -221,7 +221,7 @@ export default function User() {
       }
     } else {
       event.preventDefault()
-      console.log('registerData.email', registerData.email)
+
       if (
         Object.values(registerData).length === 0 ||
         registerData.username === '' ||
@@ -230,7 +230,6 @@ export default function User() {
       ) {
         setValidated(true)
       } else {
-        console.log('validated', validated)
 
         if (!validated) {
           axios.post(`${process.env.REACT_APP_API_URL}/createuser`, registerData).then((res) => {

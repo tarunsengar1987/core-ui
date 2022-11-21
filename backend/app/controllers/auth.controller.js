@@ -2,16 +2,13 @@ const db = require("../models");
 const config = require("../config/auth.config");
 const User = db.user;
 const Role = db.role;
-
 const Op = db.Sequelize.Op;
-
 var jwt = require("jsonwebtoken");
 var bcrypt = require("bcryptjs");
 const sendMaiOfUser = require("../middleware/Mail");
 const mail = require("../middleware/Mail");
 const { encrypt, decrypt } = require("../middleware/authJwt");
 const Setting = db.setting;
-
 //User signup
 exports.signup = (req, res) => {
   // Save User to Database
@@ -31,7 +28,8 @@ exports.signup = (req, res) => {
         mail.sendMail(
           user.dataValues,
           decrypt(user.dataValues.password),
-          data.dataValues
+          data.dataValues,
+          decrypt(data.dataValues.password),
         );
         res.send({ message: "User registered successfully!" });
       });
@@ -41,7 +39,6 @@ exports.signup = (req, res) => {
       res.status(500).send({ message: err.message });
     });
 };
-
 exports.createUser = (req, res) => {
   // Save User to Database
   User.create({
@@ -58,7 +55,8 @@ exports.createUser = (req, res) => {
         mail.sendMail(
           user.dataValues,
           decrypt(user.dataValues.password),
-          data.dataValues
+          data.dataValues,
+          decrypt(data.dataValues.password),
         );
         res.send({ message: "User created successfully!" });
       });
@@ -68,7 +66,6 @@ exports.createUser = (req, res) => {
       res.status(500).send({ message: err.message });
     });
 };
-
 //update user
 exports.updatePassword = (req, res) => {
   const id = req.params.id;
@@ -93,7 +90,6 @@ exports.updatePassword = (req, res) => {
       });
     });
 };
-
 //User send Invitation
 exports.sendInvitation = (req, res) => {
   console.log("req.body===>", req.body);
@@ -108,7 +104,8 @@ exports.sendInvitation = (req, res) => {
         mail.sendMail(
           user.dataValues,
           decrypt(user.dataValues.password),
-          data.dataValues
+          data.dataValues,
+          decrypt(data.dataValues.password),
         );
         res.send({ message: "Invitation sended successfully!" });
       });
@@ -118,8 +115,6 @@ exports.sendInvitation = (req, res) => {
       res.status(500).send({ message: err.message });
     });
 };
-
-
 //update user
 exports.resetUser = (req, res) => {
   console.log("req.body===>", req.body);
@@ -135,6 +130,7 @@ exports.resetUser = (req, res) => {
           user.dataValues,
           decrypt(user.dataValues.password),
           data.dataValues,
+          decrypt(data.dataValues.password),
           isRegister = true
         );
         res.send({ message: "Link send to your email successfully!" });
@@ -145,7 +141,6 @@ exports.resetUser = (req, res) => {
       res.status(500).send({ message: err.message });
     });
 };
-
 //User signin
 exports.signin = (req, res) => {
   console.log("user====>", req.body);
@@ -182,7 +177,6 @@ exports.signin = (req, res) => {
       res.status(500).send({ message: err.message });
     });
 };
-
 // get All User
 exports.getUser = (req, res) => {
   User.findAll({ where: { is_active: 1 } })
@@ -196,7 +190,6 @@ exports.getUser = (req, res) => {
       });
     });
 };
-
 // get User by id
 exports.getUserById = async (req, res) => {
   const userId = req.params.userId;
@@ -211,7 +204,6 @@ exports.getUserById = async (req, res) => {
     res.status(500).json(err);
   }
 };
-
 //update user
 exports.updateUser = (req, res) => {
   const id = req.params.id;
@@ -236,9 +228,6 @@ exports.updateUser = (req, res) => {
       });
     });
 };
-
-
-
 // delete user
 // exports.userDelete = function(req, res) {
 //   User.del( req.params.id, function(err, employee) {

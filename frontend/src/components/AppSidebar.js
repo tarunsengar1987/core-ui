@@ -25,7 +25,6 @@ const AppSidebar = () => {
 
   useEffect(() => {
     const userData = JSON.parse(localStorage.getItem('userData'))
-    console.log("userData===>",userData);
      let data
     if (userData?.role === "2") {
         data = removeFromArray(navigation, userNav)

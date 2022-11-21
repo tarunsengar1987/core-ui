@@ -22,7 +22,13 @@ import Alert from '../alert/Alert'
 
 const Register = () => {
   const [validated, setValidated] = useState(false)
-  const [registerData, setRegisterData] = useState({ username: '', email: '', password: '' })
+  const [registerData, setRegisterData] = useState({
+    username: '',
+    email: '',
+    password: '',
+    c_password: '',
+  })
+  const [error, setError] = useState(false)
   const [alert, setAlert] = useState(false)
   const [loader, setLoader] = useState(false)
   const [alertMessage, setAlertMessage] = useState('')
@@ -33,11 +39,27 @@ const Register = () => {
       ...registerData,
       [name]: value,
     })
+    if (event.target.name === 'confirmpassword') {
+      if (registerData.password !== event.target.value) {
+        setError(true)
+      } else {
+        setError(false)
+        const { name, value } = event.target
+        setResetPasswordata({
+          ...resetPasswordata,
+          [name]: value,
+        })
+      }
+    }
   }
 
   const handleSubmit = (event) => {
-    debugger
-    if (registerData.username === '' || registerData.password === '' || registerData.email === '') {
+    if (
+      registerData.username === '' ||
+      registerData.password === '' ||
+      registerData.email === '' ||
+      registerData.confirmpassword === ''
+    ) {
       const form = event.currentTarget
       if (form.checkValidity() === false) {
         event.preventDefault()
@@ -45,19 +67,31 @@ const Register = () => {
       }
       setValidated(true)
     } else {
-      event.preventDefault()
-      axios.post(`${process.env.REACT_APP_API_URL}/auth/signup`, registerData).then((res) => {
-        debugger
-        setAlert(true)
-        setAlertMessage('SuccessFully Login')                            
-        localStorage.setItem('userData', JSON.stringify(res.data))
-        setTimeout(() => {
-          setLoader(false)
-          setAlert(false)
-          navigate('/')
-        }, 3000)
-        
-      })
+      if (registerData.password === registerData.confirmpassword) {
+        event.preventDefault()
+        var NewRegisterData = {
+          username: registerData.username,
+          password: registerData.password,
+          email: registerData.email,
+        }
+        axios.post(`${process.env.REACT_APP_API_URL}/auth/signup`, NewRegisterData).then((res) => {
+          debugger
+          setLoader(true)
+          localStorage.setItem('userData', JSON.stringify(res.data))
+          setTimeout(() => {
+            setLoader(false)
+            setAlert(true)
+            setAlertMessage('SuccessFully Login')
+          }, 2000)
+          setTimeout(() => {
+            setAlert(false)
+            navigate('/')
+          }, 3000)
+        })
+      } else {
+        event.preventDefault()
+        setError(true)
+      }
     }
   }
 
@@ -66,7 +100,7 @@ const Register = () => {
       <CContainer>
         <CRow className="justify-content-center">
           <CCol md={9} lg={7} xl={6}>
-          <Loader isLoader={loader} />
+            <Loader isLoader={loader} />
             <Alert isVisible={alert} message={alertMessage} />
             <CCard className="mx-4">
               <CCardBody className="p-4">
@@ -130,7 +164,30 @@ const Register = () => {
                       />
                     </CInputGroup>
                   </CCol>
-                  <CCol xs={12} style={{textAlign: "right"}}>
+                  <CCol xs={12}>
+                    <CInputGroup className="has-validation">
+                      <CInputGroupText>
+                        <CIcon icon={cilUser} />
+                      </CInputGroupText>
+                      <CFormInput
+                        type="text"
+                        aria-describedby="validationCustom03Feedback"
+                        feedbackInvalid="Please provide a valid confirmpassword."
+                        id="validationCustom06"
+                        required
+                        placeholder="Confirm password"
+                        onChange={handleChange}
+                        value={registerData.confirmpassword}
+                        name="confirmpassword"
+                      />
+                    </CInputGroup>
+                    {error == true ? (
+                      <div className="errorMsg">"password and confirm password not match"</div>
+                    ) : (
+                      ''
+                    )}
+                  </CCol>
+                  <CCol xs={12} style={{ textAlign: 'right' }}>
                     <CButton color="primary" type="submit">
                       Submit form
                     </CButton>
