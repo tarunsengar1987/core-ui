@@ -81,6 +81,9 @@ export default function Classes({ classdata, tutorialData, setAlertMessage, setA
     getClasses()
     const data = JSON.parse(localStorage.getItem('userData'))
     setUser(data)
+    axios.get(`${process.env.REACT_APP_API_URL}/audiorecord`).then((res) => {
+      setAudioData(res?.data)
+    })
   }, [])
 
   useEffect(() => {
@@ -137,7 +140,7 @@ export default function Classes({ classdata, tutorialData, setAlertMessage, setA
       const reader = new FileReader()
       reader.onload = () => {
         const media = new Audio(reader.result)
-        media.onloadedmetadata = () => resolve(media.duration / 60)
+        media.onloadedmetadata = () => resolve(media.duration *1000)
       }
       reader.readAsDataURL(file)
       reader.onerror = (error) => reject(error)
@@ -342,22 +345,19 @@ export default function Classes({ classdata, tutorialData, setAlertMessage, setA
     setIsEditLesson(false)
     setValidatedLesson(false)
   }
-  const handlePlayAudio = (index) => {
+  const handlePlayAudio = (e, index) => {
+    console.log(e, index, 'test')
     if (playingIndex == index) {
       setPlayingIndex(index + 1)
       audioOnPuase.push(index + 1)
     }
-    axios.get(`${process.env.REACT_APP_API_URL}/audiorecord`).then((res) => {
-      setAudioData(res?.data)
-    })
   }
   const handleChangetab = (name) => {
-    debugger
     setIsEdit(false)
   }
 
   const handleProgress = (progress) => {
-    setPlayDuration(progress.playedSeconds / 60)
+    setPlayDuration(progress.playedSeconds *1000)
   }
 
   const handlePuase = (class_id, lesson_id, user_id, duration) => {
@@ -368,20 +368,22 @@ export default function Classes({ classdata, tutorialData, setAlertMessage, setA
       duration: duration,
       pauseduration: playDuration,
     }
-     
+
     var newLessonData = {}
     audioData.map((elem, index) => {
-      if(elem.lesson_Id == lesson_id){
-        return newLessonData = elem
+      if (elem.lesson_Id == lesson_id) {
+        return (newLessonData = elem)
       }
     })
     if (newLessonData.lesson_Id == data.lesson_Id) {
-      axios.put(`${process.env.REACT_APP_API_URL}/audiorecord/${newLessonData.id}`, data).then((res) => {
-        console.log(res.data,"update")
-      })
+      axios
+        .put(`${process.env.REACT_APP_API_URL}/audiorecord/${newLessonData.id}`, data)
+        .then((res) => {
+          console.log(res.data, 'update')
+        })
     } else {
       axios.post(`${process.env.REACT_APP_API_URL}/audiorecord`, data).then((res) => {
-        console.log(res.data,"neww")
+        console.log(res.data, 'neww')
       })
     }
   }
@@ -756,7 +758,9 @@ export default function Classes({ classdata, tutorialData, setAlertMessage, setA
                                                       ? ''
                                                       : { pointerEvents: 'none' }
                                                   }
-                                                  onPlay={() => handlePlayAudio(index)}
+                                                  // onPlay={(e) => handlePlayAudio(e, index)}  
+                                                  // onPlay={50}
+                                                  // progressInterval={15000}                                                  
                                                 />
                                               </div>
                                             </CTableDataCell>

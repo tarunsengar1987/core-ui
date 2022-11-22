@@ -75,7 +75,7 @@ const Register = () => {
           email: registerData.email,
         }
         axios.post(`${process.env.REACT_APP_API_URL}/auth/signup`, NewRegisterData).then((res) => {
-          debugger
+
           setLoader(true)
           localStorage.setItem('userData', JSON.stringify(res.data))
           setTimeout(() => {
