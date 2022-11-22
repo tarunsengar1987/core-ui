@@ -15,7 +15,7 @@ import 'simplebar/dist/simplebar.min.css'
 // sidebar nav config
 import navigation from '../_nav'
 
-const userNav = ['/user','/setting']
+const userNav = ['/user','/setting','/message']
 const adminNav = ['']
 
 

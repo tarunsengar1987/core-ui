@@ -42,7 +42,8 @@ module.exports = function(app) {
    //User reset password
    app.put("/api/forgetpassword/:id", controller.updatePassword);
 
-  
+  //Admin send mail to users
+  app.post("/api/sendmailtousers", controller.sendMailtoUsers);
 
   // //User delete
   // app.delete("/api/auth/user/:id", controller.userDelete);

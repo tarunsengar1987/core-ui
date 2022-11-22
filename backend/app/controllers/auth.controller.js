@@ -141,6 +141,29 @@ exports.resetUser = (req, res) => {
       res.status(500).send({ message: err.message });
     });
 };
+
+//User send mail
+//User send mail
+exports.sendMailtoUsers = async(req, res) => {
+  console.log
+  console.log("res.body.message",req.body)
+  for (let index = 0; index < req.body.users.length; index++) {
+    Setting.findOne().then((settingData) => {
+      if(settingData){
+        mail.sendMail(
+          req.body.users[index],
+          "",
+          settingData.dataValues,
+          "",
+          true,
+          req.body.message
+        );
+      }
+    });
+  }
+  res.send({ message: "Mail sended successfully!" });
+};
+
 //User signin
 exports.signin = (req, res) => {
   console.log("user====>", req.body);

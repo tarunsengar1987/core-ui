@@ -90,7 +90,6 @@ const Register = () => {
         })
       } else {
         event.preventDefault()
-        setError(true)
       }
     }
   }

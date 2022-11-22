@@ -1,4 +1,5 @@
 import React from 'react'
+import Profile from './views/pages/profile/Profile'
 import Setting from './views/pages/setting/Setting'
 import TutorialClassDetails from './views/pages/tutorialclassDetails/TutorialClassDetails'
 import Tutorials from './views/pages/tutorials/Tutorials'
@@ -61,6 +62,7 @@ const routes = [
   { path: '/tutorial', name: 'Tutorial', element: Tutorials },
   { path: '/tutorial/tutorial-details', name: 'Tutorial Details', element: TutorialClassDetails },
   { path: '/setting', name: 'Setting', element: Setting },
+  { path: '/profile', name: 'Profile Page', element: Profile },
   { path: '/theme', name: 'Theme', element: Colors, exact: true },
   { path: '/theme/colors', name: 'Colors', element: Colors },
   { path: '/theme/typography', name: 'Typography', element: Typography },

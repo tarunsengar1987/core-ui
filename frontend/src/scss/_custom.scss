@@ -100,7 +100,8 @@
   min-height: 100vh !important;
   position: relative;
   &__inner {
-    padding: 50px 25px;
+    // padding: 50px 25px;
+    margin: 30px;
   }
   &__root {
     min-height: 100vh !important;
@@ -329,4 +330,37 @@ table {
   color: red;
   line-height: 20px;
   margin: 8px 0 0 !important;
+}
+.massageList {
+  // display: grid;
+  grid-template-columns: 1fr 1fr;
+  // gap: 25px;
+  &__checkbox {
+    // display: grid;
+    // gap: 8px;
+  }
+  .massageList__checkbox {
+    padding: 15px;
+    max-height: 670px;
+    height: 100%;
+    overflow: auto;
+    .form-check {
+      margin-bottom: 10px;
+    }
+  }
+}
+
+.password-form {
+  max-width: 600px;
+  margin: 0 auto;
+  width: 100%;
+  padding: 30px;
+  box-shadow: 0 0 3px 0px #ccccccad;
+  .input-group {
+    margin-bottom: 30px;
+    .input-group-text {
+      width: 30%;
+    }
+  }
+  
 }

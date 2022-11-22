@@ -8,7 +8,7 @@ exports.createSetting = (req, res) => {
         smtp: req.body.smtp,
         username: req.body.username,
         port:req.body.port,
-        password: encrypt(req.body.password),
+        password: req.body.password,
     })
       .then(classes => {
         res.send(classes);
@@ -25,7 +25,6 @@ exports.createSetting = (req, res) => {
 //update Setting
 exports.updateSetting = (req, res) => {
     const id = req.params.id;
-    req.body.password = encrypt(req.body.password),
     Setting.update(req.body, {
         where: { id: id }
     })

@@ -31,6 +31,7 @@ import 'datatables.net-dt/css/jquery.dataTables.min.css'
 import ReactAudioPlayer from 'react-audio-player'
 import ReactPlayer from 'react-player'
 import Loader from '../loader/Loader'
+import { duration } from 'moment'
 
 export default function Classes({ classdata, tutorialData, setAlertMessage, setAlert }) {
   const [visible, setVisible] = useState(false)
@@ -72,7 +73,9 @@ export default function Classes({ classdata, tutorialData, setAlertMessage, setA
   const [deleteClassData, setDeleteClassData] = useState()
   const [deleteClassPopup, setDeleteClassPopup] = useState(false)
   const [modalClassPopup, setModalClassPopup] = useState('')
-
+  const [durationValue, setDurationValue] = useState([])
+  const [durationValueByArray, setDurationValueByArray] = useState([])
+  console.log('duration:', durationValue)
   useEffect(() => {
     setClassData(classdata)
     getClasses()
@@ -326,6 +329,24 @@ export default function Classes({ classdata, tutorialData, setAlertMessage, setA
       audioOnPuase.push(index + 1)
     }
   }
+  const handleChangetab = (name) => {
+    // console.log(name)
+    setIsEdit(false)
+    // let sum = 0
+    // for (let i = 0; i < durationValue.length; i++) {
+    //   sum += durationValue[i]
+    // }
+    // console.log(sum)
+    // if(durationValue.length > 0){
+    //   setDurationValueByArray([...durationValueByArray,sum])
+    //   setDurationValue([])
+    // }
+  }
+  // console.log(durationValueByArray,"durationValueByArray")
+  const handleDuration = (duration) => {
+    // setDurationValue([...durationValue, duration])
+  }
+
 
   return (
     <>
@@ -409,7 +430,7 @@ export default function Classes({ classdata, tutorialData, setAlertMessage, setA
                   }}
                   key={index}
                 >
-                  <CAccordionHeader onClick={() => setIsEdit(false)}>{data.name} </CAccordionHeader>
+                  <CAccordionHeader onClick={() => handleChangetab(data.name)}>{data.name} </CAccordionHeader>
                   <CAccordionBody>
                     {isEdit ? (
                       <CForm
@@ -494,7 +515,7 @@ export default function Classes({ classdata, tutorialData, setAlertMessage, setA
                               onClick={() => {
                                 setDeleteClassPopup(true)
                                 setDeleteClassData(data.id)
-                                setModalClassPopup("are you sure delete class")
+                                setModalClassPopup('are you sure delete class')
                               }}
                             >
                               <CIcon icon={cilDelete} />
@@ -677,6 +698,7 @@ export default function Classes({ classdata, tutorialData, setAlertMessage, setA
                                                   height="30px"
                                                   playing={false}
                                                   controls={true}
+                                                  onDuration={handleDuration}
                                                   // style={index == playingIndex ?"":{ pointerEvents: 'none' }}
                                                   style={
                                                     index == playingIndex ||

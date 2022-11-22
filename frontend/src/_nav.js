@@ -34,20 +34,20 @@ const _nav = [
       color: 'info',
     },
   },
-  // {
-  //   component: CNavItem,
-  //   name: 'Classes',
-  //   to: '/classes',
-  //   icon: <CIcon icon={cilInstitution} customClassName="nav-icon" />,
-  //   badge: {
-  //     color: 'info',
-  //   },
-  // },
   {
     component: CNavItem,
     name: 'Setting',
     to: '/setting',
     icon: <CIcon icon={cilSettings} customClassName="nav-icon" />,
+    badge: {
+      color: 'info',
+    },
+  },
+  {
+    component: CNavItem,
+    name: 'Message',
+    to: '/message',
+    icon: <CIcon icon={cilInstitution} customClassName="nav-icon" />,
     badge: {
       color: 'info',
     },

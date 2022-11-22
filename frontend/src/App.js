@@ -11,7 +11,8 @@ import Setting from './views/pages/setting/Setting'
 import TutorialClassDetails from './views/pages/tutorialclassDetails/TutorialClassDetails'
 import Tutorials from './views/pages/tutorials/Tutorials'
 import User from './views/pages/user/User'
-
+import Profile from './views/pages/profile/Profile'
+import Message from './views/pages/message/Message'
 const loading = (
   <div className="pt-3 text-center">
     <div className="sk-spinner sk-spinner-pulse"></div>
@@ -35,10 +36,12 @@ class App extends Component {
           <Routes>
           <Route element={<PrivateRoutes />}>
             <Route element={<Dashboard/>} path="/dashboard" />
+            <Route exact path="/profile" name="Profile Page" element={<Profile />} />
             <Route exact path="/user" name="User Page" element={<User />} />
             <Route exact path="/classes" name="Classes Page" element={<Class />} />
             <Route exact path="/tutorial" name="Tutorials Page" element={<Tutorials />} />
             <Route exact path="/setting" name="Setting Page" element={<Setting />} />
+            <Route exact path="/message" name="Message Page" element={<Message />} />
             <Route exact path="/tutorial/tutorial-details" name="Details Page" element={<TutorialClassDetails/>} />
             </Route>
             <Route exact path="/confirm/:id" name="Confirm Page" element={<Confirm />} />
