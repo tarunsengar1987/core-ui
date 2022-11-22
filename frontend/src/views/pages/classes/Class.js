@@ -65,6 +65,7 @@ export default function Classes({ classdata, tutorialData, setAlertMessage, setA
   const tutorialId = tutorialData?.id
   const [user, setUser] = useState({})
   const [fileData, setFileData] = useState({})
+  const [fileDuration, setFileDuration] = useState()
   const [playingIndex, setPlayingIndex] = useState(0)
   const [audioOnPuase, setAudioOnPuase] = useState([0])
   const [deletePopup, setDeletePopup] = useState(false)
@@ -73,9 +74,8 @@ export default function Classes({ classdata, tutorialData, setAlertMessage, setA
   const [deleteClassData, setDeleteClassData] = useState()
   const [deleteClassPopup, setDeleteClassPopup] = useState(false)
   const [modalClassPopup, setModalClassPopup] = useState('')
-  const [durationValue, setDurationValue] = useState([])
-  const [durationValueByArray, setDurationValueByArray] = useState([])
-  console.log('duration:', durationValue)
+  const [playDuration, setPlayDuration] = useState()
+  const [audioData, setAudioData] = useState([])
   useEffect(() => {
     setClassData(classdata)
     getClasses()
@@ -132,9 +132,22 @@ export default function Classes({ classdata, tutorialData, setAlertMessage, setA
     })
   }
 
-  const handleChangeLesson = (event) => {
+  const getVideoDuration = (file) =>
+    new Promise((resolve, reject) => {
+      const reader = new FileReader()
+      reader.onload = () => {
+        const media = new Audio(reader.result)
+        media.onloadedmetadata = () => resolve(media.duration / 60)
+      }
+      reader.readAsDataURL(file)
+      reader.onerror = (error) => reject(error)
+    })
+
+  const handleChangeLesson = async (event) => {
     if (event.target.name === 'audio') {
       setFileData(event.target?.files[0])
+      const duration = await getVideoDuration(event.target?.files[0])
+      setFileDuration(duration)
     } else {
       const { name, value } = event.target
       setLessonFormData({
@@ -210,7 +223,12 @@ export default function Classes({ classdata, tutorialData, setAlertMessage, setA
     setLessonFormData(data)
   }
 
+  // function getAudioDuration (){
+
+  // }
   const handleSubmitLesson = (event) => {
+    event.preventDefault()
+
     if (
       Object.values(lessonFormData).length === 0 ||
       lessonFormData.name === '' ||
@@ -226,6 +244,7 @@ export default function Classes({ classdata, tutorialData, setAlertMessage, setA
       data.append('order', lessonFormData.order)
       data.append('status', (lessonFormData.status = 'active'))
       data.append('class_id', (lessonFormData.class_id = classId))
+      data.append('duration', fileDuration)
 
       axios.post(`${process.env.REACT_APP_API_URL}/lesson`, data).then((res) => {
         setLoader(true)
@@ -328,25 +347,44 @@ export default function Classes({ classdata, tutorialData, setAlertMessage, setA
       setPlayingIndex(index + 1)
       audioOnPuase.push(index + 1)
     }
+    axios.get(`${process.env.REACT_APP_API_URL}/audiorecord`).then((res) => {
+      setAudioData(res?.data)
+    })
   }
   const handleChangetab = (name) => {
-    // console.log(name)
+    debugger
     setIsEdit(false)
-    // let sum = 0
-    // for (let i = 0; i < durationValue.length; i++) {
-    //   sum += durationValue[i]
-    // }
-    // console.log(sum)
-    // if(durationValue.length > 0){
-    //   setDurationValueByArray([...durationValueByArray,sum])
-    //   setDurationValue([])
-    // }
-  }
-  // console.log(durationValueByArray,"durationValueByArray")
-  const handleDuration = (duration) => {
-    // setDurationValue([...durationValue, duration])
   }
 
+  const handleProgress = (progress) => {
+    setPlayDuration(progress.playedSeconds / 60)
+  }
+
+  const handlePuase = (class_id, lesson_id, user_id, duration) => {
+    var data = {
+      class_Id: class_id,
+      lesson_Id: lesson_id,
+      user_Id: user_id,
+      duration: duration,
+      pauseduration: playDuration,
+    }
+     
+    var newLessonData = {}
+    audioData.map((elem, index) => {
+      if(elem.lesson_Id == lesson_id){
+        return newLessonData = elem
+      }
+    })
+    if (newLessonData.lesson_Id == data.lesson_Id) {
+      axios.put(`${process.env.REACT_APP_API_URL}/audiorecord/${newLessonData.id}`, data).then((res) => {
+        console.log(res.data,"update")
+      })
+    } else {
+      axios.post(`${process.env.REACT_APP_API_URL}/audiorecord`, data).then((res) => {
+        console.log(res.data,"neww")
+      })
+    }
+  }
 
   return (
     <>
@@ -430,7 +468,9 @@ export default function Classes({ classdata, tutorialData, setAlertMessage, setA
                   }}
                   key={index}
                 >
-                  <CAccordionHeader onClick={() => handleChangetab(data.name)}>{data.name} </CAccordionHeader>
+                  <CAccordionHeader onClick={() => handleChangetab(data.name)}>
+                    {data.name}{' '}
+                  </CAccordionHeader>
                   <CAccordionBody>
                     {isEdit ? (
                       <CForm
@@ -677,6 +717,7 @@ export default function Classes({ classdata, tutorialData, setAlertMessage, setA
                               <CTableBody>
                                 {lessonData.length > 0
                                   ? lessonData.map((item, index) => {
+                                      // console.log(item.id,"========================>>")
                                       return (
                                         <CTableRow>
                                           <>
@@ -698,7 +739,15 @@ export default function Classes({ classdata, tutorialData, setAlertMessage, setA
                                                   height="30px"
                                                   playing={false}
                                                   controls={true}
-                                                  onDuration={handleDuration}
+                                                  onProgress={handleProgress}
+                                                  onPause={() =>
+                                                    handlePuase(
+                                                      data.id,
+                                                      item.id,
+                                                      user.id,
+                                                      item.duration,
+                                                    )
+                                                  }
                                                   // style={index == playingIndex ?"":{ pointerEvents: 'none' }}
                                                   style={
                                                     index == playingIndex ||

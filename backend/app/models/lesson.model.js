@@ -1,5 +1,7 @@
 // const tutorialsModel = require("./tutorials.model");
 
+const { FLOAT } = require("sequelize");
+
 module.exports = (sequelize, Sequelize) => {
     const Lessons = sequelize.define("lessons", {
       name: {
@@ -16,6 +18,9 @@ module.exports = (sequelize, Sequelize) => {
       },
       audio_url: {
         type: Sequelize.STRING
+      },
+      duration: {
+        type: Sequelize.FLOAT
       },
       class_id: {
         type: Sequelize.INTEGER,

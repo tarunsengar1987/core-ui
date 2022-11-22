@@ -36,6 +36,7 @@ require('./app/routes/tutorials.routes')(app);
 require('./app/routes/classes.routes')(app);
 require('./app/routes/lessons.routes')(app);
 require('./app/routes/setting.routes')(app);
+require('./app/routes/audioRecord.routes')(app);
 
 // set port, listen for requests
 const PORT = process.env.PORT || 8080;

@@ -9,7 +9,8 @@ exports.createLesson = (req, res) => {
       status:req.body.status,
       audio_file: req.body.audio_file ? req.body.audio_file : req.file.originalname,
       audio_url:'http://localhost:8080/'+req.file.originalname,
-      class_id:req.body.class_id
+      class_id:req.body.class_id,
+      duration:req.body.duration
     })
       .then(classes => {
         res.send(classes);

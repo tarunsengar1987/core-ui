@@ -29,6 +29,7 @@ db.tutorials = require("../models/tutorials.model.js")(sequelize, Sequelize);
 db.classes = require("../models/classes.model.js")(sequelize, Sequelize);
 db.lessons = require("../models/lesson.model.js")(sequelize, Sequelize);
 db.setting = require("../models/setting.model.js")(sequelize, Sequelize);
+db.audioRecord = require("../models/audioRecord")(sequelize, Sequelize);
 
 // db.tutorials.hasMany(db.classes, { as: "classes" });
 // db.classes.belongsTo(db.tutorials, {
