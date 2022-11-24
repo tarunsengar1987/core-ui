@@ -25,13 +25,13 @@ import {
   CModalFooter,
 } from '@coreui/react'
 import axios from 'axios'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import 'datatables.net-dt/css/jquery.dataTables.min.css'
-import ReactAudioPlayer from 'react-audio-player'
 import ReactPlayer from 'react-player'
 import Loader from '../loader/Loader'
 import { duration } from 'moment'
+import AudioPlayerCustom from './AudioPlayerCustom'
 
 export default function Classes({ classdata, tutorialData, setAlertMessage, setAlert }) {
   const [visible, setVisible] = useState(false)
@@ -40,7 +40,6 @@ export default function Classes({ classdata, tutorialData, setAlertMessage, setA
   const [classData, setClassData] = useState([])
   const [lessonData, setLessonData] = useState([])
   const [classId, setClassId] = useState()
-  const [toggle, setToggle] = useState(false)
   const [validated, setValidated] = useState(false)
   const [validatedLesson, setValidatedLesson] = useState(false)
   const [isEdit, setIsEdit] = useState(false)
@@ -52,7 +51,6 @@ export default function Classes({ classdata, tutorialData, setAlertMessage, setA
   })
   const [userData, setUserData] = useState([])
   const [filteredResults, setFilteredResults] = useState([])
-  const [loading, setLoading] = useState(true)
   const [currentPage, setCurrentPage] = useState(1)
   const [recordsPerPage] = useState(10)
   const [isFilter, setIsFilter] = useState(false)
@@ -60,14 +58,10 @@ export default function Classes({ classdata, tutorialData, setAlertMessage, setA
   const [sortValue, setSortValue] = useState('')
   const indexOfLastRecord = currentPage * recordsPerPage
   const indexOfFirstRecord = indexOfLastRecord - recordsPerPage
-  const currentRecords = userData.slice(indexOfFirstRecord, indexOfLastRecord)
-  const nPages = Math.ceil(userData.length / recordsPerPage)
   const tutorialId = tutorialData?.id
   const [user, setUser] = useState({})
   const [fileData, setFileData] = useState({})
   const [fileDuration, setFileDuration] = useState()
-  const [playingIndex, setPlayingIndex] = useState(0)
-  const [audioOnPuase, setAudioOnPuase] = useState([0])
   const [deletePopup, setDeletePopup] = useState(false)
   const [modalPopup, setModalPopup] = useState('')
   const [deleteData, setDeleteData] = useState()
@@ -76,16 +70,20 @@ export default function Classes({ classdata, tutorialData, setAlertMessage, setA
   const [modalClassPopup, setModalClassPopup] = useState('')
   const [playDuration, setPlayDuration] = useState()
   const [audioData, setAudioData] = useState([])
+
   useEffect(() => {
     setClassData(classdata)
     getClasses()
     const data = JSON.parse(localStorage.getItem('userData'))
     setUser(data)
+  }, [])
+
+
+  useEffect(() => {
     axios.get(`${process.env.REACT_APP_API_URL}/audiorecord`).then((res) => {
       setAudioData(res?.data)
     })
-  }, [])
-
+  }, [playDuration])
   useEffect(() => {
     getLessons()
   }, [classId])
@@ -93,7 +91,17 @@ export default function Classes({ classdata, tutorialData, setAlertMessage, setA
   const getLessons = () => {
     axios.get(`${process.env.REACT_APP_API_URL}/lesson/` + classId).then((res) => {
       const numAscending = [...res.data].sort((a, b) => JSON.parse(a.order) - JSON.parse(b.order))
-      setLessonData(numAscending)
+      axios.get(`${process.env.REACT_APP_API_URL}/audiorecord`).then((audioRecord) => {
+        let data = numAscending?.filter((i) => {
+          return audioRecord?.data?.filter((x) => {
+            if (i.id == JSON.parse(x.lesson_Id)) {
+              i.pauseDuration = x.pauseduration
+              return i
+            }
+          })
+        })
+        setLessonData(data)
+      })
     })
   }
 
@@ -140,7 +148,7 @@ export default function Classes({ classdata, tutorialData, setAlertMessage, setA
       const reader = new FileReader()
       reader.onload = () => {
         const media = new Audio(reader.result)
-        media.onloadedmetadata = () => resolve(media.duration *1000)
+        media.onloadedmetadata = () => resolve(media.duration * 1000)
       }
       reader.readAsDataURL(file)
       reader.onerror = (error) => reject(error)
@@ -165,10 +173,6 @@ export default function Classes({ classdata, tutorialData, setAlertMessage, setA
     setClassesData({ ...classesData, [name]: checked })
   }
 
-  const handleSwitchLesson = (e) => {
-    const { name, checked } = e.target
-    setLessonFormData({ ...lessonFormData, [name]: checked })
-  }
 
   const handleClose = () => {
     setVisible(false)
@@ -221,14 +225,6 @@ export default function Classes({ classdata, tutorialData, setAlertMessage, setA
     setClassesData(data)
   }
 
-  const handleEditLesson = (data) => {
-    setIsEditLesson(true)
-    setLessonFormData(data)
-  }
-
-  // function getAudioDuration (){
-
-  // }
   const handleSubmitLesson = (event) => {
     event.preventDefault()
 
@@ -345,49 +341,16 @@ export default function Classes({ classdata, tutorialData, setAlertMessage, setA
     setIsEditLesson(false)
     setValidatedLesson(false)
   }
-  const handlePlayAudio = (e, index) => {
-    console.log(e, index, 'test')
-    if (playingIndex == index) {
-      setPlayingIndex(index + 1)
-      audioOnPuase.push(index + 1)
-    }
-  }
+
+
+
+
   const handleChangetab = (name) => {
     setIsEdit(false)
+    setLessonData([])
   }
 
-  const handleProgress = (progress) => {
-    setPlayDuration(progress.playedSeconds *1000)
-  }
-
-  const handlePuase = (class_id, lesson_id, user_id, duration) => {
-    var data = {
-      class_Id: class_id,
-      lesson_Id: lesson_id,
-      user_Id: user_id,
-      duration: duration,
-      pauseduration: playDuration,
-    }
-
-    var newLessonData = {}
-    audioData.map((elem, index) => {
-      if (elem.lesson_Id == lesson_id) {
-        return (newLessonData = elem)
-      }
-    })
-    if (newLessonData.lesson_Id == data.lesson_Id) {
-      axios
-        .put(`${process.env.REACT_APP_API_URL}/audiorecord/${newLessonData.id}`, data)
-        .then((res) => {
-          console.log(res.data, 'update')
-        })
-    } else {
-      axios.post(`${process.env.REACT_APP_API_URL}/audiorecord`, data).then((res) => {
-        console.log(res.data, 'neww')
-      })
-    }
-  }
-
+ 
   return (
     <>
       <div className="dashboardPage__head">
@@ -671,55 +634,9 @@ export default function Classes({ classdata, tutorialData, setAlertMessage, setA
                                   )}
                                 </CTableRow>
                               </CTableHead>
-                              {/* <CTableBody>
-                                {lessonData.length > 0
-                                  ? lessonData.map((item) => {
-                                      return (
-                                        <CTableRow>
-                                          <>
-                                            <CTableDataCell>
-                                              <div className="tutorialDetailsList__item">
-                                                {item.order}
-                                              </div>
-                                            </CTableDataCell>
-                                            <CTableDataCell>
-                                              <div className="tutorialDetailsList__item">
-                                                {item.name}
-                                              </div>
-                                            </CTableDataCell>
-                                            <CTableDataCell>
-                                              <div className="tutorialDetailsList__item">
-                                                <ReactPlayer
-                                                  url={item?.audio_url}
-                                                  width="400px"
-                                                  height="30px"
-                                                  playing={false}
-                                                  controls={true}
-                                                />
-                                              </div>
-                                            </CTableDataCell>
-                                            {user?.role !== '2' ? (
-                                              <CTableDataCell style={{ position: 'relative' }}>
-                                                <div className="actionIconBtn">
-                                                  <span onClick={() => handleDeleteLesson(item)}>
-                                                    <CIcon icon={cilDelete} />
-                                                  </span>
-                                                </div>
-                                              </CTableDataCell>
-                                            ) : (
-                                              ''
-                                            )}
-                                          </>
-                                        </CTableRow>
-                                      )
-                                    })
-                                  : 'Lessons not found'}
-                              </CTableBody> */}
-
                               <CTableBody>
                                 {lessonData.length > 0
-                                  ? lessonData.map((item, index) => {
-                                      // console.log(item.id,"========================>>")
+                                  ? lessonData.map((item, idx) => {
                                       return (
                                         <CTableRow>
                                           <>
@@ -735,32 +652,17 @@ export default function Classes({ classdata, tutorialData, setAlertMessage, setA
                                             </CTableDataCell>
                                             <CTableDataCell>
                                               <div className="tutorialDetailsList__item">
-                                                <ReactPlayer
+                                                <AudioPlayerCustom
                                                   url={item?.audio_url}
-                                                  width="400px"
-                                                  height="30px"
-                                                  playing={false}
-                                                  controls={true}
-                                                  onProgress={handleProgress}
-                                                  onPause={() =>
-                                                    handlePuase(
-                                                      data.id,
-                                                      item.id,
-                                                      user.id,
-                                                      item.duration,
-                                                    )
-                                                  }
-                                                  // style={index == playingIndex ?"":{ pointerEvents: 'none' }}
-                                                  style={
-                                                    index == playingIndex ||
-                                                    audioOnPuase.includes(index) ||
-                                                    user.role == '1'
-                                                      ? ''
-                                                      : { pointerEvents: 'none' }
-                                                  }
-                                                  // onPlay={(e) => handlePlayAudio(e, index)}  
-                                                  // onPlay={50}
-                                                  // progressInterval={15000}                                                  
+                                                  leassonIndex={idx}
+                                                  classIndex = {index}
+                                                  pauseDuration={item?.pauseDuration}
+                                                  class_id={data?.id}
+                                                  lesson_id={item?.id}
+                                                  user_id={user?.id}
+                                                  TempDuration={item?.duration}
+                                                  audioData={audioData}
+                                                  classId={classId}
                                                 />
                                               </div>
                                             </CTableDataCell>
