@@ -1,24 +1,34 @@
-import React, { useRef, useEffect, useState } from 'react';
+import React, { useRef, useEffect, useState } from 'react'
 
-import Audio from './Audio';
-import PlayButton from './PlayButton';
-import Seeker from './Seeker';
-import Volume from './Volume';
+import Audio from './Audio'
+import PlayButton from './PlayButton'
+import Seeker from './Seeker'
+import Volume from './Volume'
 
-import './styles.css';
-import axios from 'axios';
+import './styles.css'
+import axios from 'axios'
 
-const  AudioPlayerCustom = ({url,pauseDuration,class_id, lesson_id, user_id, TempDuration,audioData,leassonIndex,classIndex,classId})=> {
-  const [currentTime, setCurrentTime] = useState(pauseDuration?pauseDuration:0);
-  const [duration, setDuration] = useState(0);
-  const [isPlaying, setIsPlaying] = useState(false);
-  const [volume, setVolume] = useState(1);
-  const [seekDuration, setSeekDuration] = useState(pauseDuration?pauseDuration:0)
-  const audioRef = useRef(currentTime);
+const AudioPlayerCustom = ({
+  url,
+  pauseDuration,
+  class_id,
+  lesson_id,
+  user_id,
+  TempDuration,
+  audioData,
+  leassonIndex,
+  classIndex,
+  classId,
+}) => {
+  const [currentTime, setCurrentTime] = useState(pauseDuration ? pauseDuration : 0)
+  const [duration, setDuration] = useState(0)
+  const [isPlaying, setIsPlaying] = useState(false)
+  const [volume, setVolume] = useState(1)
+  const [seekDuration, setSeekDuration] = useState(pauseDuration ? pauseDuration : 0)
+  const audioRef = useRef(currentTime)
   const handleTrackClick = (position) => {
-    audioRef.current.currentTime = position;
-  };
-
+    audioRef.current.currentTime = position
+  }
 
   const handlePuase = () => {
     var data = {
@@ -50,35 +60,45 @@ const  AudioPlayerCustom = ({url,pauseDuration,class_id, lesson_id, user_id, Tem
 
   useEffect(() => {
     if (isPlaying) {
-      setSeekDuration("")
-      audioRef.current.play();
-      audioRef.current.currentTime = currentTime;
+      setSeekDuration('')
+      audioRef.current.play()
+      audioRef.current.currentTime = currentTime
     } else {
-      audioRef.current.pause();
+      audioRef.current.pause()
     }
-  }, [audioRef, isPlaying]);
+  }, [audioRef, isPlaying])
 
   useEffect(() => {
-    audioRef.current.volume = volume;
-  }, [audioRef, volume]);
+    audioRef.current.volume = volume
+  }, [audioRef, volume])
 
   return (
-    <div className="App">
-      <Seeker
-        currentTime={seekDuration == ""? currentTime : seekDuration}
-        duration={duration}
-        handleTrackClick={handleTrackClick}
-      />
-      <Audio
-        track={url}
-        ref={audioRef}
-        handleDuration={setDuration}
-        handleCurrentTime={setCurrentTime}
-      />
-      <PlayButton isPlaying={isPlaying} setIsPlaying={setIsPlaying} handleStoreDuration={handlePuase} lesson_id={lesson_id}  leassonIndex={leassonIndex} classId={classId}/>
-      <Volume volume={volume} setVolume={setVolume} />
+    <div className="App d-flex">
+      <div className="media-audio d-flex align-items-center">
+        <PlayButton
+          isPlaying={isPlaying}
+          setIsPlaying={setIsPlaying}
+          handleStoreDuration={handlePuase}
+          lesson_id={lesson_id}
+          leassonIndex={leassonIndex}
+          classId={classId}
+        />
+        <Seeker
+          currentTime={seekDuration == '' ? currentTime : seekDuration}
+          duration={duration}
+          handleTrackClick={handleTrackClick}
+        />
+        <Audio
+          track={url}
+          ref={audioRef}
+          handleDuration={setDuration}
+          handleCurrentTime={setCurrentTime}
+        />
+      </div>
+      <div className="volume-setting">
+        <Volume volume={volume} setVolume={setVolume} />
+      </div>
     </div>
-  );
+  )
 }
 export default AudioPlayerCustom
-

@@ -346,6 +346,7 @@ table {
     overflow: auto;
     .form-check {
       margin-bottom: 10px;
+      color: #6c757d;
     }
   }
 }
@@ -362,5 +363,9 @@ table {
       width: 30%;
     }
   }
-  
+}
+
+.halfChart {
+  max-width: 350px;
+  margin: 0 auto;
 }

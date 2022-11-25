@@ -2,8 +2,42 @@ body {
   color: #fff;
   background-color: #222;
 }
-
 .App {
   font-family: sans-serif;
   text-align: center;
+}
+.media-audio button {
+  padding: 0;
+  border: none;
+  height: 18px;
+}
+.media-audio .Seeker_seeker__3KfkY span {
+  padding: 0 8px;
+}
+.volume-setting .Volume_volume__PGNAr {
+  display: block;
+  margin: 0 10px;
+}
+.cart-right-part {
+  color: #000;
+}
+.cart-right-part p {
+  margin-bottom: 5px;
+  font-size: 16px;
+}
+.user-progress-detail table {
+  margin-bottom: 0;
+}
+.user-progress-detail thead tr,
+.user-progress-detail tbody tr {
+  border: none;
+  box-shadow: unset;
+  border-bottom: 1px solid #ccc;
+}
+.user-progress-detail tbody td {
+  color: #6c757d;
+  font-size: 14px;
+}
+.user-progress-detail tbody tr:nth-child(odd) td {
+  background: transparent;
 }

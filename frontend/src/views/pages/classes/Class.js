@@ -434,7 +434,7 @@ export default function Classes({ classdata, tutorialData, setAlertMessage, setA
                   key={index}
                 >
                   <CAccordionHeader onClick={() => handleChangetab(data.name)}>
-                    {data.name}{' '}
+                    {data.name}{' '}{data.id}
                   </CAccordionHeader>
                   <CAccordionBody>
                     {isEdit ? (
@@ -660,7 +660,7 @@ export default function Classes({ classdata, tutorialData, setAlertMessage, setA
                                                   class_id={data?.id}
                                                   lesson_id={item?.id}
                                                   user_id={user?.id}
-                                                  TempDuration={item?.duration}
+                                                  TempDuration={item?.duration/1000}
                                                   audioData={audioData}
                                                   classId={classId}
                                                 />

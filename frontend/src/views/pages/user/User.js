@@ -42,6 +42,7 @@ import Pagination from '../pagination/Pagination'
 import moment from 'moment'
 import Alert from '../alert/Alert'
 import Loader from '../loader/Loader'
+import { useNavigate } from 'react-router-dom'
 export default function User() {
   const [visible, setVisible] = useState(false)
   const [toggle, setToggle] = useState(false)
@@ -61,7 +62,7 @@ export default function User() {
   const [alertMessage, setAlertMessage] = useState('')
   const indexOfLastRecord = currentPage * recordsPerPage
   const indexOfFirstRecord = indexOfLastRecord - recordsPerPage
-
+  const navigate = useNavigate()
   const currentRecords = userData.slice(indexOfFirstRecord, indexOfLastRecord)
   const nPages = Math.ceil(userData.length / recordsPerPage)
 
@@ -310,6 +311,13 @@ export default function User() {
     }
   }
 
+  const handleUserViewProgress = (data) => {
+    debugger
+    navigate('/userprogress', {
+      state: {userdata: data},
+    })
+  }
+
   return (
     <div>
       <AppSidebar />
@@ -515,6 +523,17 @@ export default function User() {
                               )}
                             </div>
                           </CTableDataCell>
+                          <CTableDataCell>
+                        
+                                  {' '}
+                                  <CButton
+                                    onClick={() => handleUserViewProgress(data)}
+                                    className="bg-darkGreen border-darkGreen"
+                                  >
+                                   View Progress
+                                  </CButton>{' '}
+                                
+                          </CTableDataCell>
                           {/* <CTableDataCell>Cell</CTableDataCell> */}
                         </CTableRow>
                         <CModal visible={deletePopup} onClose={() => setDeletePopup(false)}>
@@ -585,6 +604,14 @@ export default function User() {
                               )}
                             </div>
                           </CTableDataCell>
+                          <CTableDataCell>
+                                  <CButton
+                                    onClick={() => handleUserViewProgress(data)}
+                                    className="bg-darkGreen border-darkGreen"
+                                  >
+                                   View Progress
+                                  </CButton>
+                          </CTableDataCell>
                         </CTableRow>
                         <CModal visible={deletePopup} onClose={() => setDeletePopup(false)}>
                           <CModalBody>Are you sure want to delete?</CModalBody>
@@ -603,6 +630,7 @@ export default function User() {
             </CTable>
             <Pagination nPages={nPages} currentPage={currentPage} setCurrentPage={setCurrentPage} />
           </div>
+          
         </div>
       </div>
     </div>

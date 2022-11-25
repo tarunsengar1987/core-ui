@@ -22,6 +22,20 @@ exports.createAudioRecord = (req, res) => {
 };
 
 
+// get All AudioRecord 
+exports.getAudioRecord = (req, res) => {
+    AudioRecord.findAll()
+        .then((data) => {
+            res.send(data);
+        })
+        .catch((err) => {
+            res.status(500).send({
+                message:
+                    err.message || "Some error occurred while creating the AudioRecord.",
+            });
+        });
+};
+
 // get All Classes 
 exports.getAudioRecord = (req, res) => {
     AudioRecord.findAll()
@@ -35,7 +49,27 @@ exports.getAudioRecord = (req, res) => {
             });
         });
 };
-//update Class
+
+
+// get All AudioRecord by user id
+exports.getAudioRecordById = (req, res) => {
+    const id = req.params.id;
+    AudioRecord.findAll({
+        where: { user_Id: id }
+    })
+        .then((data) => {
+            res.send(data);
+        })
+        .catch((err) => {
+            res.status(500).send({
+                message:
+                    err.message || "Some error occurred while getting the AudioRecord.",
+            });
+        });
+};
+
+
+//update AudioRecord
 exports.updateAudioRecord = (req, res) => {
     const id = req.params.id;
     AudioRecord.update(req.body, {

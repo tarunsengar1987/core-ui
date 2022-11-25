@@ -1,5 +1,6 @@
 const db = require("../models");
 const Lessons = db.lessons;
+const AudioRecord = db.audioRecord;
 
 
 exports.createLesson = (req, res) => {
@@ -90,6 +91,7 @@ exports.lessonDelete = (req, res) => {
     Lessons.destroy({
         where: { id: id }
     })
+    
         .then(num => {
             if (num == 1) {
                 res.send({

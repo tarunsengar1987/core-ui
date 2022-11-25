@@ -9,7 +9,7 @@ import {
   CWidgetStatsA,
 } from '@coreui/react'
 import { getStyle } from '@coreui/utils'
-import { CChartBar, CChartLine } from '@coreui/react-chartjs'
+import { CChart, CChartBar, CChartLine } from '@coreui/react-chartjs'
 import CIcon from '@coreui/icons-react'
 import { cilArrowBottom, cilArrowTop, cilOptions } from '@coreui/icons'
 import axios from 'axios'
@@ -19,12 +19,18 @@ const WidgetsDropdown = () => {
   const [userCount, setUserCount] = useState('')
   const [userClass, setClassCount] = useState('')
   const [user, setUser] = useState()
+  const [userData, setUserData] = useState([])
+  const [lessonData, setLessonData] = useState([])
+  const [totalProgress, setTotalProgress] = useState('')
+  const [totalLessonDurationsum, setTotalLessonDurationsum] = useState('')
+
   useEffect(() => {
     getTutorials()
     getUsers()
     getClasses()
     const data = JSON.parse(localStorage.getItem('userData'))
     setUser(data)
+    getUsersDetails()
   }, [])
 
   const getUsers = () => {
@@ -41,14 +47,44 @@ const WidgetsDropdown = () => {
   }
 
   const getClasses = () => {
-    axios.get(`${process.env.REACT_APP_API_URL}/api/classes`).then((res) => {
+    axios.get(`${process.env.REACT_APP_API_URL}/classes`).then((res) => {
       'length===>', res.data.length
       setClassCount(res.data.length)
     })
   }
 
+  const getUsersDetails = () => {
+    const data = JSON.parse(localStorage.getItem('userData'))
+    let pauseDurationSum = 0
+    axios.get(`${process.env.REACT_APP_API_URL}/audiorecord/` + data?.id).then((res) => {
+      debugger
+      setUserData(res.data)
+      res.data.map((time) => {
+        pauseDurationSum += JSON.parse(time.pauseduration)
+      })
+      getLessonDuration(pauseDurationSum)
+    })
+  }
+
+  const getLessonDuration = (pauseDurationSum) => {
+    axios.get(`${process.env.REACT_APP_API_URL}/lessons`).then(async (res) => {
+      debugger
+      res.data.sort(function (a, b) {
+        return new Date(b.updatedAt) - new Date(a.updatedAt)
+      })
+      setLessonData(res.data)
+      let sum = 0
+      res?.data?.map((item) => {
+        sum += item.duration
+      })
+      setTotalLessonDurationsum(sum)
+      setTotalProgress((pauseDurationSum / sum) * 100)
+    })
+  }
+
   return (
     <CRow className="dashboardCards">
+      {console.log('useruseruser', user)}
       {user?.role === '1' ? (
         <CCol sm={6} lg={3}>
           <CWidgetStatsA
@@ -63,66 +99,6 @@ const WidgetsDropdown = () => {
               </>
             }
             title="Users"
-
-            // chart={
-            //   <CChartLine
-            //     className="mt-3 mx-3"
-            //     style={{ height: '70px' }}
-            //     data={{
-            //       labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
-            //       datasets: [
-            //         {
-            //           label: 'My First dataset',
-            //           backgroundColor: 'transparent',
-            //           borderColor: 'rgba(255,255,255,.55)',
-            //           pointBackgroundColor: getStyle('--cui-primary'),
-            //           data: [65, 59, 84, 84, 51, 55, 40],
-            //         },
-            //       ],
-            //     }}
-            //     options={{
-            //       plugins: {
-            //         legend: {
-            //           display: false,
-            //         },
-            //       },
-            //       maintainAspectRatio: false,
-            //       scales: {
-            //         x: {
-            //           grid: {
-            //             display: false,
-            //             drawBorder: false,
-            //           },
-            //           ticks: {
-            //             display: false,
-            //           },
-            //         },
-            //         y: {
-            //           min: 30,
-            //           max: 89,
-            //           display: false,
-            //           grid: {
-            //             display: false,
-            //           },
-            //           ticks: {
-            //             display: false,
-            //           },
-            //         },
-            //       },
-            //       elements: {
-            //         line: {
-            //           borderWidth: 1,
-            //           tension: 0.4,
-            //         },
-            //         point: {
-            //           radius: 4,
-            //           hitRadius: 10,
-            //           hoverRadius: 4,
-            //         },
-            //       },
-            //     }}
-            //   />
-            // }
           />
         </CCol>
       ) : (
@@ -139,54 +115,9 @@ const WidgetsDropdown = () => {
             </>
           }
           title="Tutorials"
-
-          // chart={
-          //   <CChartLine
-          //     className="mt-3"
-          //     style={{ height: '70px' }}
-          //     data={{
-          //       labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
-          //       datasets: [
-          //         {
-          //           label: 'My First dataset',
-          //           backgroundColor: 'rgba(255,255,255,.2)',
-          //           borderColor: 'rgba(255,255,255,.55)',
-          //           data: [78, 81, 80, 45, 34, 12, 40],
-          //           fill: true,
-          //         },
-          //       ],
-          //     }}
-          //     options={{
-          //       plugins: {
-          //         legend: {
-          //           display: false,
-          //         },
-          //       },
-          //       maintainAspectRatio: false,
-          //       scales: {
-          //         x: {
-          //           display: false,
-          //         },
-          //         y: {
-          //           display: false,
-          //         },
-          //       },
-          //       elements: {
-          //         line: {
-          //           borderWidth: 2,
-          //           tension: 0.4,
-          //         },
-          //         point: {
-          //           radius: 0,
-          //           hitRadius: 10,
-          //           hoverRadius: 4,
-          //         },
-          //       },
-          //     }}
-          //   />
-          // }
         />
       </CCol>
+
       {user?.role === '1' ? (
         <CCol sm={6} lg={3}>
           <CWidgetStatsA
@@ -201,76 +132,52 @@ const WidgetsDropdown = () => {
               </>
             }
             title="Settings"
-
-            // chart={
-            //   <CChartBar
-            //     className="mt-3 mx-3"
-            //     style={{ height: '70px' }}
-            //     data={{
-            //       labels: [
-            //         'January',
-            //         'February',
-            //         'March',
-            //         'April',
-            //         'May',
-            //         'June',
-            //         'July',
-            //         'August',
-            //         'September',
-            //         'October',
-            //         'November',
-            //         'December',
-            //         'January',
-            //         'February',
-            //         'March',
-            //         'April',
-            //       ],
-            //       datasets: [
-            //         {
-            //           label: 'My First dataset',
-            //           backgroundColor: 'rgba(255,255,255,.2)',
-            //           borderColor: 'rgba(255,255,255,.55)',
-            //           data: [78, 81, 80, 45, 34, 12, 40, 85, 65, 23, 12, 98, 34, 84, 67, 82],
-            //           barPercentage: 0.6,
-            //         },
-            //       ],
-            //     }}
-            //     options={{
-            //       maintainAspectRatio: false,
-            //       plugins: {
-            //         legend: {
-            //           display: false,
-            //         },
-            //       },
-            //       scales: {
-            //         x: {
-            //           grid: {
-            //             display: false,
-            //             drawTicks: false,
-            //           },
-            //           ticks: {
-            //             display: false,
-            //           },
-            //         },
-            //         y: {
-            //           grid: {
-            //             display: false,
-            //             drawBorder: false,
-            //             drawTicks: false,
-            //           },
-            //           ticks: {
-            //             display: false,
-            //           },
-            //         },
-            //       },
-            //     }}
-            //   />
-            // }
           />
         </CCol>
       ) : (
         ''
       )}
+      <CCol xs={12}>
+        {user?.role === '2' ? (
+          <div>
+            <div className="row">
+              <div className="col-md-6">
+              <div className="card p-4 h-100">
+                <h4>Line</h4>
+                <div className="chart-wrapper halfChart">
+                  <CChart
+                    type="doughnut"
+                    data={{
+                      labels: ['TotalProgress', 'Total'],
+                      datasets: [
+                        {
+                          backgroundColor: ['#41B883', '#E46651'],
+                          data: [totalProgress, 100],
+                        },
+                      ],
+                    }}
+                  />
+                </div>
+                <hr />
+                </div>
+              </div>
+              <div className="col-md-6">
+                <div className="card p-4 h-100 cart-right-part">
+                  {console.log('lessonData', lessonData)}
+                  <h4 className='mb-3'>Recently Visited Audio</h4>
+                  {lessonData.length > 0
+                    ? lessonData
+                        .slice([0], [10])
+                        .map((item, index) => <p>{item.name}</p>)
+                    : 'You Did not visit any audio'}
+                </div>
+              </div>
+            </div>
+          </div>
+        ) : (
+          ''
+        )}
+      </CCol>
     </CRow>
   )
 }

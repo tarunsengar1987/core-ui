@@ -29,7 +29,8 @@ exports.signup = (req, res) => {
           user.dataValues,
           decrypt(user.dataValues.password),
           data.dataValues,
-          decrypt(data.dataValues.password),
+          "",
+          "",
         );
         res.send({ message: "User registered successfully!" });
       });
@@ -56,7 +57,8 @@ exports.createUser = (req, res) => {
           user.dataValues,
           decrypt(user.dataValues.password),
           data.dataValues,
-          decrypt(data.dataValues.password),
+          "",
+          "",
         );
         res.send({ message: "User created successfully!" });
       });
@@ -66,6 +68,8 @@ exports.createUser = (req, res) => {
       res.status(500).send({ message: err.message });
     });
 };
+
+
 //update user
 exports.updatePassword = (req, res) => {
   const id = req.params.id;
@@ -90,6 +94,8 @@ exports.updatePassword = (req, res) => {
       });
     });
 };
+
+
 //User send Invitation
 exports.sendInvitation = (req, res) => {
   console.log("req.body===>", req.body);
@@ -116,7 +122,7 @@ exports.sendInvitation = (req, res) => {
     });
 };
 //update user
-exports.resetUser = (req, res) => {
+exports.resetUser = (req, res) => { 
   console.log("req.body===>", req.body);
   User.findOne({
     where: {

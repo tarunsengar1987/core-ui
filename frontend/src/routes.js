@@ -4,6 +4,7 @@ import Setting from './views/pages/setting/Setting'
 import TutorialClassDetails from './views/pages/tutorialclassDetails/TutorialClassDetails'
 import Tutorials from './views/pages/tutorials/Tutorials'
 import User from './views/pages/user/User'
+import UserProgress from './views/pages/user/UserProgress'
 
 const Dashboard = React.lazy(() => import('./views/dashboard/Dashboard'))
 const Colors = React.lazy(() => import('./views/theme/colors/Colors'))
@@ -62,6 +63,7 @@ const routes = [
   { path: '/tutorial', name: 'Tutorial', element: Tutorials },
   { path: '/tutorial/tutorial-details', name: 'Tutorial Details', element: TutorialClassDetails },
   { path: '/setting', name: 'Setting', element: Setting },
+  { path: '/userprogress', name: 'UserProgress', element: UserProgress },
   { path: '/profile', name: 'Profile Page', element: Profile },
   { path: '/theme', name: 'Theme', element: Colors, exact: true },
   { path: '/theme/colors', name: 'Colors', element: Colors },

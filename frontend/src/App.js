@@ -13,6 +13,7 @@ import Tutorials from './views/pages/tutorials/Tutorials'
 import User from './views/pages/user/User'
 import Profile from './views/pages/profile/Profile'
 import Message from './views/pages/message/Message'
+import UserProgress from './views/pages/user/UserProgress'
 const loading = (
   <div className="pt-3 text-center">
     <div className="sk-spinner sk-spinner-pulse"></div>
@@ -43,6 +44,7 @@ class App extends Component {
             <Route exact path="/setting" name="Setting Page" element={<Setting />} />
             <Route exact path="/message" name="Message Page" element={<Message />} />
             <Route exact path="/tutorial/tutorial-details" name="Details Page" element={<TutorialClassDetails/>} />
+            <Route exact path="/userprogress" name="Userprogress Page" element={<UserProgress />} />
             </Route>
             <Route exact path="/confirm/:id" name="Confirm Page" element={<Confirm />} />
             <Route exact path="/forgotpassword" name="Reset Page" element={<Resetpassword />} />
