@@ -14,12 +14,12 @@ module.exports = function(app) {
   //Classes update route
   app.get("/api/audiorecord/:id", audioRecordController.getAudioRecordById);
 
-  app.get('/api/progress', async(req, res) => {
+  app.get('/api/progress/:id', async(req, res) => {
     db.sequelize.query(`SELECT
     (select id from coreuidb.tutorials where coreuidb.tutorials.id = (SELECT tutorial_id from coreuidb.classes WHERE id=class_Id)) as tutorial_id,
     (select name from coreuidb.tutorials where coreuidb.tutorials.id = (SELECT tutorial_id from coreuidb.classes WHERE id=class_Id)) as tutorial,
     (sum(pauseduration)*100)/sum(duration) as completed_percentage
-FROM coreuidb.audiorecords GROUP BY tutorial_id;`, {
+FROM coreuidb.audiorecords WHERE user_id = `+req.params.id+` GROUP BY tutorial_id;`, {
         type: db.sequelize.QueryTypes.SELECT
     }).then((data) => {
         return res.send({data: data, success: true,  message:"progress fetched successfully!" })

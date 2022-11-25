@@ -39,6 +39,7 @@ import { useNavigate } from 'react-router-dom'
 import moment from 'moment'
 import Alert from '../alert/Alert'
 import Loader from '../loader/Loader'
+import { CChart } from '@coreui/react-chartjs'
 
 export default function Tutorials() {
   const [visible, setVisible] = useState(false)
@@ -66,10 +67,12 @@ export default function Tutorials() {
   const [alertMessage, setAlertMessage] = useState('')
   const [modalPopup, setModalPopup] = useState('')
   const [deleteData, setDeleteData] = useState()
+  const [totalProgress, setTotalProgress] = useState([])
   useEffect(() => {
     getTutorials()
     const data = JSON.parse(localStorage.getItem('userData'))
     setUser(data)
+    getProgress()
   }, [])
 
   useEffect(() => {
@@ -95,6 +98,14 @@ export default function Tutorials() {
       )
     }
   }, [assending])
+
+  const getProgress = () => {
+    const data = JSON.parse(localStorage.getItem('userData'))
+    axios.get(`${process.env.REACT_APP_API_URL}/progress/` + data.id).then((res) => {
+      debugger
+      setTotalProgress(res.data.data)
+    })
+  }
 
   const getTutorials = () => {
     axios.get(`${process.env.REACT_APP_API_URL}/tutorials`).then((res) => {
@@ -439,12 +450,13 @@ export default function Tutorials() {
                   />
                 </CTableHeaderCell>
                 <CTableHeaderCell scope="col">View Classes</CTableHeaderCell>
+                <CTableHeaderCell scope="col">Progress</CTableHeaderCell>
                 {user.role === '1' ? <CTableHeaderCell scope="col">Actions</CTableHeaderCell> : ''}
               </CTableRow>
             </CTableHead>
             <CTableBody>
               {isFilter
-                ? filteredResults.map((data,index) => (
+                ? filteredResults.map((data, index) => (
                     <React.Fragment key={index}>
                       <CTableRow>
                         <CTableDataCell>{data.name}</CTableDataCell>
@@ -479,14 +491,52 @@ export default function Tutorials() {
                             </span>
                           </div>
                         </CTableDataCell>
-
+                        {user?.role === '2' ? (
+                          <CTableDataCell>
+                            {totalProgress.map((item) => (
+                              <>
+                                {' '}
+                                {data.id === item.tutorial_id ? (
+                                  
+                                      <div className="card card tutorial-progress-report h-100">
+                                        <h4>Line</h4>
+                                        <div className="chart-wrapper halfChart">
+                                          <CChart
+                                            type="doughnut"
+                                            data={{
+                                              // labels: ['TotalProgress', 'Total'],
+                                              datasets: [
+                                                {
+                                                  backgroundColor: ['#41B883', '#E46651'],
+                                                  data: [
+                                                    data.id === item.tutorial_id
+                                                      ? item.completed_percentage
+                                                      : '',
+                                                    100,
+                                                  ],
+                                                },
+                                              ],
+                                            }}
+                                          />
+                                        </div>
+                                      </div>
+                                  
+                                ) : (
+                                  ''
+                                )}
+                              </>
+                            ))}
+                          </CTableDataCell>
+                        ) : (
+                          ''
+                        )}
                         {user.role === '1' ? (
                           <CTableDataCell>
                             <div className="actionIconBtn">
                               <span
                                 onClick={() => {
-                                    setDeleteData(data.id)
-                                    checkClsses(data.id)
+                                  setDeleteData(data.id)
+                                  checkClsses(data.id)
                                   //  setDeletePopup(!deletePopup)
                                 }}
                               >
@@ -504,7 +554,7 @@ export default function Tutorials() {
                       </CTableRow>
                     </React.Fragment>
                   ))
-                : currentRecords.map((data,index) => (
+                : currentRecords.map((data, index) => (
                     <React.Fragment key={index}>
                       <CTableRow>
                         <CTableDataCell>{data.name}</CTableDataCell>
@@ -536,6 +586,43 @@ export default function Tutorials() {
                             </span>
                           </div>
                         </CTableDataCell>
+
+                        {user?.role === '2' ? (
+                          <CTableDataCell>
+                            {totalProgress.map((item) => (
+                              <>
+                                {' '}
+                                {data.id === item.tutorial_id ? (
+                                      <div className="card tutorial-progress-report h-100">
+                                        <div className="chart-wrapper halfChart">
+                                          <CChart
+                                            type="doughnut"
+                                            data={{
+                                              // labels: ['TotalProgress', 'Total'],
+                                              datasets: [
+                                                {
+                                                  backgroundColor: ['#41B883', '#E46651'],
+                                                  data: [
+                                                    data.id === item.tutorial_id
+                                                      ? item.completed_percentage
+                                                      : '',
+                                                    100,
+                                                  ],
+                                                },
+                                              ],
+                                            }}
+                                          />
+                                        </div>
+                                      </div>
+                                ) : (
+                                  ''
+                                )}
+                              </>
+                            ))}
+                          </CTableDataCell>
+                        ) : (
+                          ''
+                        )}
 
                         {user.role === '1' ? (
                           <CTableDataCell>
