@@ -25,8 +25,6 @@ const WidgetsDropdown = () => {
   const [lessonData, setLessonData] = useState([])
   const [totalProgress, setTotalProgress] = useState('')
   const [totalLessonDurationsum, setTotalLessonDurationsum] = useState('')
-  const [classData1, setClassData1] = useState([])
-  const [tutorialData1, setTutorialData1] = useState([])
 
   const [loader, setLoader] = useState(false)
 
