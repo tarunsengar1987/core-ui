@@ -60,8 +60,38 @@ exports.updateClass = (req, res) => {
 //get class by id
 exports.getClassByTutorialId = (req, res) => {
     const id = req.params.id;
+    console.log({id})
     Classes.findAll({ where: {tutorial_id: id} })
         .then(data => {
+            console.log({data})
+
+            if (!data)
+                res.status(404).send({
+                    status: 404,
+                    message: "Not found Class with id " + id
+                });
+            else res.send(data)
+        })
+        .catch(err => {
+            res
+                .status(500)
+                .send({
+                    status: 500,
+                    message: "Error retrieving Class with id=" + id
+                });
+        });
+  };
+
+
+
+  //get class by id
+exports.getClassById = (req, res) => {
+    const id = req.params.id;
+    console.log({id})
+    Classes.findAll({ where: {id: id} })
+        .then(data => {
+            console.log({data})
+
             if (!data)
                 res.status(404).send({
                     status: 404,

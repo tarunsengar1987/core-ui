@@ -6,7 +6,7 @@ import CKEditor from 'react-ckeditor-component'
 import Loader from '../loader/Loader'
 import Alert from '../alert/Alert'
 import { Button } from '@coreui/coreui'
-import { CButton } from '@coreui/react'
+import { CButton, CFormInput } from '@coreui/react'
 const Message = () => {
   const [userData, setUserData] = useState([])
   const [userEmail, setUserEmail] = useState([])
@@ -16,6 +16,7 @@ const Message = () => {
   const [loader, setLoader] = useState(false)
   const [alert, setAlert] = useState(false)
   const [alertMessage, setAlertMessage] = useState('')
+  const [filterValue, setFilterValue] = useState('')
   function getUser() {
     axios.get(`${process.env.REACT_APP_API_URL}/users`).then((res) => {
       setUserData(res.data)
@@ -89,6 +90,9 @@ const Message = () => {
   const afterPaste = (evt) => {
     // console.log("afterPaste event called with event info: ", evt);
   }
+  const handleSearchItems = (e) => {
+    setFilterValue(e.target.value)
+  }
 
   return (
     <div>
@@ -101,6 +105,19 @@ const Message = () => {
           <div className="dashboardPage__inner">
             <div className="dashboardPage__head">
               <h1 className="dashboardPage__title">User List</h1>
+            </div>
+            <div className="custom-search">
+              <CFormInput
+                type="text"
+                aria-describedby="validationCustom03Feedback"
+                feedbackInvalid="Please provide a valid email."
+                id="validationCustom03"
+                required
+                value={filterValue}
+                placeholder="Search"
+                onChange={handleSearchItems}
+                name="search"
+              />
             </div>
             <div className="massageList">
               <div className="row">
@@ -118,39 +135,46 @@ const Message = () => {
                         All Select
                       </label>
                     </div>
-                    {userData?.map((data) => {
-                      return (
-                        <div className="form-check">
-                          <input
-                            onChange={handleEmail}
-                            className="form-check-input"
-                            name={data.email}
-                            type="checkbox"
-                            value=""
-                            checked={isCheck.includes(data.email) || false}
-                          />
-                          <label className="form-check-label" htmlFor="flexCheckDefault">
-                            {data.email}
-                          </label>
-                        </div>
+                    {userData
+                      ?.filter((option) =>
+                        `${option.email}`.toLowerCase().includes(filterValue.toLowerCase()),
                       )
-                    })}
+                      .map((data) => {
+                        return (
+                          <div className="form-check">
+                            <input
+                              onChange={handleEmail}
+                              className="form-check-input"
+                              name={data.email}
+                              type="checkbox"
+                              value=""
+                              checked={isCheck.includes(data.email) || false}
+                            />
+                            <label className="form-check-label" htmlFor="flexCheckDefault">
+                              {data.email}
+                            </label>
+                          </div>
+                        )
+                      })}
                   </div>
                 </div>
                 <div className="col-8">
                   <div className="p-4 rounded bg-white">
-                  <CKEditor
-                    activeclassName="p10"
-                    content={content}
-                    events={{
-                      blur: onBlur,
-                      afterPaste: afterPaste,
-                      change: onChange,
-                    }}
-                  />
-                  <CButton className="bg-darkGreen border-darkGreen mt-3" onClick={handleSendMail}>
-                    Send
-                  </CButton>
+                    <CKEditor
+                      activeclassName="p10"
+                      content={content}
+                      events={{
+                        blur: onBlur,
+                        afterPaste: afterPaste,
+                        change: onChange,
+                      }}
+                    />
+                    <CButton
+                      className="bg-darkGreen border-darkGreen mt-3"
+                      onClick={handleSendMail}
+                    >
+                      Send
+                    </CButton>
                   </div>
                 </div>
               </div>

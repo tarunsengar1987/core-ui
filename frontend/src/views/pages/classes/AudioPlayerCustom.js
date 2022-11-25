@@ -4,7 +4,7 @@ import Audio from './Audio'
 import PlayButton from './PlayButton'
 import Seeker from './Seeker'
 import Volume from './Volume'
-
+import Alert from '../alert/Alert'
 import './styles.css'
 import axios from 'axios'
 
@@ -25,6 +25,8 @@ const AudioPlayerCustom = ({
   const [isPlaying, setIsPlaying] = useState(false)
   const [volume, setVolume] = useState(1)
   const [seekDuration, setSeekDuration] = useState(pauseDuration ? pauseDuration : 0)
+  const [alert, setAlert] = useState(false)
+  const [alertMessage, setAlertMessage] = useState('')
   const audioRef = useRef(currentTime)
   const handleTrackClick = (position) => {
     audioRef.current.currentTime = position
@@ -46,15 +48,40 @@ const AudioPlayerCustom = ({
       }
     })
     if (newLessonData.lesson_Id == data.lesson_Id) {
-      axios
-        .put(`${process.env.REACT_APP_API_URL}/audiorecord/${newLessonData.id}`, data)
-        .then((res) => {
-          console.log(res.data, 'update')
-        })
+      try {
+        axios
+          .put(`${process.env.REACT_APP_API_URL}/audiorecord/${newLessonData.id}`, data)
+          .then((res) => {
+            console.log(res.data, 'update')
+          })
+          .catch((error) => {
+            setAlert(true)
+            setAlertMessage('no any audio data')
+            setTimeout(() => {
+              setAlert(false)
+            },2000)
+          })
+      } catch {
+        console.log(' no any audio record ')
+      }
     } else {
-      axios.post(`${process.env.REACT_APP_API_URL}/audiorecord`, data).then((res) => {
-        console.log(res.data, 'neww')
-      })
+      try {
+        axios
+          .post(`${process.env.REACT_APP_API_URL}/audiorecord`, data)
+          .then((res) => {
+            console.log(res.data, 'neww')
+            setAlert(true)
+          })
+          .catch((error) => {
+            setAlert(true)
+            setAlertMessage('no any audio data')
+            setTimeout(() => {
+              setAlert(false)
+            },2000)
+          })
+      } catch {
+        console.log(' no any audio record ')
+      }
     }
   }
 
@@ -74,6 +101,7 @@ const AudioPlayerCustom = ({
 
   return (
     <div className="App d-flex">
+      <Alert isVisible={alert} message={alertMessage} />
       <div className="media-audio d-flex align-items-center">
         <PlayButton
           isPlaying={isPlaying}

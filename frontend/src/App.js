@@ -44,6 +44,7 @@ class App extends Component {
             <Route exact path="/setting" name="Setting Page" element={<Setting />} />
             <Route exact path="/message" name="Message Page" element={<Message />} />
             <Route exact path="/tutorial/tutorial-details" name="Details Page" element={<TutorialClassDetails/>} />
+            {/* <Route exact path="/tutorial/tutorial-details/:id" name="Details Page" element={<TutorialClassDetails/>} /> */}
             <Route exact path="/userprogress" name="Userprogress Page" element={<UserProgress />} />
             </Route>
             <Route exact path="/confirm/:id" name="Confirm Page" element={<Confirm />} />

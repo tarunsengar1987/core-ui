@@ -78,31 +78,38 @@ export default function Classes({ classdata, tutorialData, setAlertMessage, setA
     setUser(data)
   }, [])
 
-
   useEffect(() => {
-    axios.get(`${process.env.REACT_APP_API_URL}/audiorecord`).then((res) => {
-      setAudioData(res?.data)
-    })
+    try {
+      axios.get(`${process.env.REACT_APP_API_URL}/audiorecord`).then((res) => {
+        setAudioData(res?.data)
+      })
+    } catch {
+      console.log("can't get data from server please try again ")
+    }
   }, [playDuration])
   useEffect(() => {
     getLessons()
   }, [classId])
 
   const getLessons = () => {
-    axios.get(`${process.env.REACT_APP_API_URL}/lesson/` + classId).then((res) => {
-      const numAscending = [...res.data].sort((a, b) => JSON.parse(a.order) - JSON.parse(b.order))
-      axios.get(`${process.env.REACT_APP_API_URL}/audiorecord`).then((audioRecord) => {
-        let data = numAscending?.filter((i) => {
-          return audioRecord?.data?.filter((x) => {
-            if (i.id == JSON.parse(x.lesson_Id)) {
-              i.pauseDuration = x.pauseduration
-              return i
-            }
+    try {
+      axios.get(`${process.env.REACT_APP_API_URL}/lesson/` + classId).then((res) => {
+        const numAscending = [...res.data].sort((a, b) => JSON.parse(a.order) - JSON.parse(b.order))
+        axios.get(`${process.env.REACT_APP_API_URL}/audiorecord`).then((audioRecord) => {
+          let data = numAscending?.filter((i) => {
+            return audioRecord?.data?.filter((x) => {
+              if (i.id == JSON.parse(x.lesson_Id)) {
+                i.pauseDuration = x.pauseduration
+                return i
+              }
+            })
           })
+          setLessonData(data)
         })
-        setLessonData(data)
       })
-    })
+    } catch {
+      console.log("can't get data from server please try again ")
+    }
   }
 
   useEffect(() => {
@@ -130,9 +137,22 @@ export default function Classes({ classdata, tutorialData, setAlertMessage, setA
   }, [assending])
 
   const getClasses = () => {
-    axios.get(`${process.env.REACT_APP_API_URL}/class/` + tutorialId).then((res) => {
-      setClassData(res.data)
-    })
+    try {
+      axios
+        .get(`${process.env.REACT_APP_API_URL}/class/` + tutorialId)
+        .then((res) => {
+          setClassData(res.data)
+        })
+        .catch((error) => {
+          setAlert(true)
+          setAlertMessage(error.data.message)
+          setTimeout(() => {
+            setAlert(false)
+          }, 2000)
+        })
+    } catch {
+      console.log("can't get data from server please try again ")
+    }
   }
 
   const handleChange = (event) => {
@@ -148,7 +168,7 @@ export default function Classes({ classdata, tutorialData, setAlertMessage, setA
       const reader = new FileReader()
       reader.onload = () => {
         const media = new Audio(reader.result)
-        media.onloadedmetadata = () => resolve(media.duration * 1000)
+        media.onloadedmetadata = () => resolve(media.duration )
       }
       reader.readAsDataURL(file)
       reader.onerror = (error) => reject(error)
@@ -173,7 +193,6 @@ export default function Classes({ classdata, tutorialData, setAlertMessage, setA
     setClassesData({ ...classesData, [name]: checked })
   }
 
-
   const handleClose = () => {
     setVisible(false)
     setValidated(false)
@@ -189,35 +208,61 @@ export default function Classes({ classdata, tutorialData, setAlertMessage, setA
   }
 
   const handleDeleteClass = () => {
-    axios.delete(`${process.env.REACT_APP_API_URL}/class/` + deleteClassData).then((res) => {
-      setDeleteClassPopup(false)
-      setLoader(true)
-      getClasses()
-      setTimeout(() => {
-        setLoader(false)
-        setAlert(true)
-        setAlertMessage('Successfully Deleted')
-      }, 2000)
-      setTimeout(() => {
-        setAlert(false)
-      }, 4000)
-    })
+    try {
+      axios
+        .delete(`${process.env.REACT_APP_API_URL}/class/` + deleteClassData)
+        .then((res) => {
+          setDeleteClassPopup(false)
+          setLoader(true)
+          getClasses()
+          setTimeout(() => {
+            setLoader(false)
+            setAlert(true)
+            setAlertMessage('Successfully Deleted')
+          }, 2000)
+          setTimeout(() => {
+            setAlert(false)
+          }, 4000)
+        })
+        .catch((error) => {
+          setAlert(true)
+          setAlertMessage(error.data.message)
+          setTimeout(() => {
+            setAlert(false)
+          }, 2000)
+        })
+    } catch {
+      console.log("can't get data from server please try again ")
+    }
   }
 
   const handleDeleteLesson = () => {
-    axios.delete(`${process.env.REACT_APP_API_URL}/lesson/` + deleteData).then((res) => {
-      getLessons()
-      setDeletePopup(false)
-      setLoader(true)
-      setTimeout(() => {
-        setLoader(false)
-        setAlert(true)
-        setAlertMessage('Successfully Deleted')
-      }, 2000)
-      setTimeout(() => {
-        setAlert(false)
-      }, 4000)
-    })
+    try {
+      axios
+        .delete(`${process.env.REACT_APP_API_URL}/lesson/` + deleteData)
+        .then((res) => {
+          getLessons()
+          setDeletePopup(false)
+          setLoader(true)
+          setTimeout(() => {
+            setLoader(false)
+            setAlert(true)
+            setAlertMessage('Successfully Deleted')
+          }, 2000)
+          setTimeout(() => {
+            setAlert(false)
+          }, 4000)
+        })
+        .catch((error) => {
+          setAlert(true)
+          setAlertMessage(error.data.message)
+          setTimeout(() => {
+            setAlert(false)
+          }, 2000)
+        })
+    } catch {
+      console.log("can't get data from server please try again ")
+    }
   }
 
   const handleEdit = (data) => {
@@ -245,20 +290,31 @@ export default function Classes({ classdata, tutorialData, setAlertMessage, setA
       data.append('class_id', (lessonFormData.class_id = classId))
       data.append('duration', fileDuration)
 
-      axios.post(`${process.env.REACT_APP_API_URL}/lesson`, data).then((res) => {
-        setLoader(true)
-        setVisibleLesson(false)
-        getLessons()
-        setLessonFormData({})
-        setTimeout(() => {
-          setLoader(false)
-          setAlert(true)
-          setAlertMessage('Successfully Added')
-        }, 2000)
-        setTimeout(() => {
-          setAlert(false)
-        }, 4000)
-      })
+      try {
+        axios
+          .post(`${process.env.REACT_APP_API_URL}/lesson`, data)
+          .then((res) => {
+            setLoader(true)
+            setVisibleLesson(false)
+            getLessons()
+            setLessonFormData({})
+            setTimeout(() => {
+              setLoader(false)
+              setAlert(true)
+              setAlertMessage('Successfully Added')
+            }, 2000)
+            setTimeout(() => {
+              setAlert(false)
+            }, 4000)
+          })
+          .catch((error) => {
+            setAlert(true)
+            setAlertMessage(error.data.message)
+            setTimeout(() => {
+              setAlert(false)
+            }, 2000)
+          })
+      } catch {}
     }
   }
 
@@ -279,22 +335,33 @@ export default function Classes({ classdata, tutorialData, setAlertMessage, setA
         } else {
           classesData.status = 'active'
         }
-        axios
-          .put(`${process.env.REACT_APP_API_URL}/class/` + classesData.id, classesData)
-          .then((res) => {
-            setLoader(true)
-            setIsEdit(false)
-            getClasses()
-            setClassesData({})
-            setTimeout(() => {
-              setLoader(false)
+        try {
+          axios
+            .put(`${process.env.REACT_APP_API_URL}/class/` + classesData.id, classesData)
+            .then((res) => {
+              setLoader(true)
+              setIsEdit(false)
+              getClasses()
+              setClassesData({})
+              setTimeout(() => {
+                setLoader(false)
+                setAlert(true)
+                setAlertMessage('Successfully Updated')
+              }, 2000)
+              setTimeout(() => {
+                setAlert(false)
+              }, 4000)
+            })
+            .catch((error) => {
               setAlert(true)
-              setAlertMessage('Successfully Updated')
-            }, 2000)
-            setTimeout(() => {
-              setAlert(false)
-            }, 4000)
-          })
+              setAlertMessage(error.data.message)
+              setTimeout(() => {
+                setAlert(false)
+              }, 2000)
+            })
+        } catch {
+          console.log("can't get data from server please try again ")
+        }
       }
     } else {
       if (
@@ -309,20 +376,33 @@ export default function Classes({ classdata, tutorialData, setAlertMessage, setA
         event.preventDefault()
         classesData.status = 'active'
         classesData.tutorial_id = tutorialId
-        axios.post(`${process.env.REACT_APP_API_URL}/class`, classesData).then((res) => {
-          setVisible(false)
-          setLoader(true)
-          getClasses()
-          setClassesData({})
-          setTimeout(() => {
-            setLoader(false)
-            setAlertMessage('Successfully Added')
-            setAlert(true)
-          }, 2000)
-          setTimeout(() => {
-            setAlert(false)
-          }, 4000)
-        })
+        try {
+          axios
+            .post(`${process.env.REACT_APP_API_URL}/class`, classesData)
+            .then((res) => {
+              setVisible(false)
+              setLoader(true)
+              getClasses()
+              setClassesData({})
+              setTimeout(() => {
+                setLoader(false)
+                setAlertMessage('Successfully Added')
+                setAlert(true)
+              }, 2000)
+              setTimeout(() => {
+                setAlert(false)
+              }, 4000)
+            })
+            .catch((error) => {
+              setAlert(true)
+              setAlertMessage(error.data.message)
+              setTimeout(() => {
+                setAlert(false)
+              }, 2000)
+            })
+        } catch {
+          console.log("can't get data from server please try again ")
+        }
       }
       // }
     }
@@ -342,15 +422,11 @@ export default function Classes({ classdata, tutorialData, setAlertMessage, setA
     setValidatedLesson(false)
   }
 
-
-
-
   const handleChangetab = (name) => {
     setIsEdit(false)
     setLessonData([])
   }
 
- 
   return (
     <>
       <div className="dashboardPage__head">
@@ -434,7 +510,7 @@ export default function Classes({ classdata, tutorialData, setAlertMessage, setA
                   key={index}
                 >
                   <CAccordionHeader onClick={() => handleChangetab(data.name)}>
-                    {data.name}{' '}{data.id}
+                    {data.name} {data.id}
                   </CAccordionHeader>
                   <CAccordionBody>
                     {isEdit ? (
@@ -655,12 +731,12 @@ export default function Classes({ classdata, tutorialData, setAlertMessage, setA
                                                 <AudioPlayerCustom
                                                   url={item?.audio_url}
                                                   leassonIndex={idx}
-                                                  classIndex = {index}
+                                                  classIndex={index}
                                                   pauseDuration={item?.pauseDuration}
                                                   class_id={data?.id}
                                                   lesson_id={item?.id}
                                                   user_id={user?.id}
-                                                  TempDuration={item?.duration/1000}
+                                                  TempDuration={item?.duration / 1000}
                                                   audioData={audioData}
                                                   classId={classId}
                                                 />

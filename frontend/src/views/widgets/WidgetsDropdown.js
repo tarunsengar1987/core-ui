@@ -13,6 +13,8 @@ import { CChart, CChartBar, CChartLine } from '@coreui/react-chartjs'
 import CIcon from '@coreui/icons-react'
 import { cilArrowBottom, cilArrowTop, cilOptions } from '@coreui/icons'
 import axios from 'axios'
+import { Navigate, useNavigate } from 'react-router-dom'
+import Loader from '../pages/loader/Loader'
 
 const WidgetsDropdown = () => {
   const [tutorialCount, setTutorialCount] = useState('')
@@ -23,7 +25,12 @@ const WidgetsDropdown = () => {
   const [lessonData, setLessonData] = useState([])
   const [totalProgress, setTotalProgress] = useState('')
   const [totalLessonDurationsum, setTotalLessonDurationsum] = useState('')
+  const [classData1, setClassData1] = useState([])
+  const [tutorialData1, setTutorialData1] = useState([])
 
+  const [loader, setLoader] = useState(false)
+
+  const navigate = useNavigate()
   useEffect(() => {
     getTutorials()
     getUsers()
@@ -57,34 +64,81 @@ const WidgetsDropdown = () => {
     const data = JSON.parse(localStorage.getItem('userData'))
     let pauseDurationSum = 0
     axios.get(`${process.env.REACT_APP_API_URL}/audiorecord/` + data?.id).then((res) => {
-      debugger
       setUserData(res.data)
       res.data.map((time) => {
         pauseDurationSum += JSON.parse(time.pauseduration)
       })
-      getLessonDuration(pauseDurationSum)
+      getLessonDuration(pauseDurationSum, res.data)
     })
   }
 
-  const getLessonDuration = (pauseDurationSum) => {
+  const getLessonDuration = (pauseDurationSum, audioData) => {
     axios.get(`${process.env.REACT_APP_API_URL}/lessons`).then(async (res) => {
-      debugger
-      res.data.sort(function (a, b) {
-        return new Date(b.updatedAt) - new Date(a.updatedAt)
+      let filterAudio = res.data.filter((i) => {
+        return audioData.filter((audio) => {
+          if (i.id === JSON.parse(audio.lesson_Id)) {
+            return i
+          }
+        })
       })
-      setLessonData(res.data)
+
+      setLessonData(filterAudio)
       let sum = 0
       res?.data?.map((item) => {
         sum += item.duration
       })
+      console.log({pauseDurationSum,sum})
       setTotalLessonDurationsum(sum)
       setTotalProgress((pauseDurationSum / sum) * 100)
     })
   }
 
+  const handleNavigateRecentAudio = (classId) => {
+    setLoader(true)
+    axios.get(`${process.env.REACT_APP_API_URL}/classbyId/` + classId).then((classData) => {
+      console.log({ classData })
+      axios
+        .get(`${process.env.REACT_APP_API_URL}/class/` + classData.data[0].tutorial_id)
+        .then((tutorialdres) => {
+          axios.get(`${process.env.REACT_APP_API_URL}/tutorials`).then((tutorialData) => {
+            let filterTutorial = tutorialData.data.find(
+              (i) => i.id === classData.data[0].tutorial_id,
+            )
+            setTimeout(() => {
+              setLoader(false)
+
+              navigate('/tutorial/tutorial-details', {
+                state: { classdata: tutorialdres.data, tutorialData: filterTutorial },
+              })
+            }, 3000)
+          })
+
+          //   console.log({filterData})
+
+          // setTutorialData1(res.data)
+          // })
+        })
+    })
+
+    // let filterTutorial = tutorialData1.filter((elem) => {
+    //   return classData1.map((data) => {
+    //     if (elem.id == JSON.parse(data.tutorial_id)) {
+    //       return elem
+    //     }
+    //   })
+    // })
+    // let filterClassData = classData1.filter((data) => {
+    //   return tutorialData1.map((elem) => {
+    //     if (elem.id == JSON.parse(data.tutorial_id)) {
+    //       return elem
+    //     }
+    //   })
+    // })
+  }
   return (
     <CRow className="dashboardCards">
-      {console.log('useruseruser', user)}
+              <Loader isLoader={loader} />
+
       {user?.role === '1' ? (
         <CCol sm={6} lg={3}>
           <CWidgetStatsA
@@ -142,33 +196,38 @@ const WidgetsDropdown = () => {
           <div>
             <div className="row">
               <div className="col-md-6">
-              <div className="card p-4 h-100">
-                <h4>Line</h4>
-                <div className="chart-wrapper halfChart">
-                  <CChart
-                    type="doughnut"
-                    data={{
-                      labels: ['TotalProgress', 'Total'],
-                      datasets: [
-                        {
-                          backgroundColor: ['#41B883', '#E46651'],
-                          data: [totalProgress, 100],
-                        },
-                      ],
-                    }}
-                  />
-                </div>
-                <hr />
+                <div className="card p-4 h-100">
+                  <h4>Line</h4>
+                  {console.log({totalProgress})}
+                  <div className="chart-wrapper halfChart">
+                    <CChart
+                      type="doughnut"
+                      data={{
+                        labels: ['TotalProgress', 'Total'],
+                        datasets: [
+                          {
+                            backgroundColor: ['#41B883', '#E46651'],
+                            data: [totalProgress, 100],
+                          },
+                        ],
+                      }}
+                    />
+                  </div>
+                  <hr />
                 </div>
               </div>
               <div className="col-md-6">
                 <div className="card p-4 h-100 cart-right-part">
                   {console.log('lessonData', lessonData)}
-                  <h4 className='mb-3'>Recently Visited Audio</h4>
+                  <h4 className="mb-3">Recently Visited Audio</h4>
                   {lessonData.length > 0
                     ? lessonData
                         .slice([0], [10])
-                        .map((item, index) => <p>{item.name}</p>)
+                        .map((item, index) => (
+                          <p onClick={() => handleNavigateRecentAudio(item.class_id)}>
+                            {item.name}
+                          </p>
+                        ))
                     : 'You Did not visit any audio'}
                 </div>
               </div>

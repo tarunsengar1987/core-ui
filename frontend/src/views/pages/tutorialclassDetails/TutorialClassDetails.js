@@ -8,7 +8,7 @@ export default function TutorialClassDetails() {
   const location = useLocation()
   const [alertMessage, setAlertMessage] = useState('')
   const [alert, setAlert] = useState(false)
-
+  console.log({location})
   return (
     <div>
       <AppSidebar />

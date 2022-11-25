@@ -16,4 +16,7 @@ module.exports = function(app) {
 
    //get textCategory by id
    app.get("/api/class/:id", classController.getClassByTutorialId);
+   
+    //get classId  by id
+    app.get("/api/classbyId/:id", classController.getClassById);
 };
