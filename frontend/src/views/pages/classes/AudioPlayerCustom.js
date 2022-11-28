@@ -15,13 +15,14 @@ const AudioPlayerCustom = ({
   lesson_id,
   user_id,
   TempDuration,
-  audioData,
   leassonIndex,
   classIndex,
   classId,
+  user
 }) => {
   const [currentTime, setCurrentTime] = useState(pauseDuration ? pauseDuration : 0)
   const [duration, setDuration] = useState(0)
+  const [audioData, setAudioData] = useState([])
   const [isPlaying, setIsPlaying] = useState(false)
   const [volume, setVolume] = useState(1)
   const [seekDuration, setSeekDuration] = useState(pauseDuration ? pauseDuration : 0)
@@ -31,6 +32,8 @@ const AudioPlayerCustom = ({
   const handleTrackClick = (position) => {
     audioRef.current.currentTime = position
   }
+
+ 
 
   const handlePuase = () => {
     var data = {
@@ -47,7 +50,8 @@ const AudioPlayerCustom = ({
         return (newLessonData = elem)
       }
     })
-    if (newLessonData.lesson_Id == data.lesson_Id) {
+    if (newLessonData.lesson_Id == data.lesson_Id && newLessonData.user_Id == user.id) {
+      console.log(newLessonData.lesson_Id == data.lesson_Id && newLessonData.user_Id == user.id)
       try {
         axios
           .put(`${process.env.REACT_APP_API_URL}/audiorecord/${newLessonData.id}`, data)
@@ -55,35 +59,44 @@ const AudioPlayerCustom = ({
             console.log(res.data, 'update')
           })
           .catch((error) => {
-            setAlert(true)
-            setAlertMessage('no any audio data')
-            setTimeout(() => {
-              setAlert(false)
-            },2000)
+            // setAlert(true)
+            // setAlertMessage('no any audio data')
+            // setTimeout(() => {
+            //   setAlert(false)
+            // },2000)
           })
       } catch {
         console.log(' no any audio record ')
       }
     } else {
+      console.log("clicked")
       try {
         axios
           .post(`${process.env.REACT_APP_API_URL}/audiorecord`, data)
           .then((res) => {
             console.log(res.data, 'neww')
-            setAlert(true)
           })
           .catch((error) => {
-            setAlert(true)
-            setAlertMessage('no any audio data')
-            setTimeout(() => {
-              setAlert(false)
-            },2000)
+            // setAlert(true)
+            // setAlertMessage('no any audio data')
+            // setTimeout(() => {
+            //   setAlert(false)
+            // },2000)
           })
       } catch {
         console.log(' no any audio record ')
       }
     }
   }
+  useEffect(() => {
+    try {
+      axios.get(`${process.env.REACT_APP_API_URL}/audiorecord`).then((res) => {
+        setAudioData(res?.data)
+      })
+    } catch {
+      console.log("can't get data from server please try again ")
+    }
+  }, [handlePuase])
 
   useEffect(() => {
     if (isPlaying) {

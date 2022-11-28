@@ -131,8 +131,8 @@
   }
 }
 table {
-  border-collapse: separate;
-  border-spacing: 0 10px;
+  border-collapse: separate !important;
+  border-spacing: 0 10px !important;
   td,
   th {
     border: none !important;
@@ -153,7 +153,7 @@ table {
     tr {
       box-shadow: 0px 0px 8px 0px rgb(12 27 30 / 24%);
       border-radius: 15px !important;
-      border: 1px solid rgba(36, 112, 129, 0.1882352941);
+      border: none;
       overflow: hidden;
       &:nth-child(odd) {
         td,
@@ -331,8 +331,8 @@ table {
   line-height: 20px;
   margin: 8px 0 0 !important;
 }
-.custom-search{
- max-width: 510px;
+.custom-search {
+  max-width: 510px;
   margin-bottom: 25px;
 }
 .massageList {
@@ -379,5 +379,40 @@ table {
   .halfChart {
     max-width: 70px;
     margin: 0;
+  }
+}
+
+.spinner-border {
+  border: var(--bs-spinner-border-width) solid #17505c !important;
+  border-right-color: transparent !important;
+}
+.modal-title {
+  color: #17505c;
+}
+
+div.vr:empty {
+  display: none;
+}
+.dashboardCards {
+  .card-body > div {
+    width: 100%;
+  }
+  &-dataList {
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    gap: 5px;
+    font-size: 16px;
+    line-height: 20px;
+    font-weight: 400;
+    &-no {
+      font-weight: 600 !important;
+      font-size: 1.5rem !important;
+      line-height: 1.5;
+      display: block;
+    }
+  }
+  .card {
+    height: calc(100% - 1.5rem);
   }
 }

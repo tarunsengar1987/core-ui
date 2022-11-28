@@ -69,7 +69,6 @@ export default function Classes({ classdata, tutorialData, setAlertMessage, setA
   const [deleteClassPopup, setDeleteClassPopup] = useState(false)
   const [modalClassPopup, setModalClassPopup] = useState('')
   const [playDuration, setPlayDuration] = useState()
-  const [audioData, setAudioData] = useState([])
 
   useEffect(() => {
     setClassData(classdata)
@@ -78,15 +77,7 @@ export default function Classes({ classdata, tutorialData, setAlertMessage, setA
     setUser(data)
   }, [])
 
-  useEffect(() => {
-    try {
-      axios.get(`${process.env.REACT_APP_API_URL}/audiorecord`).then((res) => {
-        setAudioData(res?.data)
-      })
-    } catch {
-      console.log("can't get data from server please try again ")
-    }
-  }, [playDuration])
+
   useEffect(() => {
     getLessons()
   }, [classId])
@@ -99,8 +90,10 @@ export default function Classes({ classdata, tutorialData, setAlertMessage, setA
           let data = numAscending?.filter((i) => {
             return audioRecord?.data?.filter((x) => {
               if (i.id == JSON.parse(x.lesson_Id)) {
-                i.pauseDuration = x.pauseduration
-                return i
+                 if(x.user_Id == user.id){
+                   i.pauseDuration = x.pauseduration
+                   return i
+                  }
               }
             })
           })
@@ -737,8 +730,8 @@ export default function Classes({ classdata, tutorialData, setAlertMessage, setA
                                                   lesson_id={item?.id}
                                                   user_id={user?.id}
                                                   TempDuration={item?.duration / 1000}
-                                                  audioData={audioData}
                                                   classId={classId}
+                                                  user={user}
                                                 />
                                               </div>
                                             </CTableDataCell>

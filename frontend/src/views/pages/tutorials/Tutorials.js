@@ -450,7 +450,11 @@ export default function Tutorials() {
                   />
                 </CTableHeaderCell>
                 <CTableHeaderCell scope="col">View Classes</CTableHeaderCell>
-                <CTableHeaderCell scope="col">Progress</CTableHeaderCell>
+                {user?.role === '2' ? (
+                  <CTableHeaderCell scope="col">Progress</CTableHeaderCell>
+                ) : (
+                  ''
+                )}
                 {user.role === '1' ? <CTableHeaderCell scope="col">Actions</CTableHeaderCell> : ''}
               </CTableRow>
             </CTableHead>
@@ -495,32 +499,29 @@ export default function Tutorials() {
                           <CTableDataCell>
                             {totalProgress.map((item) => (
                               <>
-                                {' '}
                                 {data.id === item.tutorial_id ? (
-                                  
-                                      <div className="card card tutorial-progress-report h-100">
-                                        <h4>Line</h4>
-                                        <div className="chart-wrapper halfChart">
-                                          <CChart
-                                            type="doughnut"
-                                            data={{
-                                              // labels: ['TotalProgress', 'Total'],
-                                              datasets: [
-                                                {
-                                                  backgroundColor: ['#41B883', '#E46651'],
-                                                  data: [
-                                                    data.id === item.tutorial_id
-                                                      ? item.completed_percentage
-                                                      : '',
-                                                    100,
-                                                  ],
-                                                },
+                                  <div className="card card tutorial-progress-report h-100">
+                                    <h4>Line</h4>
+                                    <div className="chart-wrapper halfChart">
+                                      <CChart
+                                        type="doughnut"
+                                        data={{
+                                          // labels: ['TotalProgress', 'Total'],
+                                          datasets: [
+                                            {
+                                              backgroundColor: ['#41B883', '#E46651'],
+                                              data: [
+                                                data.id === item.tutorial_id
+                                                  ? item.completed_percentage
+                                                  : '',
+                                                100,
                                               ],
-                                            }}
-                                          />
-                                        </div>
-                                      </div>
-                                  
+                                            },
+                                          ],
+                                        }}
+                                      />
+                                    </div>
+                                  </div>
                                 ) : (
                                   ''
                                 )}
@@ -593,27 +594,27 @@ export default function Tutorials() {
                               <>
                                 {' '}
                                 {data.id === item.tutorial_id ? (
-                                      <div className="card tutorial-progress-report h-100">
-                                        <div className="chart-wrapper halfChart">
-                                          <CChart
-                                            type="doughnut"
-                                            data={{
-                                              // labels: ['TotalProgress', 'Total'],
-                                              datasets: [
-                                                {
-                                                  backgroundColor: ['#41B883', '#E46651'],
-                                                  data: [
-                                                    data.id === item.tutorial_id
-                                                      ? item.completed_percentage
-                                                      : '',
-                                                    100,
-                                                  ],
-                                                },
+                                  <div className="card tutorial-progress-report h-100">
+                                    <div className="chart-wrapper halfChart">
+                                      <CChart
+                                        type="doughnut"
+                                        data={{
+                                          // labels: ['TotalProgress', 'Total'],
+                                          datasets: [
+                                            {
+                                              backgroundColor: ['#41B883', '#E46651'],
+                                              data: [
+                                                data.id === item.tutorial_id
+                                                  ? item.completed_percentage
+                                                  : '',
+                                                100,
                                               ],
-                                            }}
-                                          />
-                                        </div>
-                                      </div>
+                                            },
+                                          ],
+                                        }}
+                                      />
+                                    </div>
+                                  </div>
                                 ) : (
                                   ''
                                 )}
