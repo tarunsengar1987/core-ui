@@ -490,9 +490,12 @@ export default function Tutorials() {
                         </CTableDataCell>
                         <CTableDataCell>
                           <div className="actionIconBtn">
-                            <span onClick={() => handleView(data)}>
-                              <CIcon icon={cilViewColumn} />
-                            </span>
+                          <CButton
+                              onClick={() => handleView(data)}
+                              className="bg-darkGreen border-darkGreen"
+                            >
+                              View
+                            </CButton>
                           </div>
                         </CTableDataCell>
                         {user?.role === '2' ? (
@@ -514,7 +517,11 @@ export default function Tutorials() {
                                                 data.id === item.tutorial_id
                                                   ? item.completed_percentage
                                                   : '',
+<<<<<<< Updated upstream
                                                 100,
+=======
+                                                  100 - item.completed_percentage ,
+>>>>>>> Stashed changes
                                               ],
                                             },
                                           ],
@@ -582,9 +589,12 @@ export default function Tutorials() {
                         </CTableDataCell>
                         <CTableDataCell>
                           <div className="actionIconBtn">
-                            <span onClick={() => handleView(data)}>
-                              <CIcon icon={cilViewColumn} />
-                            </span>
+                            <CButton
+                              onClick={() => handleView(data)}
+                              className="bg-darkGreen border-darkGreen"
+                            >
+                              View
+                            </CButton>
                           </div>
                         </CTableDataCell>
 
@@ -607,7 +617,11 @@ export default function Tutorials() {
                                                 data.id === item.tutorial_id
                                                   ? item.completed_percentage
                                                   : '',
+<<<<<<< Updated upstream
                                                 100,
+=======
+                                                  100 -item.completed_percentage ,
+>>>>>>> Stashed changes
                                               ],
                                             },
                                           ],

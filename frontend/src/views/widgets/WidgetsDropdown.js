@@ -172,45 +172,10 @@ const WidgetsDropdown = () => {
       })
     }, 3000)
 
-    // axios.get(`${process.env.REACT_APP_API_URL}/classbyId/` + classId).then((classData) => {
-    //   console.log({ classData })
-    //   axios
-    //     .get(`${process.env.REACT_APP_API_URL}/class/` + classData.data[0].tutorial_id)
-    //     .then((tutorialdres) => {
-    //       axios.get(`${process.env.REACT_APP_API_URL}/tutorials`).then((tutorialData) => {
-    //         let filterTutorial = tutorialData.data.find(
-    //           (i) => i.id === classData.data[0].tutorial_id,
-    //         )
-    //         setTimeout(() => {
-    //           setLoader(false)
-
-    //           navigate('/tutorial/tutorial-details', {
-    //             state: { classdata: classData, tutorialData: filterTutorial },
-    //           })
-    //         }, 3000)
-    //       })
-
-    //       //   console.log({filterData})
-
-    //       // setTutorialData1(res.data)
-    //       // })
     //     })
     // })
 
-    // let filterTutorial = tutorialData1.filter((elem) => {
-    //   return classData1.map((data) => {
-    //     if (elem.id == JSON.parse(data.tutorial_id)) {
-    //       return elem
-    //     }
-    //   })
-    // })
-    // let filterClassData = classData1.filter((data) => {
-    //   return tutorialData1.map((elem) => {
-    //     if (elem.id == JSON.parse(data.tutorial_id)) {
-    //       return elem
-    //     }
-    //   })
-    // })
+   
   }
   return (
     <CRow className="dashboardCards">
@@ -336,7 +301,11 @@ const WidgetsDropdown = () => {
                         datasets: [
                           {
                             backgroundColor: ['#41B883', '#E46651'],
+<<<<<<< Updated upstream
                             data: [totalProgress, 100 - totalProgress],
+=======
+                            data: [totalProgress,  100 - totalProgress],
+>>>>>>> Stashed changes
                           },
                         ],
                       }}

@@ -416,3 +416,37 @@ div.vr:empty {
     height: calc(100% - 1.5rem);
   }
 }
+.userProgressList {
+  &-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border: 1px solid #eee;
+    background: #fff;
+    border-radius: 10px;
+    padding: 20px;
+    margin: 20px 0;
+    .chart-wrapper {
+      width: 110px;
+    }
+  }
+  &-itemTitle {
+    color: #12404e;
+    font-size: 20px;
+    font-weight: 400;
+    margin: 0 0 12px;
+    b {
+      font-weight: 700;
+      color: #17505c;
+    }
+  }
+  &-itemInfo {
+    width: calc(100% - 120px);
+    p {
+      color: #12404e;
+      font-size: 14px;
+      opacity: 80%;
+      margin: 0;
+    }
+  }
+}

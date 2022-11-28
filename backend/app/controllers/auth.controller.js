@@ -111,7 +111,9 @@ exports.sendInvitation = (req, res) => {
           user.dataValues,
           decrypt(user.dataValues.password),
           data.dataValues,
-          decrypt(data.dataValues.password),
+          "",
+          "",
+          ""
         );
         res.send({ message: "Invitation sended successfully!" });
       });
@@ -136,8 +138,11 @@ exports.resetUser = (req, res) => {
           user.dataValues,
           decrypt(user.dataValues.password),
           data.dataValues,
-          decrypt(data.dataValues.password),
-          isRegister = true
+          isRegister = true,
+          "",
+          "",
+          ""
+         
         );
         res.send({ message: "Link send to your email successfully!" });
       });
