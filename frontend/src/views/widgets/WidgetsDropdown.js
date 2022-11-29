@@ -31,6 +31,7 @@ const WidgetsDropdown = () => {
   const [totalLessonDurationsum, setTotalLessonDurationsum] = useState('')
   const [classData, setClassData] = useState([])
   const [loader, setLoader] = useState(false)
+  const [active, setActive] = useState(0)
   const [tutorialData, setTutorialData] = useState([])
   // const [audioFilterData, setAudioFilterData] = useState([])
   console.log(activeUsers.length, inviteUsers.length, awaitingAprroveUsers.length)
@@ -182,8 +183,9 @@ const WidgetsDropdown = () => {
       console.log("can't get data from server please try again ")
     }
   }
-
+  
   const handleNavigateRecentAudio = (tutorial) => {
+    setActive(0)
     setLoader(true)
     setTimeout(() => {
       setLoader(false)
@@ -193,46 +195,11 @@ const WidgetsDropdown = () => {
       })
     }, 3000)
 
-    // axios.get(`${process.env.REACT_APP_API_URL}/classbyId/` + classId).then((classData) => {
-    //   console.log({ classData })
-    //   axios
-    //     .get(`${process.env.REACT_APP_API_URL}/class/` + classData.data[0].tutorial_id)
-    //     .then((tutorialdres) => {
-    //       axios.get(`${process.env.REACT_APP_API_URL}/tutorials`).then((tutorialData) => {
-    //         let filterTutorial = tutorialData.data.find(
-    //           (i) => i.id === classData.data[0].tutorial_id,
-    //         )
-    //         setTimeout(() => {
-    //           setLoader(false)
-
-    //           navigate('/tutorial/tutorial-details', {
-    //             state: { classdata: classData, tutorialData: filterTutorial },
-    //           })
-    //         }, 3000)
-    //       })
-
-    //       //   console.log({filterData})
-
-    //       // setTutorialData1(res.data)
-    //       // })
     //     })
     // })
-
-    // let filterTutorial = tutorialData1.filter((elem) => {
-    //   return classData1.map((data) => {
-    //     if (elem.id == JSON.parse(data.tutorial_id)) {
-    //       return elem
-    //     }
-    //   })
-    // })
-    // let filterClassData = classData1.filter((data) => {
-    //   return tutorialData1.map((elem) => {
-    //     if (elem.id == JSON.parse(data.tutorial_id)) {
-    //       return elem
-    //     }
-    //   })
-    // })
   }
+
+  console.log(lessonData, "lessonData");
   return (
     <CRow className="dashboardCards">
       <Loader isLoader={loader} />
@@ -300,7 +267,7 @@ const WidgetsDropdown = () => {
                     </span>
                     Awaiting approval
                   </div>
-                </div>
+                  </div>
               }
               // title="Users"
             />
@@ -341,7 +308,6 @@ const WidgetsDropdown = () => {
               color="danger"
               value={
                 <>
-                  0
                   <span className="fs-6 fw-normal">
                     {/* (-23.6% <CIcon icon={cilArrowBottom} />) */}
                   </span>
@@ -360,7 +326,6 @@ const WidgetsDropdown = () => {
             <div className="row">
               <div className="col-md-6">
                 <div className="card p-4 h-100">
-                  <h4>Line</h4>
                   {/* {console.log({ totalProgress })} */}
                   <div className="chart-wrapper halfChart">
                     <CChart
@@ -388,14 +353,21 @@ const WidgetsDropdown = () => {
               <div className="col-md-6">
                 <div className="card p-4 h-100 cart-right-part">
                   {/* {console.log('lessonData', lessonData)} */}
-                  <h4 className="mb-3">Recently Visited Audio</h4>
-                  {lessonData.length > 0
-                    ? lessonData
-                        .slice([0], [10])
-                        .map((item, index) => (
-                          <p onClick={() => handleNavigateRecentAudio(item)}>{item.name}</p>
-                        ))
-                    : 'You Did not visit any audio'}
+                  <h4 className="mb-3 visitedVideoTitle">Recently Visited Audio</h4>
+                  <ul className="visitedVideoList">
+                  {console.log({active})}
+                    {lessonData.length > 0
+                      ? lessonData
+                          .slice([0], [10])
+                          .map((item, index) => (
+                            <li onClick={() => {
+                              setActive(index);
+                              handleNavigateRecentAudio(item)}} 
+                             className= {active===index ? "visitedVideoList-item active": "visitedVideoList-item" }
+                            >{item.name}</li>
+                          ))
+                      : 'You Did not visit any audio'}
+                  </ul>
                 </div>
               </div>
             </div>

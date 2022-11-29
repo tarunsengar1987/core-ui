@@ -2,7 +2,7 @@ module.exports = {
   HOST: "localhost",
   USER: "root",
   PASSWORD: "root",
-  DB: "coreui",
+  DB: "coreuidb",
   dialect: "mysql",
   pool: {
     max: 5,

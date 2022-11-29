@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import {
   CTable,
   CTableBody,
@@ -6,6 +7,8 @@ import {
   CTableHeaderCell,
   CTableRow,
 } from '@coreui/react'
+=======
+>>>>>>> 33d3ee2402f4db645c7e7b4baabf8d61368ff525
 import { CChart } from '@coreui/react-chartjs'
 import axios from 'axios'
 import React, { useEffect, useState } from 'react'
@@ -17,13 +20,24 @@ export default function UserProgress() {
   const [lessonData, setLessonData] = useState([])
   const [totalProgress, setTotalProgress] = useState('')
   const [totalLessonDurationsum, setTotalLessonDurationsum] = useState('')
+  const [totalProgressUser, setTotalProgressUser] = useState([])
 
   const location = useLocation()
   debugger
 
   useEffect(() => {
     getUsersDetails()
+    getProgress()
   }, [])
+
+  const getProgress = () => {
+    axios
+      .get(`${process.env.REACT_APP_API_URL}/progress/` + location?.state?.userdata?.id)
+      .then((res) => {
+        debugger
+        setTotalProgressUser(res.data.data)
+      })
+  }
 
   const getUsersDetails = () => {
     let pauseDurationSum = 0
@@ -37,9 +51,14 @@ export default function UserProgress() {
           })
           getLessonDuration(pauseDurationSum)
         })
+<<<<<<< HEAD
     } catch {
       console.log("can't get data from server please try again ")
     }
+=======
+        getLessonDuration(pauseDurationSum)
+      })
+>>>>>>> 33d3ee2402f4db645c7e7b4baabf8d61368ff525
   }
 
   const getLessonDuration = (pauseDurationSum) => {
@@ -67,6 +86,7 @@ export default function UserProgress() {
         <div className="dashboardPage__root">
           <AppHeader />
           <div className="dashboardPage__inner">
+<<<<<<< HEAD
             <div className="user-progress-detail card">
               <CTable>
                 <CTableHead>
@@ -105,6 +125,35 @@ export default function UserProgress() {
                     : 'You Did not visit any audio'}
                 </CTableBody>
               </CTable>
+=======
+            <div className="userProgressList">
+              {console.log('totalProgressUser', totalProgressUser)}
+              { totalProgressUser.length > 0
+                    ? totalProgressUser.map((item) => (
+                <>
+                  {' '}
+                  <div className="userProgressList-item">
+                    <div className="userProgressList-itemInfo">
+                      <h5 className="userProgressList-itemTitle"><b>Tutorial Name:</b> {item.tutorial}</h5>
+                      <p>{item.tutorial}</p>
+                    </div>
+                    {console.log('totalProgressUser', item.tutorial)}
+                    <CChart
+                      type="doughnut"
+                      data={{
+                        // labels: ['TotalProgress', 'Total'],
+                        datasets: [
+                          {
+                            backgroundColor: ['#41B883', '#E46651'],
+                            data: [item.completed_percentage,   100 -item.completed_percentage ],
+                          },
+                        ],
+                      }}
+                    />
+                  </div>
+                </>
+              )): <h5 className="userProgressList-itemTitle">This User Did not visit any audio</h5> }
+>>>>>>> 33d3ee2402f4db645c7e7b4baabf8d61368ff525
             </div>
           </div>
         </div>

@@ -3,6 +3,7 @@
   cursor: pointer;
 }
 .dashboardCards .card {
+  cursor: pointer;
   .card-body {
     padding-bottom: 1rem !important;
   }
@@ -400,7 +401,7 @@ div.vr:empty {
   &-dataList {
     width: 100%;
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr 1fr;
+    grid-template-columns: 1fr 3fr;
     gap: 5px;
     font-size: 16px;
     line-height: 20px;
@@ -411,8 +412,72 @@ div.vr:empty {
       line-height: 1.5;
       display: block;
     }
+    & > div > div {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-direction: row-reverse;
+      .dashboardCards-dataList-no {
+        font-size: 1.4rem !important;
+        line-height: 1.2;
+        margin-right: 10px;
+      }
+    }
   }
   .card {
     height: calc(100% - 1.5rem);
+  }
+}
+.userProgressList {
+  &-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border: 1px solid #eee;
+    background: #fff;
+    border-radius: 10px;
+    padding: 20px;
+    margin: 20px 0;
+    .chart-wrapper {
+      width: 110px;
+    }
+  }
+  &-itemTitle {
+    color: #12404e;
+    font-size: 20px;
+    font-weight: 400;
+    margin: 0 0 12px;
+    b {
+      font-weight: 700;
+      color: #17505c;
+    }
+  }
+  &-itemInfo {
+    width: calc(100% - 120px);
+    p {
+      color: #12404e;
+      font-size: 14px;
+      opacity: 80%;
+      margin: 0;
+    }
+  }
+}
+
+.visitedVideoTitle {
+  font-weight: 700;
+  color: #17505c;
+  font-size: 24px;
+  margin: 0;
+  line-height: 38px;
+}
+.visitedVideoList {
+  padding-left: 25px;
+  &-item {
+    cursor: pointer;
+    margin-bottom: 5px;
+    &.active {
+      color: #408a99;
+      font-weight: 500;
+    }
   }
 }

@@ -25,9 +25,6 @@ verifyToken = (req, res, next) => {
   });
 };
 
-
-
-
  encrypt=(text)=>{
   var cipher = crypto.createCipher('aes-256-cbc', cypherKey)
   var crypted = cipher.update(text,'utf8','hex')

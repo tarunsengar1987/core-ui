@@ -54,6 +54,7 @@ const Message = () => {
   }
 
   const onChange = (evt) => {
+    debugger
     console.log('onChange fired with event info: ', evt.editor.getData())
     var newContent = evt.editor.getData()
     setContent(newContent)
@@ -193,6 +194,10 @@ const Message = () => {
                         blur: onBlur,
                         afterPaste: afterPaste,
                         change: onChange,
+                      }}
+                      config={{
+                        extraAllowedContent: 'div(*)',
+                        allowedContent: false,
                       }}
                     />
                     <CButton
