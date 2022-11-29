@@ -102,10 +102,15 @@ export default function Tutorials() {
   const getProgress = () => {
     const data = JSON.parse(localStorage.getItem('userData'))
     try {
-      axios.get(`${process.env.REACT_APP_API_URL}/progress/` + data.id).then((res) => {
-        debugger
-        setTotalProgress(res.data.data)
-      })
+      axios
+        .get(`${process.env.REACT_APP_API_URL}/progress/` + data?.id)
+        .then((res) => {
+          debugger
+          setTotalProgress(res?.data?.data)
+        })
+        .catch((error) => {
+          console.log(error.response.data.message)
+        })
     } catch {
       console.log("can't get data from server please try again ")
     }
@@ -503,68 +508,166 @@ export default function Tutorials() {
               />
             </CInputGroup>
           </CCol>
-          <CTable>
-            <CTableHead>
-              <CTableRow color="dark">
-                <CTableHeaderCell scope="col">
-                  Name
-                  <CIcon
-                    icon={assending ? cilArrowTop : cilArrowBottom}
-                    onClick={() => handleSort('name')}
-                  />
-                </CTableHeaderCell>
-                {/* <CTableHeaderCell scope="col">
+          <div className="table-responsive">
+            <CTable>
+              <CTableHead>
+                <CTableRow color="dark">
+                  <CTableHeaderCell scope="col">
+                    Name
+                    <CIcon
+                      icon={assending ? cilArrowTop : cilArrowBottom}
+                      onClick={() => handleSort('name')}
+                    />
+                  </CTableHeaderCell>
+                  {/* <CTableHeaderCell scope="col">
                   Descriptions
                   <CIcon
                     icon={assending ? cilArrowTop : cilArrowBottom}
                     onClick={() => handleSort('descriptions')}
                   />
                 </CTableHeaderCell> */}
-                <CTableHeaderCell scope="col">
-                  Status
-                  <CIcon
-                    icon={assending ? cilArrowTop : cilArrowBottom}
-                    onClick={() => handleSort('status')}
-                  />
-                </CTableHeaderCell>
-                {user.role !== '2' ? (
-                  <CTableHeaderCell scope="col">Active/Inactive</CTableHeaderCell>
-                ) : (
-                  ''
-                )}
-                <CTableHeaderCell scope="col">
-                  Created At
-                  <CIcon
-                    icon={assending ? cilArrowTop : cilArrowBottom}
-                    onClick={() => handleSort('createdAt')}
-                  />
-                </CTableHeaderCell>
-                <CTableHeaderCell scope="col">
-                  Updated At
-                  <CIcon
-                    icon={assending ? cilArrowTop : cilArrowBottom}
-                    onClick={() => handleSort('updatedAt')}
-                  />
-                </CTableHeaderCell>
-                <CTableHeaderCell scope="col">View Classes</CTableHeaderCell>
-                {user?.role === '2' ? (
-                  <CTableHeaderCell scope="col">Progress</CTableHeaderCell>
-                ) : (
-                  ''
-                )}
-                {user.role === '1' ? <CTableHeaderCell scope="col">Actions</CTableHeaderCell> : ''}
-              </CTableRow>
-            </CTableHead>
-            <CTableBody>
-              {isFilter
-                ? filteredResults.map((data, index) => (
-                    <React.Fragment key={index}>
-                      <CTableRow>
-                        <CTableDataCell>{data.name}</CTableDataCell>
-                        {/* <CTableDataCell>{data.descriptions}</CTableDataCell> */}
-                        <CTableDataCell>{data.status}</CTableDataCell>
+                  <CTableHeaderCell scope="col">
+                    Status
+                    <CIcon
+                      icon={assending ? cilArrowTop : cilArrowBottom}
+                      onClick={() => handleSort('status')}
+                    />
+                  </CTableHeaderCell>
+                  {user.role !== '2' ? (
+                    <CTableHeaderCell scope="col">Active/Inactive</CTableHeaderCell>
+                  ) : (
+                    ''
+                  )}
+                  <CTableHeaderCell scope="col">
+                    Created At
+                    <CIcon
+                      icon={assending ? cilArrowTop : cilArrowBottom}
+                      onClick={() => handleSort('createdAt')}
+                    />
+                  </CTableHeaderCell>
+                  <CTableHeaderCell scope="col">
+                    Updated At
+                    <CIcon
+                      icon={assending ? cilArrowTop : cilArrowBottom}
+                      onClick={() => handleSort('updatedAt')}
+                    />
+                  </CTableHeaderCell>
+                  <CTableHeaderCell scope="col">Actions</CTableHeaderCell>
+                  {user?.role === '2' ? (
+                    <CTableHeaderCell scope="col">Progress</CTableHeaderCell>
+                  ) : (
+                    ''
+                  )}
+                  {user.role === '1' ? <CTableHeaderCell scope="col"></CTableHeaderCell> : ''}
+                </CTableRow>
+              </CTableHead>
+              <CTableBody>
+                {isFilter
+                  ? filteredResults.map((data, index) => (
+                      <React.Fragment key={index}>
+                        <CTableRow>
+                          <CTableDataCell>{data.name}</CTableDataCell>
+                          {/* <CTableDataCell>{data.descriptions}</CTableDataCell> */}
+                          <CTableDataCell>{data.status}</CTableDataCell>
 
-                        <>
+                          <>
+                            {user.role === '1' ? (
+                              <CTableDataCell>
+                                <CFormSwitch
+                                  className="backgroundswitch"
+                                  defaultChecked={data.status === 'active' ? true : false}
+                                  id="formSwitchCheckDefault"
+                                  onClick={() => handleBlockUser(data)}
+                                />
+                              </CTableDataCell>
+                            ) : (
+                              ''
+                            )}
+                          </>
+
+                          <CTableDataCell>
+                            {moment(data?.createdAt).format('MM/DD/YYYY')}
+                          </CTableDataCell>
+                          <CTableDataCell>
+                            {moment(data?.updatedAt).format('MM/DD/YYYY')}
+                          </CTableDataCell>
+
+                          {user?.role === '2' ? (
+                            <CTableDataCell>
+                              {totalProgress.map((item) => (
+                                <>
+                                  {data.id === item.tutorial_id ? (
+                                    <div className="card card tutorial-progress-report h-100">
+                                      <h4>Line</h4>
+                                      <div className="chart-wrapper halfChart">
+                                        <CChart
+                                          type="doughnut"
+                                          data={{
+                                            // labels: ['TotalProgress', 'Total'],
+                                            datasets: [
+                                              {
+                                                backgroundColor: ['#41B883', '#E46651'],
+                                                data: [
+                                                  data.id === item.tutorial_id
+                                                    ? item.completed_percentage
+                                                    : '',
+                                                  100 - item.completed_percentage,
+                                                ],
+                                              },
+                                            ],
+                                          }}
+                                        />
+                                      </div>
+                                    </div>
+                                  ) : (
+                                    ''
+                                  )}
+                                </>
+                              ))}
+                            </CTableDataCell>
+                          ) : (
+                            ''
+                          )}
+                          {user.role === '1' ? (
+                            <CTableDataCell>
+                              <div className="actionIconBtn">
+                                <span
+                                  onClick={() => {
+                                    setDeleteData(data.id)
+                                    checkClsses(data.id)
+                                    //  setDeletePopup(!deletePopup)
+                                  }}
+                                >
+                                  <CIcon icon={cilDelete} />
+                                </span>
+
+                                <span onClick={() => handleEdit(data)}>
+                                  <CIcon icon={cilPencil} />
+                                </span>
+                              </div>
+                            </CTableDataCell>
+                          ) : (
+                            ''
+                          )}
+                          <CTableDataCell>
+                            <div className="actionIconBtn">
+                              <CButton
+                                onClick={() => handleView(data)}
+                                className="bg-darkGreen border-darkGreen"
+                              >
+                                View Classes
+                              </CButton>
+                            </div>
+                          </CTableDataCell>
+                        </CTableRow>
+                      </React.Fragment>
+                    ))
+                  : currentRecords.map((data, index) => (
+                      <React.Fragment key={index}>
+                        <CTableRow>
+                          <CTableDataCell>{data.name}</CTableDataCell>
+                          {/* <CTableDataCell>{data.descriptions}</CTableDataCell> */}
+                          <CTableDataCell>{data.status}</CTableDataCell>
                           {user.role === '1' ? (
                             <CTableDataCell>
                               <CFormSwitch
@@ -577,183 +680,85 @@ export default function Tutorials() {
                           ) : (
                             ''
                           )}
-                        </>
-
-                        <CTableDataCell>
-                          {moment(data?.createdAt).format('MM/DD/YYYY')}
-                        </CTableDataCell>
-                        <CTableDataCell>
-                          {moment(data?.updatedAt).format('MM/DD/YYYY')}
-                        </CTableDataCell>
-                        <CTableDataCell>
-                          <div className="actionIconBtn">
-                          <CButton
-                              onClick={() => handleView(data)}
-                              className="bg-darkGreen border-darkGreen"
-                            >
-                              View
-                            </CButton>
-                          </div>
-                        </CTableDataCell>
-                        {user?.role === '2' ? (
                           <CTableDataCell>
-                            {totalProgress.map((item) => (
-                              <>
-                                {data.id === item.tutorial_id ? (
-                                  <div className="card card tutorial-progress-report h-100">
-                                    <h4>Line</h4>
-                                    <div className="chart-wrapper halfChart">
-                                      <CChart
-                                        type="doughnut"
-                                        data={{
-                                          // labels: ['TotalProgress', 'Total'],
-                                          datasets: [
-                                            {
-                                              backgroundColor: ['#41B883', '#E46651'],
-                                              data: [
-                                                data.id === item.tutorial_id
-                                                  ? item.completed_percentage
-                                                  : '',
-                                                  100 - item.completed_percentage ,
-                                              ],
-                                            },
-                                          ],
-                                        }}
-                                      />
-                                    </div>
-                                  </div>
-                                ) : (
-                                  ''
-                                )}
-                              </>
-                            ))}
+                            {moment(data?.createdAt).format('MM/DD/YYYY')}
                           </CTableDataCell>
-                        ) : (
-                          ''
-                        )}
-                        {user.role === '1' ? (
+                          <CTableDataCell>
+                            {moment(data?.updatedAt).format('MM/DD/YYYY')}
+                          </CTableDataCell>
+                          {user?.role === '2' ? (
+                            <CTableDataCell>
+                              {totalProgress.map((item) => (
+                                <>
+                                  {' '}
+                                  {data.id === item.tutorial_id ? (
+                                    <div className="card tutorial-progress-report h-100">
+                                      <div className="chart-wrapper halfChart">
+                                        <CChart
+                                          type="doughnut"
+                                          data={{
+                                            // labels: ['TotalProgress', 'Total'],
+                                            datasets: [
+                                              {
+                                                backgroundColor: ['#41B883', '#E46651'],
+                                                data: [
+                                                  data.id === item.tutorial_id
+                                                    ? item.completed_percentage
+                                                    : '',
+                                                  100 - item.completed_percentage,
+                                                ],
+                                              },
+                                            ],
+                                          }}
+                                        />
+                                      </div>
+                                    </div>
+                                  ) : (
+                                    ''
+                                  )}
+                                </>
+                              ))}
+                            </CTableDataCell>
+                          ) : (
+                            ''
+                          )}
+                          {user.role === '1' ? (
+                            <CTableDataCell>
+                              <>
+                                <div className="actionIconBtn">
+                                  <span
+                                    onClick={() => {
+                                      setDeleteData(data.id)
+                                      checkClsses(data.id)
+                                    }}
+                                  >
+                                    <CIcon icon={cilDelete} />
+                                  </span>
+                                  <span onClick={() => handleEdit(data)}>
+                                    <CIcon icon={cilPencil} />
+                                  </span>
+                                </div>
+                              </>
+                            </CTableDataCell>
+                          ) : (
+                            ''
+                          )}{' '}
                           <CTableDataCell>
                             <div className="actionIconBtn">
-                              <span
-                                onClick={() => {
-                                  setDeleteData(data.id)
-                                  checkClsses(data.id)
-                                  //  setDeletePopup(!deletePopup)
-                                }}
+                              <CButton
+                                onClick={() => handleView(data)}
+                                className="bg-darkGreen border-darkGreen"
                               >
-                                <CIcon icon={cilDelete} />
-                              </span>
-
-                              <span onClick={() => handleEdit(data)}>
-                                <CIcon icon={cilPencil} />
-                              </span>
+                                View Classes
+                              </CButton>
                             </div>
                           </CTableDataCell>
-                        ) : (
-                          ''
-                        )}
-                      </CTableRow>
-                    </React.Fragment>
-                  ))
-                : currentRecords.map((data, index) => (
-                    <React.Fragment key={index}>
-                      <CTableRow>
-                        <CTableDataCell>{data.name}</CTableDataCell>
-                        {/* <CTableDataCell>{data.descriptions}</CTableDataCell> */}
-                        <CTableDataCell>{data.status}</CTableDataCell>
-                        {user.role === '1' ? (
-                          <CTableDataCell>
-                            <CFormSwitch
-                              className="backgroundswitch"
-                              defaultChecked={data.status === 'active' ? true : false}
-                              id="formSwitchCheckDefault"
-                              onClick={() => handleBlockUser(data)}
-                            />
-                          </CTableDataCell>
-                        ) : (
-                          ''
-                        )}
-
-                        <CTableDataCell>
-                          {moment(data?.createdAt).format('MM/DD/YYYY')}
-                        </CTableDataCell>
-                        <CTableDataCell>
-                          {moment(data?.updatedAt).format('MM/DD/YYYY')}
-                        </CTableDataCell>
-                        <CTableDataCell>
-                          <div className="actionIconBtn">
-                            <CButton
-                              onClick={() => handleView(data)}
-                              className="bg-darkGreen border-darkGreen"
-                            >
-                              View
-                            </CButton>
-                          </div>
-                        </CTableDataCell>
-
-                        {user?.role === '2' ? (
-                          <CTableDataCell>
-                            {totalProgress.map((item) => (
-                              <>
-                                {' '}
-                                {data.id === item.tutorial_id ? (
-                                  <div className="card tutorial-progress-report h-100">
-                                    <div className="chart-wrapper halfChart">
-                                      <CChart
-                                        type="doughnut"
-                                        data={{
-                                          // labels: ['TotalProgress', 'Total'],
-                                          datasets: [
-                                            {
-                                              backgroundColor: ['#41B883', '#E46651'],
-                                              data: [
-                                                data.id === item.tutorial_id
-                                                  ? item.completed_percentage
-                                                  : '',
-                                                  100 -item.completed_percentage ,
-                                              ],
-                                            },
-                                          ],
-                                        }}
-                                      />
-                                    </div>
-                                  </div>
-                                ) : (
-                                  ''
-                                )}
-                              </>
-                            ))}
-                          </CTableDataCell>
-                        ) : (
-                          ''
-                        )}
-
-                        {user.role === '1' ? (
-                          <CTableDataCell>
-                            <>
-                              <div className="actionIconBtn">
-                                <span
-                                  onClick={() => {
-                                    setDeleteData(data.id)
-                                    checkClsses(data.id)
-                                  }}
-                                >
-                                  <CIcon icon={cilDelete} />
-                                </span>
-                                <span onClick={() => handleEdit(data)}>
-                                  <CIcon icon={cilPencil} />
-                                </span>
-                              </div>
-                            </>
-                          </CTableDataCell>
-                        ) : (
-                          ''
-                        )}
-                      </CTableRow>
-                    </React.Fragment>
-                  ))}
-            </CTableBody>
-          </CTable>
+                        </CTableRow>
+                      </React.Fragment>
+                    ))}
+              </CTableBody>
+            </CTable>
+          </div>
 
           <CModal visible={deletePopup} onClose={() => setDeletePopup(false)}>
             <CModalBody>{modalPopup}</CModalBody>

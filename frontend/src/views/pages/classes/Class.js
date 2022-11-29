@@ -75,8 +75,7 @@ export default function Classes({ classdata, tutorialData, setAlertMessage, setA
     getClasses()
     const data = JSON.parse(localStorage.getItem('userData'))
     setUser(data)
-  }, [])
-
+  }, [lessonData])
 
   useEffect(() => {
     getLessons()
@@ -90,10 +89,10 @@ export default function Classes({ classdata, tutorialData, setAlertMessage, setA
           let data = numAscending?.filter((i) => {
             return audioRecord?.data?.filter((x) => {
               if (i.id == JSON.parse(x.lesson_Id)) {
-                 if(x.user_Id == user.id){
-                   i.pauseDuration = x.pauseduration
-                   return i
-                  }
+                if (x.user_Id == user.id) {
+                  i.pauseDuration = x.pauseduration
+                  return i
+                }
               }
             })
           })
@@ -161,7 +160,7 @@ export default function Classes({ classdata, tutorialData, setAlertMessage, setA
       const reader = new FileReader()
       reader.onload = () => {
         const media = new Audio(reader.result)
-        media.onloadedmetadata = () => resolve(media.duration )
+        media.onloadedmetadata = () => resolve(media.duration)
       }
       reader.readAsDataURL(file)
       reader.onerror = (error) => reject(error)
@@ -684,83 +683,85 @@ export default function Classes({ classdata, tutorialData, setAlertMessage, setA
                         )}
                         <div className="lassonList">
                           {data.id === classId && (
-                            <CTable>
-                              <CTableHead>
-                                <CTableRow color="dark">
-                                  {lessonData.length > 0 ? (
-                                    <>
-                                      <CTableHeaderCell scope="col">Order No.</CTableHeaderCell>
-                                      <CTableHeaderCell scope="col">Name</CTableHeaderCell>
-                                      <CTableHeaderCell scope="col">Audio</CTableHeaderCell>
-                                      {user?.role !== '2' ? (
-                                        <CTableHeaderCell scope="col">Actions</CTableHeaderCell>
-                                      ) : (
-                                        ''
-                                      )}
-                                    </>
-                                  ) : (
-                                    ''
-                                  )}
-                                </CTableRow>
-                              </CTableHead>
-                              <CTableBody>
-                                {lessonData.length > 0
-                                  ? lessonData.map((item, idx) => {
-                                      return (
-                                        <CTableRow>
-                                          <>
-                                            <CTableDataCell>
-                                              <div className="tutorialDetailsList__item">
-                                                {item.order}
-                                              </div>
-                                            </CTableDataCell>
-                                            <CTableDataCell>
-                                              <div className="tutorialDetailsList__item">
-                                                {item.name}
-                                              </div>
-                                            </CTableDataCell>
-                                            <CTableDataCell>
-                                              <div className="tutorialDetailsList__item">
-                                                <AudioPlayerCustom
-                                                  url={item?.audio_url}
-                                                  leassonIndex={idx}
-                                                  classIndex={index}
-                                                  pauseDuration={item?.pauseDuration}
-                                                  class_id={data?.id}
-                                                  lesson_id={item?.id}
-                                                  user_id={user?.id}
-                                                  TempDuration={item?.duration / 1000}
-                                                  classId={classId}
-                                                  user={user}
-                                                />
-                                              </div>
-                                            </CTableDataCell>
-                                            {user?.role !== '2' ? (
-                                              <CTableDataCell style={{ position: 'relative' }}>
-                                                <div className="actionIconBtn">
-                                                  <span
-                                                    onClick={() => {
-                                                      setDeletePopup(true)
-                                                      setModalPopup(
-                                                        'Are you sure want to delete this tutorial ?',
-                                                      )
-                                                      setDeleteData(item?.id)
-                                                    }}
-                                                  >
-                                                    <CIcon icon={cilDelete} />
-                                                  </span>
+                            <div className="table-responsive">
+                              <CTable>
+                                <CTableHead>
+                                  <CTableRow color="dark">
+                                    {lessonData.length > 0 ? (
+                                      <>
+                                        <CTableHeaderCell scope="col">Order No.</CTableHeaderCell>
+                                        <CTableHeaderCell scope="col">Name</CTableHeaderCell>
+                                        <CTableHeaderCell scope="col">Audio</CTableHeaderCell>
+                                        {user?.role !== '2' ? (
+                                          <CTableHeaderCell scope="col">Actions</CTableHeaderCell>
+                                        ) : (
+                                          ''
+                                        )}
+                                      </>
+                                    ) : (
+                                      ''
+                                    )}
+                                  </CTableRow>
+                                </CTableHead>
+                                <CTableBody>
+                                  {lessonData.length > 0
+                                    ? lessonData.map((item, idx) => {
+                                        return (
+                                          <CTableRow>
+                                            <>
+                                              <CTableDataCell>
+                                                <div className="tutorialDetailsList__item">
+                                                  {item.order}
                                                 </div>
                                               </CTableDataCell>
-                                            ) : (
-                                              ''
-                                            )}
-                                          </>
-                                        </CTableRow>
-                                      )
-                                    })
-                                  : 'Lessons not found'}
-                              </CTableBody>
-                            </CTable>
+                                              <CTableDataCell>
+                                                <div className="tutorialDetailsList__item">
+                                                  {item.name}
+                                                </div>
+                                              </CTableDataCell>
+                                              <CTableDataCell>
+                                                <div className="tutorialDetailsList__item">
+                                                  <AudioPlayerCustom
+                                                    url={item?.audio_url}
+                                                    leassonIndex={idx}
+                                                    classIndex={index}
+                                                    pauseDuration={item?.pauseDuration}
+                                                    class_id={data?.id}
+                                                    lesson_id={item?.id}
+                                                    user_id={user?.id}
+                                                    TempDuration={item?.duration / 1000}
+                                                    classId={classId}
+                                                    user={user}
+                                                  />
+                                                </div>
+                                              </CTableDataCell>
+                                              {user?.role !== '2' ? (
+                                                <CTableDataCell style={{ position: 'relative' }}>
+                                                  <div className="actionIconBtn">
+                                                    <span
+                                                      onClick={() => {
+                                                        setDeletePopup(true)
+                                                        setModalPopup(
+                                                          'Are you sure want to delete this tutorial ?',
+                                                        )
+                                                        setDeleteData(item?.id)
+                                                      }}
+                                                    >
+                                                      <CIcon icon={cilDelete} />
+                                                    </span>
+                                                  </div>
+                                                </CTableDataCell>
+                                              ) : (
+                                                ''
+                                              )}
+                                            </>
+                                          </CTableRow>
+                                        )
+                                      })
+                                    : 'Lessons not found'}
+                                </CTableBody>
+                              </CTable>
+                            </div>
                           )}
                         </div>
                       </>

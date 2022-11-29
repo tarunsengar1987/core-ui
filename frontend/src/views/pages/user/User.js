@@ -564,229 +564,237 @@ export default function User() {
                 />
               </CInputGroup>
             </CCol>
-            <CTable>
-              <CTableHead>
-                <CTableRow color="dark">
-                  <CTableHeaderCell scope="col">
-                    Name{' '}
-                    <CIcon
-                      icon={assending ? cilArrowTop : cilArrowBottom}
-                      onClick={() => handleSort('username')}
-                    />
-                  </CTableHeaderCell>
-                  <CTableHeaderCell scope="col">
-                    Email
-                    <CIcon
-                      icon={assending ? cilArrowTop : cilArrowBottom}
-                      onClick={() => handleSort('email')}
-                    />
-                  </CTableHeaderCell>
-                  <CTableHeaderCell scope="col">
-                    Status
-                    <CIcon
-                      icon={assending ? cilArrowTop : cilArrowBottom}
-                      onClick={() => handleSort('status')}
-                    />
-                  </CTableHeaderCell>
-                  <CTableHeaderCell scope="col">Block/Unblock</CTableHeaderCell>
-                  <CTableHeaderCell scope="col">
-                    Created At
-                    <CIcon
-                      icon={assending ? cilArrowTop : cilArrowBottom}
-                      onClick={() => handleSort('createdAt')}
-                    />
-                  </CTableHeaderCell>
-                  <CTableHeaderCell scope="col">
-                    Updated At
-                    <CIcon
-                      icon={assending ? cilArrowTop : cilArrowBottom}
-                      onClick={() => handleSort('updatedAt')}
-                    />
-                  </CTableHeaderCell>
+            <div className="table-responsive">
+              <CTable>
+                <CTableHead>
+                  <CTableRow color="dark">
+                    <CTableHeaderCell scope="col">
+                      Name{' '}
+                      <CIcon
+                        icon={assending ? cilArrowTop : cilArrowBottom}
+                        onClick={() => handleSort('username')}
+                      />
+                    </CTableHeaderCell>
+                    <CTableHeaderCell scope="col">
+                      Email
+                      <CIcon
+                        icon={assending ? cilArrowTop : cilArrowBottom}
+                        onClick={() => handleSort('email')}
+                      />
+                    </CTableHeaderCell>
+                    <CTableHeaderCell scope="col">
+                      Status
+                      <CIcon
+                        icon={assending ? cilArrowTop : cilArrowBottom}
+                        onClick={() => handleSort('status')}
+                      />
+                    </CTableHeaderCell>
+                    <CTableHeaderCell scope="col">Block/Unblock</CTableHeaderCell>
+                    <CTableHeaderCell scope="col">
+                      Created At
+                      <CIcon
+                        icon={assending ? cilArrowTop : cilArrowBottom}
+                        onClick={() => handleSort('createdAt')}
+                      />
+                    </CTableHeaderCell>
+                    <CTableHeaderCell scope="col">
+                      Updated At
+                      <CIcon
+                        icon={assending ? cilArrowTop : cilArrowBottom}
+                        onClick={() => handleSort('updatedAt')}
+                      />
+                    </CTableHeaderCell>
 
-                  <CTableHeaderCell scope="col">Actions</CTableHeaderCell>
-                </CTableRow>
-              </CTableHead>
-              <CTableBody>
-                {isFilter
-                  ? filteredResults
-                      ?.filter((option) =>
-                        `${option.status}`.toLowerCase().includes(statusValue?.toLowerCase()),
-                      )
-                      .map((data) => {
-                        console.log(data)
-                        if (data.role != '1') {
-                          return (
-                            <>
-                              <CTableRow>
-                                <CTableDataCell>{data.username}</CTableDataCell>
-                                <CTableDataCell>{data.email}</CTableDataCell>
-                                <CTableDataCell>{data.status} </CTableDataCell>
-                                <CTableDataCell>
-                                  <CFormSwitch
-                                    className="backgroundswitch"
-                                    disabled={data.status === 'Invited' ? true : false}
-                                    defaultChecked={data.status === 'blocked' ? true : false}
-                                    id="formSwitchCheckDefault"
-                                    onClick={() => handleBlockUser(data)}
-                                  />
-                                </CTableDataCell>
-                                <CTableDataCell>
-                                  {moment(data?.createdAt).format('MM/DD/YYYY')}
-                                </CTableDataCell>
-                                <CTableDataCell>
-                                  {moment(data?.updatedAt).format('MM/DD/YYYY')}
-                                </CTableDataCell>
-                                <CTableDataCell>
-                                  <div className="actionIconBtn">
-                                    {/* <span onClick={() => setDeletePopup(!deletePopup)}>
+                    <CTableHeaderCell scope="col">Actions</CTableHeaderCell>
+                  </CTableRow>
+                </CTableHead>
+                <CTableBody>
+                  {isFilter
+                    ? filteredResults
+                        ?.filter((option) =>
+                          `${option.status}`.toLowerCase().includes(statusValue?.toLowerCase()),
+                        )
+                        .map((data) => {
+                          console.log(data)
+                          if (data.role != '1') {
+                            return (
+                              <>
+                                <CTableRow>
+                                  <CTableDataCell>{data.username}</CTableDataCell>
+                                  <CTableDataCell>{data.email}</CTableDataCell>
+                                  <CTableDataCell>{data.status} </CTableDataCell>
+                                  <CTableDataCell>
+                                    <CFormSwitch
+                                      className="backgroundswitch"
+                                      disabled={data.status === 'Invited' ? true : false}
+                                      defaultChecked={data.status === 'blocked' ? true : false}
+                                      id="formSwitchCheckDefault"
+                                      onClick={() => handleBlockUser(data)}
+                                    />
+                                  </CTableDataCell>
+                                  <CTableDataCell>
+                                    {moment(data?.createdAt).format('MM/DD/YYYY')}
+                                  </CTableDataCell>
+                                  <CTableDataCell>
+                                    {moment(data?.updatedAt).format('MM/DD/YYYY')}
+                                  </CTableDataCell>
+                                  <CTableDataCell>
+                                    <div className="actionIconBtn">
+                                      {/* <span onClick={() => setDeletePopup(!deletePopup)}>
                                   <CIcon icon={cilDelete} />
                                 </span> */}
-                                    <span onClick={() => handleEdit(data)}>
-                                      <CIcon icon={cilPencil} />
-                                    </span>
-                                    {data.status === 'active' ? (
-                                      <></>
-                                    ) : (
-                                      <>
-                                        {' '}
-                                        <CButton
-                                          onClick={() => handleUserInvite(data)}
-                                          className="bg-darkGreen border-darkGreen"
-                                        >
-                                          {data.status === 'active' ? (
-                                            <></>
-                                          ) : (
-                                            <>
-                                              {data.status === 'Awaiting approval'
-                                                ? 'Approve'
-                                                : 'Invite'}
-                                            </>
-                                          )}
-                                        </CButton>{' '}
-                                      </>
-                                    )}
-                                  </div>
-                                </CTableDataCell>
-                                <CTableDataCell>
-                                  {' '}
-                                  <CButton
-                                    onClick={() => handleUserViewProgress(data)}
-                                    className="bg-darkGreen border-darkGreen"
-                                  >
-                                    View Progress
-                                  </CButton>{' '}
-                                </CTableDataCell>
-                                {/* <CTableDataCell>Cell</CTableDataCell> */}
-                              </CTableRow>
-                              <CModal visible={deletePopup} onClose={() => setDeletePopup(false)}>
-                                <CModalBody>Are you sure want to delete?</CModalBody>
-                                <CModalFooter>
-                                  <CButton color="secondary" onClick={() => setDeletePopup(false)}>
-                                    Close
-                                  </CButton>
-                                  <CButton color="primary" onClick={() => handleDelete(data)}>
-                                    Delete
-                                  </CButton>
-                                </CModalFooter>
-                              </CModal>
-                            </>
-                          )
-                        } else {
-                          ;('')
-                        }
-                      })
-                  : currentRecords
-                      .filter((option) =>
-                        `${option.status}`.toLowerCase().includes(statusValue.toLowerCase()),
-                      )
-                      .map((data) => {
-                        console.log(data)
-                        if (data.role != '1') {
-                          return (
-                            <>
-                              <CTableRow>
-                                <CTableDataCell>{data.username}</CTableDataCell>
-                                <CTableDataCell>{data.email}</CTableDataCell>
-                                <CTableDataCell>{data.status}</CTableDataCell>
-                                <CTableDataCell>
-                                  <CFormSwitch
-                                    className="backgroundswitch"
-                                    disabled={
-                                      data.status === 'Invited' ||
-                                      data.status === 'Awaiting approval'
-                                        ? true
-                                        : false
-                                    }
-                                    defaultChecked={data.status === 'blocked' ? true : false}
-                                    id="formSwitchCheckDefault"
-                                    onClick={() => handleBlockUser(data)}
-                                  />
-                                </CTableDataCell>
-                                <CTableDataCell>
-                                  {moment(data?.createdAt).format('MM/DD/YYYY')}
-                                </CTableDataCell>
-                                <CTableDataCell>
-                                  {moment(data?.updatedAt).format('MM/DD/YYYY')}
-                                </CTableDataCell>
+                                      <span onClick={() => handleEdit(data)}>
+                                        <CIcon icon={cilPencil} />
+                                      </span>
+                                      {data.status === 'active' ? (
+                                        <></>
+                                      ) : (
+                                        <>
+                                          {' '}
+                                          <CButton
+                                            onClick={() => handleUserInvite(data)}
+                                            className="bg-darkGreen border-darkGreen"
+                                          >
+                                            {data.status === 'active' ? (
+                                              <></>
+                                            ) : (
+                                              <>
+                                                {data.status === 'Awaiting approval'
+                                                  ? 'Approve'
+                                                  : 'Invite'}
+                                              </>
+                                            )}
+                                          </CButton>{' '}
+                                        </>
+                                      )}
+                                    </div>
+                                  </CTableDataCell>
+                                  <CTableDataCell>
+                                    {' '}
+                                    <CButton
+                                      onClick={() => handleUserViewProgress(data)}
+                                      className="bg-darkGreen border-darkGreen"
+                                    >
+                                      View Progress
+                                    </CButton>{' '}
+                                  </CTableDataCell>
+                                  {/* <CTableDataCell>Cell</CTableDataCell> */}
+                                </CTableRow>
+                                <CModal visible={deletePopup} onClose={() => setDeletePopup(false)}>
+                                  <CModalBody>Are you sure want to delete?</CModalBody>
+                                  <CModalFooter>
+                                    <CButton
+                                      color="secondary"
+                                      onClick={() => setDeletePopup(false)}
+                                    >
+                                      Close
+                                    </CButton>
+                                    <CButton color="primary" onClick={() => handleDelete(data)}>
+                                      Delete
+                                    </CButton>
+                                  </CModalFooter>
+                                </CModal>
+                              </>
+                            )
+                          } else {
+                            ;('')
+                          }
+                        })
+                    : currentRecords
+                        .filter((option) =>
+                          `${option.status}`.toLowerCase().includes(statusValue.toLowerCase()),
+                        )
+                        .map((data) => {
+                          console.log(data)
+                          if (data.role != '1') {
+                            return (
+                              <>
+                                <CTableRow>
+                                  <CTableDataCell>{data.username}</CTableDataCell>
+                                  <CTableDataCell>{data.email}</CTableDataCell>
+                                  <CTableDataCell>{data.status}</CTableDataCell>
+                                  <CTableDataCell>
+                                    <CFormSwitch
+                                      className="backgroundswitch"
+                                      disabled={
+                                        data.status === 'Invited' ||
+                                        data.status === 'Awaiting approval'
+                                          ? true
+                                          : false
+                                      }
+                                      defaultChecked={data.status === 'blocked' ? true : false}
+                                      id="formSwitchCheckDefault"
+                                      onClick={() => handleBlockUser(data)}
+                                    />
+                                  </CTableDataCell>
+                                  <CTableDataCell>
+                                    {moment(data?.createdAt).format('MM/DD/YYYY')}
+                                  </CTableDataCell>
+                                  <CTableDataCell>
+                                    {moment(data?.updatedAt).format('MM/DD/YYYY')}
+                                  </CTableDataCell>
 
-                                <CTableDataCell>
-                                  <div className="actionIconBtn">
-                                    {/* <span onClick={() => setDeletePopup(!deletePopup)}>
+                                  <CTableDataCell>
+                                    <div className="actionIconBtn">
+                                      {/* <span onClick={() => setDeletePopup(!deletePopup)}>
                                   <CIcon icon={cilDelete} />
                                 </span> */}
-                                    <span onClick={() => handleEdit(data)}>
-                                      <CIcon icon={cilPencil} />
-                                    </span>
-                                    {data.status === 'active' ? (
-                                      <></>
-                                    ) : (
-                                      <>
-                                        {' '}
-                                        <CButton
-                                          onClick={() => handleUserInvite(data)}
-                                          className="bg-darkGreen border-darkGreen"
-                                        >
-                                          {data.status === 'active' ? (
-                                            <></>
-                                          ) : (
-                                            <>
-                                              {data.status === 'Awaiting approval'
-                                                ? 'Approve'
-                                                : 'Invite'}
-                                            </>
-                                          )}
-                                        </CButton>{' '}
-                                      </>
-                                    )}
-                                  </div>
-                                </CTableDataCell>
-                                <CTableDataCell>
-                                  <CButton
-                                    onClick={() => handleUserViewProgress(data)}
-                                    className="bg-darkGreen border-darkGreen"
-                                  >
-                                    View Progress
-                                  </CButton>
-                                </CTableDataCell>
-                              </CTableRow>
-                              <CModal visible={deletePopup} onClose={() => setDeletePopup(false)}>
-                                <CModalBody>Are you sure want to delete?</CModalBody>
-                                <CModalFooter>
-                                  <CButton color="secondary" onClick={() => setDeletePopup(false)}>
-                                    Close
-                                  </CButton>
-                                  <CButton color="primary" onClick={() => handleDelete(data)}>
-                                    Delete
-                                  </CButton>
-                                </CModalFooter>
-                              </CModal>
-                            </>
-                          )
-                        }
-                      })}
-              </CTableBody>
-            </CTable>
+                                      <span onClick={() => handleEdit(data)}>
+                                        <CIcon icon={cilPencil} />
+                                      </span>
+                                      {data.status === 'active' ? (
+                                        <></>
+                                      ) : (
+                                        <>
+                                          {' '}
+                                          <CButton
+                                            onClick={() => handleUserInvite(data)}
+                                            className="bg-darkGreen border-darkGreen"
+                                          >
+                                            {data.status === 'active' ? (
+                                              <></>
+                                            ) : (
+                                              <>
+                                                {data.status === 'Awaiting approval'
+                                                  ? 'Approve'
+                                                  : 'Invite'}
+                                              </>
+                                            )}
+                                          </CButton>{' '}
+                                        </>
+                                      )}
+                                    </div>
+                                  </CTableDataCell>
+                                  <CTableDataCell>
+                                    <CButton
+                                      onClick={() => handleUserViewProgress(data)}
+                                      className="bg-darkGreen border-darkGreen"
+                                    >
+                                      View Progress
+                                    </CButton>
+                                  </CTableDataCell>
+                                </CTableRow>
+                                <CModal visible={deletePopup} onClose={() => setDeletePopup(false)}>
+                                  <CModalBody>Are you sure want to delete?</CModalBody>
+                                  <CModalFooter>
+                                    <CButton
+                                      color="secondary"
+                                      onClick={() => setDeletePopup(false)}
+                                    >
+                                      Close
+                                    </CButton>
+                                    <CButton color="primary" onClick={() => handleDelete(data)}>
+                                      Delete
+                                    </CButton>
+                                  </CModalFooter>
+                                </CModal>
+                              </>
+                            )
+                          }
+                        })}
+                </CTableBody>
+              </CTable>
+            </div>
             <Pagination nPages={nPages} currentPage={currentPage} setCurrentPage={setCurrentPage} />
           </div>
         </div>

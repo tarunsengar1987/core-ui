@@ -1,23 +1,15 @@
-import React from 'react'
+import React, { useState } from 'react'
 import {
   CAvatar,
-  CBadge,
   CDropdown,
   CDropdownDivider,
-  CDropdownHeader,
   CDropdownItem,
   CDropdownMenu,
   CDropdownToggle,
 } from '@coreui/react'
 import {
-  cilBell,
-  cilCreditCard,
-  cilCommentSquare,
-  cilEnvelopeOpen,
-  cilFile,
-  cilLockLocked,
+ 
   cilSettings,
-  cilTask,
   cilUser,
   cilAccountLogout,
 } from '@coreui/icons'
@@ -26,17 +18,19 @@ import { AppContent, AppSidebar, AppFooter, AppHeader } from '../../components/i
 
 import avatar8 from './../../assets/images/avatars/8.jpg'
 import { useNavigate } from 'react-router-dom'
+import { useEffect } from 'react'
 
 const AppHeaderDropdown = () => {
   const navigate = useNavigate()
+  const [user, setUser] = useState({})
 
+  useEffect(() => {
+    const data = JSON.parse(localStorage.getItem('userData'))
+    setUser(data)
+  }, [])
   const handleLogout = () => {
     localStorage.clear('userData')
     navigate('/')
-    // setTimeout(() => {
-    //   setAlert(false)
-    //   navigate('/')
-    // }, 3000)
   }
   return (
     <CDropdown variant="nav-item">
@@ -78,10 +72,14 @@ const AppHeaderDropdown = () => {
           <CIcon icon={cilUser} className="me-2" />
           Profile
         </CDropdownItem>
-        <CDropdownItem href="#">
-          <CIcon icon={cilSettings} className="me-2" />
-          Settings
-        </CDropdownItem>
+        {user.role == '1' ? (
+          <CDropdownItem href="/setting">
+            <CIcon icon={cilSettings} className="me-2" />
+            Settings
+          </CDropdownItem>
+        ) : (
+          ''
+        )}
         <CDropdownDivider />
         <CDropdownItem onClick={() => handleLogout()}>
           <CIcon icon={cilAccountLogout} className="me-2" />
@@ -101,7 +99,6 @@ const AppHeaderDropdown = () => {
             42
           </CBadge>
         </CDropdownItem> */}
-       
       </CDropdownMenu>
     </CDropdown>
   )

@@ -23,6 +23,7 @@ const WidgetsDropdown = () => {
   const [activeUsers, setActiveUser] = useState([])
   const [inviteUsers, setInviteUser] = useState([])
   const [awaitingAprroveUsers, setAwaitingAprroveUser] = useState([])
+  const [blockUser, setBlockUser] = useState([])
   const [userClass, setClassCount] = useState('')
   const [user, setUser] = useState()
   const [userData, setUserData] = useState([])
@@ -31,7 +32,7 @@ const WidgetsDropdown = () => {
   const [totalLessonDurationsum, setTotalLessonDurationsum] = useState('')
   const [classData, setClassData] = useState([])
   const [loader, setLoader] = useState(false)
-  const [active, setActive] = useState(0)
+  const [active, setActive] = useState()
   const [tutorialData, setTutorialData] = useState([])
   // const [audioFilterData, setAudioFilterData] = useState([])
   console.log(activeUsers.length, inviteUsers.length, awaitingAprroveUsers.length)
@@ -70,6 +71,11 @@ const WidgetsDropdown = () => {
             if (inviteUsers.some((inviteUsers) => inviteUsers.id != users.id)) {
             } else {
               inviteUsers.push(users)
+            }
+          } else if (users.status == 'Block') {
+            if (blockUser.some((blockUser) => blockUser.id != users.id)) {
+            } else {
+              blockUser.push(users)
             }
           }
         })
@@ -183,7 +189,7 @@ const WidgetsDropdown = () => {
       console.log("can't get data from server please try again ")
     }
   }
-  
+
   const handleNavigateRecentAudio = (tutorial) => {
     setActive(0)
     setLoader(true)
@@ -199,13 +205,13 @@ const WidgetsDropdown = () => {
     // })
   }
 
-  console.log(lessonData, "lessonData");
+  console.log(lessonData, 'lessonData')
   return (
     <CRow className="dashboardCards">
       <Loader isLoader={loader} />
 
       {user?.role === '1' ? (
-        <CCol sm={6} lg={3} className="dashboardCards">
+        <CCol sm={6} lg={3} className="dashboardCards-small">
           <span>
             <CWidgetStatsA
               className="mb-4"
@@ -233,41 +239,54 @@ const WidgetsDropdown = () => {
                     </span>
                     User
                   </div>
-                  <div
-                    onClick={() => {
-                      navigate(`/user/Active`)
-                    }}
-                  >
-                    {/* (-12.4% <CIcon icon={cilArrowBottom} />) */}
-                    <span className="dashboardCards-dataList-no">
-                      {activeUsers?.length == 0 ? 0 : activeUsers.length}
-                    </span>
-                    Active
+                  <div>
+                    <div
+                      onClick={() => {
+                        navigate(`/user/Active`)
+                      }}
+                    >
+                      {/* (-12.4% <CIcon icon={cilArrowBottom} />) */}
+                      <span className="dashboardCards-dataList-no">
+                        {activeUsers?.length == 0 ? 0 : activeUsers.length}
+                      </span>
+                      Active
+                    </div>
+                    <div
+                      className=""
+                      onClick={() => {
+                        navigate(`/user/Invited`)
+                      }}
+                    >
+                      {/* (-12.4% <CIcon icon={cilArrowBottom} />) */}
+                      <span className="dashboardCards-dataList-no">
+                        {inviteUsers.length == 0 ? 0 : inviteUsers.length}
+                      </span>
+                      Invited
+                    </div>
+                    <div
+                      onClick={() => {
+                        navigate(`/user/Awaiting approval`)
+                      }}
+                    >
+                      {/* (-12.4% <CIcon icon={cilArrowBottom} />) */}
+                      <span className="dashboardCards-dataList-no">
+                        {awaitingAprroveUsers?.length == 0 ? 0 : awaitingAprroveUsers.length}
+                      </span>
+                      Awaiting approval
+                    </div>
+                    <div
+                      onClick={() => {
+                        navigate(`/user/Block`)
+                      }}
+                    >
+                      {/* (-12.4% <CIcon icon={cilArrowBottom} />) */}
+                      <span className="dashboardCards-dataList-no">
+                        {blockUser?.length == 0 ? 0 : blockUser.length}
+                      </span>
+                      Block
+                    </div>
                   </div>
-                  <div
-                    className=""
-                    onClick={() => {
-                      navigate(`/user/Invited`)
-                    }}
-                  >
-                    {/* (-12.4% <CIcon icon={cilArrowBottom} />) */}
-                    <span className="dashboardCards-dataList-no">
-                      {inviteUsers.length == 0 ? 0 : inviteUsers.length}
-                    </span>
-                    Invited
-                  </div>
-                  <div
-                    onClick={() => {
-                      navigate(`/user/Awaiting approval`)
-                    }}
-                  >
-                    {/* (-12.4% <CIcon icon={cilArrowBottom} />) */}
-                    <span className="dashboardCards-dataList-no">
-                      {awaitingAprroveUsers?.length == 0 ? 0 : awaitingAprroveUsers.length}
-                    </span>
-                    Awaiting approval
-                  </div>
-                  </div>
+                </div>
               }
               // title="Users"
             />
@@ -276,7 +295,7 @@ const WidgetsDropdown = () => {
       ) : (
         ''
       )}
-      <CCol sm={6} lg={3}>
+      <CCol sm={6} lg={3} className="dashboardCards-small">
         <span
           onClick={() => {
             navigate(`/tutorial`)
@@ -297,7 +316,7 @@ const WidgetsDropdown = () => {
       </CCol>
 
       {user?.role === '1' ? (
-        <CCol sm={6} lg={3}>
+        <CCol sm={6} lg={3} className="dashboardCards-small">
           <span
             onClick={() => {
               navigate(`/setting`)
@@ -324,7 +343,7 @@ const WidgetsDropdown = () => {
         {user?.role === '2' ? (
           <div>
             <div className="row">
-              <div className="col-md-6">
+              <div className="col-12 col-lg-6">
                 <div className="card p-4 h-100">
                   {/* {console.log({ totalProgress })} */}
                   <div className="chart-wrapper halfChart">
@@ -347,25 +366,29 @@ const WidgetsDropdown = () => {
                       }}
                     />
                   </div>
-                  <hr />
                 </div>
               </div>
-              <div className="col-md-6">
+              <div className="col-12 col-lg-6">
                 <div className="card p-4 h-100 cart-right-part">
                   {/* {console.log('lessonData', lessonData)} */}
                   <h4 className="mb-3 visitedVideoTitle">Recently Visited Audio</h4>
                   <ul className="visitedVideoList">
-                  {console.log({active})}
+                    {console.log({ active })}
                     {lessonData.length > 0
-                      ? lessonData
-                          .slice([0], [10])
-                          .map((item, index) => (
-                            <li onClick={() => {
-                              setActive(index);
-                              handleNavigateRecentAudio(item)}} 
-                             className= {active===index ? "visitedVideoList-item active": "visitedVideoList-item" }
-                            >{item.name}</li>
-                          ))
+                      ? lessonData.map((item, index) => (
+                          <li
+                            onClick={() => {
+                              handleNavigateRecentAudio(item)
+                            }}
+                            className={
+                              active === item.name
+                                ? 'visitedVideoList-item active'
+                                : 'visitedVideoList-item'
+                            }
+                          >
+                            {item.name}
+                          </li>
+                        ))
                       : 'You Did not visit any audio'}
                   </ul>
                 </div>
