@@ -31,6 +31,7 @@ const WidgetsDropdown = () => {
   const [totalLessonDurationsum, setTotalLessonDurationsum] = useState('')
   const [classData, setClassData] = useState([])
   const [loader, setLoader] = useState(false)
+  const [active, setActive] = useState(0)
   const [tutorialData, setTutorialData] = useState([])
   // const [audioFilterData, setAudioFilterData] = useState([])
   console.log(activeUsers.length, inviteUsers.length, awaitingAprroveUsers.length)
@@ -161,8 +162,9 @@ const WidgetsDropdown = () => {
       setTotalProgress((pauseDurationSum / sum) * 100)
     })
   }
-
+  
   const handleNavigateRecentAudio = (tutorial) => {
+    setActive(0)
     setLoader(true)
     setTimeout(() => {
       setLoader(false)
@@ -174,9 +176,9 @@ const WidgetsDropdown = () => {
 
     //     })
     // })
-
-   
   }
+
+  console.log(lessonData, "lessonData");
   return (
     <CRow className="dashboardCards">
       <Loader isLoader={loader} />
@@ -211,6 +213,7 @@ const WidgetsDropdown = () => {
                     User
                   </div>
                   <div>
+                  <div>
                     {/* (-12.4% <CIcon icon={cilArrowBottom} />) */}
                     <span className="dashboardCards-dataList-no">
                       {activeUsers?.length == 0 ? 0 : activeUsers.length}
@@ -230,6 +233,7 @@ const WidgetsDropdown = () => {
                       {awaitingAprroveUsers?.length == 0 ? 0 : awaitingAprroveUsers.length}
                     </span>{' '}
                     Awaiting Aprrove
+                  </div>
                   </div>
                 </div>
               }
@@ -264,7 +268,7 @@ const WidgetsDropdown = () => {
         <CCol sm={6} lg={3}>
           <span
             onClick={() => {
-              navigate(`/tutorial`)
+              navigate(`/setting`)
             }}
           >
             <CWidgetStatsA
@@ -272,7 +276,6 @@ const WidgetsDropdown = () => {
               color="danger"
               value={
                 <>
-                  0
                   <span className="fs-6 fw-normal">
                     {/* (-23.6% <CIcon icon={cilArrowBottom} />) */}
                   </span>
@@ -291,7 +294,6 @@ const WidgetsDropdown = () => {
             <div className="row">
               <div className="col-md-6">
                 <div className="card p-4 h-100">
-                  <h4>Line</h4>
                   {/* {console.log({ totalProgress })} */}
                   <div className="chart-wrapper halfChart">
                     <CChart
@@ -301,11 +303,7 @@ const WidgetsDropdown = () => {
                         datasets: [
                           {
                             backgroundColor: ['#41B883', '#E46651'],
-<<<<<<< Updated upstream
                             data: [totalProgress, 100 - totalProgress],
-=======
-                            data: [totalProgress,  100 - totalProgress],
->>>>>>> Stashed changes
                           },
                         ],
                       }}
@@ -317,14 +315,21 @@ const WidgetsDropdown = () => {
               <div className="col-md-6">
                 <div className="card p-4 h-100 cart-right-part">
                   {/* {console.log('lessonData', lessonData)} */}
-                  <h4 className="mb-3">Recently Visited Audio</h4>
-                  {lessonData.length > 0
-                    ? lessonData
-                        .slice([0], [10])
-                        .map((item, index) => (
-                          <p onClick={() => handleNavigateRecentAudio(item)}>{item.name}</p>
-                        ))
-                    : 'You Did not visit any audio'}
+                  <h4 className="mb-3 visitedVideoTitle">Recently Visited Audio</h4>
+                  <ul className="visitedVideoList">
+                  {console.log({active})}
+                    {lessonData.length > 0
+                      ? lessonData
+                          .slice([0], [10])
+                          .map((item, index) => (
+                            <li onClick={() => {
+                              setActive(index);
+                              handleNavigateRecentAudio(item)}} 
+                             className= {active===index ? "visitedVideoList-item active": "visitedVideoList-item" }
+                            >{item.name}</li>
+                          ))
+                      : 'You Did not visit any audio'}
+                  </ul>
                 </div>
               </div>
             </div>

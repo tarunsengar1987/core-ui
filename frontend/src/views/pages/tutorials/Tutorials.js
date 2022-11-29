@@ -517,11 +517,7 @@ export default function Tutorials() {
                                                 data.id === item.tutorial_id
                                                   ? item.completed_percentage
                                                   : '',
-<<<<<<< Updated upstream
-                                                100,
-=======
                                                   100 - item.completed_percentage ,
->>>>>>> Stashed changes
                                               ],
                                             },
                                           ],
@@ -617,11 +613,7 @@ export default function Tutorials() {
                                                 data.id === item.tutorial_id
                                                   ? item.completed_percentage
                                                   : '',
-<<<<<<< Updated upstream
-                                                100,
-=======
                                                   100 -item.completed_percentage ,
->>>>>>> Stashed changes
                                               ],
                                             },
                                           ],

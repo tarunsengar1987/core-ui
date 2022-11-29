@@ -51,43 +51,38 @@ const Message = () => {
       users: isCheck,
       message: `${content}`,
     }
+    if (isCheck.length !== 0) {
+      if (content !== '') {
+        axios.post(`${process.env.REACT_APP_API_URL}/sendmailtousers`, mailData).then((res) => {
+          console.log(res.data)
+          setLoader(true)
+          setAllChecked(false)
+          setTimeout(() => {
+            setLoader(false)
+            setAlert(true)
+            setAlertMessage(res.data.message)
+          }, 2000)
 
-  //   dangerouslySetInnerHTML={{
-  //     __html: content,
-  // }}
-    debugger
-    // if (isCheck.length !== 0) {
-    //   if (content !== '') {
-    //     axios.post(`${process.env.REACT_APP_API_URL}/sendmailtousers`, mailData).then((res) => {
-    //       console.log(res.data)
-    //       setLoader(true)
-    //       setAllChecked(false)
-    //       setTimeout(() => {
-    //         setLoader(false)
-    //         setAlert(true)
-    //         setAlertMessage(res.data.message)
-    //       }, 2000)
-
-    //       setTimeout(() => {
-    //         setAlert(false)
-    //       }, 3000)
-    //       setIsCheck([])
-    //       setContent('')
-    //     })
-    //   } else {
-    //     setAlert(true)
-    //     setAlertMessage('please write a message')
-    //     setTimeout(() => {
-    //       setAlert(false)
-    //     }, 2000)
-    //   }
-    // } else {
-    //   setAlert(true)
-    //   setAlertMessage('please choose the User')
-    //   setTimeout(() => {
-    //     setAlert(false)
-    //   }, 2000)
-    // }
+          setTimeout(() => {
+            setAlert(false)
+          }, 3000)
+          setIsCheck([])
+          setContent('')
+        })
+      } else {
+        setAlert(true)
+        setAlertMessage('please write a message')
+        setTimeout(() => {
+          setAlert(false)
+        }, 2000)
+      }
+    } else {
+      setAlert(true)
+      setAlertMessage('please choose the User')
+      setTimeout(() => {
+        setAlert(false)
+      }, 2000)
+    }
   }
   const onBlur = (evt) => {
     // console.log("onBlur event called with event info: ", evt);
