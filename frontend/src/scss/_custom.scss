@@ -2,48 +2,63 @@
 .dropdown-item {
   cursor: pointer;
 }
+
 .dashboardCards .card {
   cursor: pointer;
+
   .card-body {
     padding-bottom: 1rem !important;
   }
 }
 
+.wrapper.bg-light {
+  background: #ebedef !important;
+}
+
 .bg-primary {
   background-color: #17505c !important;
 }
+
 .btn-primary {
   background-color: #247081;
   border-color: #0e2e34;
 }
+
 .btn-primary:hover {
   background-color: #17505c;
   border-color: #0e2e34;
 }
+
 .btn-primary.active {
   background-color: #247081;
   border-color: #0e2e34;
 }
+
 .cardTitle {
   font-weight: 700;
   color: #17505c;
 }
+
 .login-page .card,
 .register-page .card {
   border-color: #2470815c;
 }
-.cardTitle + p {
+
+.cardTitle+p {
   font-weight: 600;
   color: #17505c !important;
   opacity: 80%;
   font-size: 16px !important;
 }
+
 .sidebar {
   background: #17505c;
 }
+
 .headUserBox {
   display: flex;
   align-items: center;
+
   &__name {
     font-size: 16px;
     margin: 0;
@@ -51,16 +66,19 @@
     font-weight: 700;
   }
 }
+
 .dropdown-menu {
   box-shadow: 0px 0px 20px 0px rgb(0 0 0 / 22%);
   z-index: 11;
   border: 1px solid #ccc !important;
 }
+
 .headUserBox .avatar {
   box-shadow: 0px 0px 20px 0px rgb(0 0 0 / 22%);
   z-index: 11;
   border: 1px solid #ccc !important;
 }
+
 .breadcrumb {
   a {
     color: #247081;
@@ -68,52 +86,66 @@
     text-decoration: none;
   }
 }
+
 .bg-darkGreen {
   background-color: #17505c !important;
 }
+
 .border-darkGreen {
   border-color: #17505c !important;
 }
+
 .bg-white {
   background-color: #fff !important;
 }
+
 .border-white {
   border-color: #fff !important;
 }
+
 .text-darkGreen {
   color: #17505c !important;
 }
+
 .text-white {
   color: #fff !important;
 }
+
 .font-bold {
   font-weight: 600 !important;
 }
+
 .px-0 {
   padding-left: 0 !important;
   padding-right: 0 !important;
 }
+
 .form-switch .form-check-input:checked {
   border-color: #17505c !important;
   background-color: #17505c !important;
 }
+
 .dashboardPage {
   min-height: 100vh !important;
   position: relative;
+
   &__inner {
     // padding: 50px 25px;
     margin: 30px;
   }
+
   &__root {
     min-height: 100vh !important;
     position: relative;
   }
+
   &__head {
     display: flex;
     align-items: center;
     justify-content: space-between;
     margin-bottom: 30px;
   }
+
   &__title {
     font-weight: 700;
     color: #17505c;
@@ -121,28 +153,34 @@
     margin: 0;
     line-height: 38px;
   }
+
   .footer {
     position: absolute;
     bottom: 0;
     left: 0;
     right: 0;
+
     a {
       color: #247081;
     }
   }
 }
+
 table {
   border-collapse: separate !important;
-  border-spacing: 0 10px !important;
+  border-spacing: 0 12px !important;
+
   td,
   th {
     border: none !important;
-    padding: 10px 12px !important;
+    padding: 8px 15px !important;
     vertical-align: middle;
-    & > div {
+
+    &>div {
       margin-bottom: 0 !important;
     }
   }
+
   thead {
     tr th {
       background-color: transparent !important;
@@ -150,31 +188,43 @@ table {
       color: #000 !important;
     }
   }
+
   tbody {
     tr {
       box-shadow: 0px 0px 8px 0px rgb(12 27 30 / 24%);
       border-radius: 15px !important;
       border: none;
       overflow: hidden;
+
+      td,
+      th {
+        background-color: #fff;
+      }
+
       &:nth-child(odd) {
+
         td,
         th {
           background-color: rgb(36 112 129 / 11%);
         }
       }
+
       td:first-child {
         border-radius: 15px 0 0 15px;
       }
+
       td:last-child {
         border-radius: 0 15px 15px 0;
       }
     }
   }
 }
+
 .actionIconBtn {
   display: flex;
   align-items: center;
   gap: 8px;
+
   span {
     height: 28px;
     width: 28px;
@@ -184,6 +234,7 @@ table {
     align-items: center;
     justify-content: center;
     cursor: pointer;
+
     svg {
       color: #247081;
     }
@@ -191,32 +242,39 @@ table {
 }
 
 .tutorialDetailsModule {
-  box-shadow: 0px 0px 8px 0px rgba(12, 27, 30, 0.24);
+  box-shadow: 0px 0px 10px 0px rgb(0 0 0 / 10%);
   border-radius: 15px !important;
-  border: 1px solid rgb(190 203 209);
+  background-color: #fff;
+  border: 2px solid #fff;
   overflow: hidden;
+
   &__header {
-    padding: 25px;
+    padding: 18px 25px;
     border-bottom: 1px solid rgb(190 203 209);
-    background: #17505c2b;
+    background: rgb(23 80 92 / 10%);
+
     p {
       font-size: 16px;
       color: #666;
       margin: 0;
     }
   }
+
   &__title {
-    font-size: 24px;
-    color: #247081;
+    font-size: 28px;
+    color: #17505c;
     font-weight: 700;
+    margin: 0 0 5px;
   }
 }
+
 .tutorialDetailsCard {
-  box-shadow: 0px 0px 12px 2px rgba(12, 27, 30, 0.24);
+  box-shadow: 0px 0px 12px 0px rgb(0 0 0 / 11%);
+  border: none !important;
   border-radius: 15px !important;
-  border: 1px solid rgb(190, 203, 209) !important;
   overflow: hidden;
   height: fit-content;
+
   &__title {
     font-weight: 700;
     font-size: 20px;
@@ -224,8 +282,10 @@ table {
     color: #247081;
   }
 }
+
 .tutorialDetailsList {
   padding: 30px;
+
   &__item {
     font-size: 14px;
     padding: 5px 0;
@@ -233,16 +293,19 @@ table {
     align-items: center;
     margin: 0 !important;
   }
+
   &__title {
     font-weight: 700;
     min-width: 150px;
     display: inline-block;
     color: #12404e;
   }
+
   .accordion {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 22px;
+
     .accordion-header {
       button {
         font-weight: 600;
@@ -257,12 +320,15 @@ table {
         }
       }
     }
+
     .accordion-collpase {
       border-top: 1px solid rgb(190, 203, 209);
     }
+
     .accordion-body {
       position: relative;
     }
+
     .actionIconBtn {
       position: absolute;
       right: 15px;
@@ -270,12 +336,14 @@ table {
     }
   }
 }
+
 .classFormBtn {
   margin-top: 20px;
   display: flex;
   align-items: center;
   justify-content: flex-end;
 }
+
 .alertModel {
   padding: 12px;
   max-width: 400px;
@@ -285,17 +353,20 @@ table {
   z-index: 9999;
   width: 100%;
 }
+
 .lassonList-head {
   margin-top: 20px;
   display: flex;
   align-items: center;
   justify-content: end;
 }
+
 .lassonList {
   max-height: 220px;
-  overflow-y: scroll;
+  overflow-y: auto;
   position: relative;
   margin-top: 18px;
+
   thead {
     position: sticky;
     background: #fff;
@@ -322,6 +393,7 @@ table {
 .text-white {
   color: white !important;
 }
+
 .text-offWhite {
   color: #ddd !important;
 }
@@ -332,27 +404,40 @@ table {
   line-height: 20px;
   margin: 8px 0 0 !important;
 }
+
 .custom-search {
   max-width: 510px;
   margin-bottom: 25px;
 }
+
 .massageList {
   // display: grid;
   grid-template-columns: 1fr 1fr;
+
   // gap: 25px;
   &__checkbox {
     // display: grid;
     // gap: 8px;
   }
+
   .massageList__checkbox {
     padding: 15px;
     max-height: 670px;
     height: 100%;
     overflow: auto;
+
     .form-check {
       margin-bottom: 10px;
       color: #6c757d;
     }
+  }
+
+  .col-12>div {
+    background: #fff !important;
+    box-shadow: 0px 0px 9px 0px rgb(0 0 0 / 8%);
+    border: 1px solid #fff;
+    border-radius: 10px !important;
+    padding: 25px !important;
   }
 }
 
@@ -362,8 +447,10 @@ table {
   width: 100%;
   padding: 30px;
   box-shadow: 0 0 3px 0px #ccccccad;
+
   .input-group {
     margin-bottom: 30px;
+
     .input-group-text {
       width: 30%;
     }
@@ -374,9 +461,11 @@ table {
   max-width: 350px;
   margin: 0 auto;
 }
+
 .tutorial-progress-report {
   background-color: transparent !important;
   border: none !important;
+
   .halfChart {
     max-width: 70px;
     margin: 0;
@@ -387,6 +476,7 @@ table {
   border: var(--bs-spinner-border-width) solid #17505c !important;
   border-right-color: transparent !important;
 }
+
 .modal-title {
   color: #17505c;
 }
@@ -394,61 +484,162 @@ table {
 div.vr:empty {
   display: none;
 }
+
 .dashboardCards {
-  .card-body > div {
+  .card-body>div {
     width: 100%;
   }
+
   &-dataList {
     width: 100%;
     display: grid;
-    grid-template-columns: 1fr 3fr;
-    gap: 5px;
+    grid-template-columns: 1fr;
+    gap: 20px;
     font-size: 16px;
     line-height: 20px;
     font-weight: 400;
+
     &-no {
       font-weight: 600 !important;
       font-size: 1.5rem !important;
       line-height: 1.5;
       display: block;
     }
-    & > div {
+
+    &>div {
       transition: all 0.2s ease;
+
+
       &:first-child:hover {
         color: #000;
       }
-      & > div {
+
+      &>div {
         display: flex;
         align-items: center;
         justify-content: space-between;
         flex-direction: row-reverse;
         transition: all 0.2s ease;
-        .dashboardCards-dataList-no {
-          font-size: 1.4rem !important;
-          line-height: 1.2;
-          margin-right: 10px;
-        }
+
+
         &:hover {
           color: #000;
         }
       }
     }
   }
+
   .card {
     height: calc(100% - 1.5rem);
     margin-bottom: 20px;
     height: calc(100% - 20px) !important;
   }
+
   &-small {
     .card {
       transition: all 0.2s ease;
+      background: #fff !important;
+      box-shadow: 0px 0px 10px 0px rgb(0 0 0 / 10%);
+      border: 1px solid #fff;
+      overflow: hidden;
+
+      div {
+        color: #000;
+      }
+
+      .card-body {
+        border-left: 6px solid #1e89a1;
+        padding: 25px !important;
+      }
+
+
+      .dashboardCards-dataList-head {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        justify-content: space-between;
+        min-height: 45px;
+        font-size: 22px;
+        color: #17505c;
+        font-weight: 700;
+        transition: all 0.2s ease;
+
+        .dashboardCards-dataList-no {
+          border: 2px solid #fff;
+          font-size: 22px !important;
+          height: 42px;
+          width: 42px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          border-radius: 50%;
+          background: #d2e7eb;
+          line-height: 24px !important;
+          font-weight: 600 !important;
+          flex-grow: 0;
+          flex-shrink: 0;
+          flex-basis: 42px;
+          transition: all 0.2s ease;
+        }
+      }
+
+      .dashboardCards-dataInnerList {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px 20px;
+
+        div {
+          font-size: 15px;
+          transition: all 0.2s ease;
+          color: #17505c;
+          line-height: 20px;
+          font-weight: 400;
+
+          .dashboardCards-dataList-no {
+            font-size: 14px !important;
+            height: 20px;
+            width: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            background: #d2e7eb;
+            line-height: 20px !important;
+            font-weight: 600 !important;
+            flex-grow: 0;
+            flex-shrink: 0;
+            flex-basis: 20px;
+            transition: all 0.2s ease;
+          }
+
+          &:hover {
+            color: #1e89a1;
+            text-decoration: underline;
+
+            .dashboardCards-dataList-no {
+              background: #17505c;
+              color: #fff;
+            }
+          }
+        }
+      }
+
       &:hover {
-        box-shadow: 0px 0px 12px 0px rgba(0, 0, 0, 0.15);
-        border: 2px solid #fff;
+        border: 1px solid #1e89a1;
+        box-shadow: 0px 0px 18px 0px rgba(0, 0, 0, 0.15);
+
+        .dashboardCards-dataList-head {
+          color: #1e89a1;
+
+          .dashboardCards-dataList-no {
+            box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.10);
+          }
+        }
       }
     }
   }
 }
+
 .userProgressList {
   &-item {
     display: flex;
@@ -459,22 +650,27 @@ div.vr:empty {
     border-radius: 10px;
     padding: 20px;
     margin: 20px 0;
+
     .chart-wrapper {
       width: 110px;
     }
   }
+
   &-itemTitle {
     color: #12404e;
     font-size: 20px;
     font-weight: 400;
     margin: 0 0 12px;
+
     b {
       font-weight: 700;
       color: #17505c;
     }
   }
+
   &-itemInfo {
     width: calc(100% - 120px);
+
     p {
       color: #12404e;
       font-size: 14px;
@@ -491,16 +687,20 @@ div.vr:empty {
   margin: 0;
   line-height: 38px;
 }
+
 .visitedVideoList {
   padding-left: 25px;
+
   &-item {
     cursor: pointer;
     margin-bottom: 5px;
     transition: all 0.2s ease;
+
     &.active {
       color: #408a99;
       font-weight: 500;
     }
+
     &:hover {
       color: #408a99;
       font-weight: 500;
@@ -512,10 +712,13 @@ div.vr:empty {
 .table-responsive {
   overflow-x: auto;
   padding: 0 5px;
+
   table {
+
     td,
     th {
       white-space: nowrap;
+
       button {
         padding: 5px 12px;
         font-size: 14px;
@@ -524,11 +727,21 @@ div.vr:empty {
   }
 }
 
+.blankDataModule {
+  padding: 15px;
+  text-align: center;
+  color: #235964;
+  font-weight: 500;
+  border: 1px solid #e7edee;
+  border-radius: 10px;
+}
+
 @media only screen and (max-width: 1024px) {
   .tutorialDetailsList .accordion {
     grid-template-columns: 1fr;
   }
 }
+
 @media only screen and (max-width: 600px) {
   .table-responsive {
     table {

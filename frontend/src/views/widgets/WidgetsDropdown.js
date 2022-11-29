@@ -211,7 +211,7 @@ const WidgetsDropdown = () => {
       <Loader isLoader={loader} />
 
       {user?.role === '1' ? (
-        <CCol sm={6} lg={3} className="dashboardCards-small">
+        <CCol md={6} xl={3} xs={12} className="dashboardCards-small">
           <span>
             <CWidgetStatsA
               className="mb-4"
@@ -232,14 +232,15 @@ const WidgetsDropdown = () => {
                     onClick={() => {
                       navigate(`/user`)
                     }}
+                    className="dashboardCards-dataList-head"
                   >
                     {/* (-12.4% <CIcon icon={cilArrowBottom} />) */}
+                    User
                     <span className="dashboardCards-dataList-no">
                       {userCount == 0 ? 0 : userCount}
                     </span>
-                    User
                   </div>
-                  <div>
+                  <div className="dashboardCards-dataInnerList">
                     <div
                       onClick={() => {
                         navigate(`/user/Active`)
@@ -295,7 +296,7 @@ const WidgetsDropdown = () => {
       ) : (
         ''
       )}
-      <CCol sm={6} lg={3} className="dashboardCards-small">
+      <CCol md={6} xl={3} xs={12} className="dashboardCards-small">
         <span
           onClick={() => {
             navigate(`/tutorial`)
@@ -305,18 +306,22 @@ const WidgetsDropdown = () => {
             className="mb-4"
             color="warning"
             value={
-              <>
-                {tutorialCount}
-                <span className="fs-6 fw-normal">{/* (84.7% <CIcon icon={cilArrowTop} />) */}</span>
-              </>
+              <div className="dashboardCards-dataList">
+                {/* {userCount}   */}
+                <div className="dashboardCards-dataList-head">
+                  {/* (-12.4% <CIcon icon={cilArrowBottom} />) */}
+                  Tutorials
+                  <span className="dashboardCards-dataList-no">{tutorialCount}</span>
+                </div>
+              </div>
             }
-            title="Tutorials"
+            // title="Tutorials"
           />
         </span>
       </CCol>
 
       {user?.role === '1' ? (
-        <CCol sm={6} lg={3} className="dashboardCards-small">
+        <CCol md={6} xl={3} xs={12} className="dashboardCards-small">
           <span
             onClick={() => {
               navigate(`/setting`)
@@ -326,13 +331,14 @@ const WidgetsDropdown = () => {
               className="mb-4"
               color="danger"
               value={
-                <>
-                  <span className="fs-6 fw-normal">
-                    {/* (-23.6% <CIcon icon={cilArrowBottom} />) */}
-                  </span>
-                </>
+                <div className="dashboardCards-dataList">
+                  <div className="dashboardCards-dataList-head">
+                    Settings
+                    {/* <span className="dashboardCards-dataList-no"></span> */}
+                  </div>
+                </div>
               }
-              title="Settings"
+              // title="Settings"
             />
           </span>
         </CCol>

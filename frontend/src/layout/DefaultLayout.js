@@ -8,7 +8,7 @@ const DefaultLayout = () => {
       <div className="wrapper d-flex flex-column min-vh-100 bg-light">
         <AppHeader />
         <div className="body flex-grow-1 px-3">
-          <div style={{ padding: '40px 20px' }}>
+          <div style={{ padding: '40px 32px' }}>
             <AppContent />
           </div>
         </div>

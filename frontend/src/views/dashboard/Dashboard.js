@@ -56,17 +56,19 @@ import WidgetsDropdown from '../widgets/WidgetsDropdown'
 import { AppContent, AppSidebar, AppFooter, AppHeader } from '../../components/index'
 
 const Dashboard = () => {
- 
-  
   return (
     <>
       <div>
         <AppSidebar />
         <div className="wrapper d-flex flex-column min-vh-100 bg-light">
           <AppHeader />
-          <div style={{ padding: '40px 20px' }}>
-            <WidgetsDropdown />
-          
+          <div>
+            <div className="dashboardPage__inner">
+              <div className="dashboardPage__head">
+                <h1 className="dashboardPage__title">Dashboard</h1>
+              </div>
+              <WidgetsDropdown />
+            </div>
           </div>
 
           {/* <WidgetsBrand withCharts /> */}

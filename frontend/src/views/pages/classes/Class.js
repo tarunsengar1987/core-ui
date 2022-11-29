@@ -491,203 +491,204 @@ export default function Classes({ classdata, tutorialData, setAlertMessage, setA
         </CModal>
       </div>
       <div>
-        <CAccordion>
-          {classData.length > 0
-            ? classData.map((data, index) => (
-                <CAccordionItem
-                  className="tutorialDetailsCard"
-                  onClick={() => {
-                    setClassId(data.id)
-                  }}
-                  key={index}
-                >
-                  <CAccordionHeader onClick={() => handleChangetab(data.name)}>
-                    {data.name} {data.id}
-                  </CAccordionHeader>
-                  <CAccordionBody>
-                    {isEdit ? (
-                      <CForm
-                        className="needs-validation"
-                        noValidate
-                        validated={validated}
-                        onSubmit={handleSubmit}
-                      >
-                        <div className="tutorialDetailsList__item">
-                          <span className="tutorialDetailsList__title">name:</span>
-                          <CInputGroup className="has-validation">
-                            <CFormInput
-                              type="text"
-                              aria-describedby="validationCustom03Feedback"
-                              feedbackInvalid="Please provide a valid Username."
-                              id="validationCustom03"
-                              name="name"
-                              required
-                              placeholder="Name"
-                              onChange={handleChange}
-                              value={classesData.name || ''}
-                            />
-                          </CInputGroup>
-                        </div>
-                        <div className="tutorialDetailsList__item">
-                          <span className="tutorialDetailsList__title">description:</span>
-                          <CInputGroup className="has-validation">
-                            <CFormInput
-                              type="text"
-                              aria-describedby="validationCustom03Feedback"
-                              feedbackInvalid="Please provide a valid Email."
-                              id="validationCustom03"
-                              name="descriptions"
-                              placeholder="Description"
-                              required
-                              onChange={handleChange}
-                              value={classesData.descriptions}
-                            />
-                          </CInputGroup>
-                        </div>
-                        <div className="tutorialDetailsList__item">
-                          <span className="tutorialDetailsList__title">status:</span>
-                          <CInputGroup className="has-validation">
-                            <CFormSwitch
-                              className="backgroundswitch"
-                              defaultChecked={data.status === 'active' ? true : false}
-                              id="formSwitchCheckDefault"
-                              onClick={(e) => handleSwitch(e)}
-                              name="status"
-                            />
-                          </CInputGroup>
-                        </div>
+        {classData.length > 0 ? (
+          <CAccordion>
+            {classData.map((data, index) => (
+              <CAccordionItem
+                className="tutorialDetailsCard"
+                onClick={() => {
+                  setClassId(data.id)
+                }}
+                key={index}
+              >
+                <CAccordionHeader onClick={() => handleChangetab(data.name)}>
+                  {data.name} {data.id}
+                </CAccordionHeader>
+                <CAccordionBody>
+                  {isEdit ? (
+                    <CForm
+                      className="needs-validation"
+                      noValidate
+                      validated={validated}
+                      onSubmit={handleSubmit}
+                    >
+                      <div className="tutorialDetailsList__item">
+                        <span className="tutorialDetailsList__title">name:</span>
+                        <CInputGroup className="has-validation">
+                          <CFormInput
+                            type="text"
+                            aria-describedby="validationCustom03Feedback"
+                            feedbackInvalid="Please provide a valid Username."
+                            id="validationCustom03"
+                            name="name"
+                            required
+                            placeholder="Name"
+                            onChange={handleChange}
+                            value={classesData.name || ''}
+                          />
+                        </CInputGroup>
+                      </div>
+                      <div className="tutorialDetailsList__item">
+                        <span className="tutorialDetailsList__title">description:</span>
+                        <CInputGroup className="has-validation">
+                          <CFormInput
+                            type="text"
+                            aria-describedby="validationCustom03Feedback"
+                            feedbackInvalid="Please provide a valid Email."
+                            id="validationCustom03"
+                            name="descriptions"
+                            placeholder="Description"
+                            required
+                            onChange={handleChange}
+                            value={classesData.descriptions}
+                          />
+                        </CInputGroup>
+                      </div>
+                      <div className="tutorialDetailsList__item">
+                        <span className="tutorialDetailsList__title">status:</span>
+                        <CInputGroup className="has-validation">
+                          <CFormSwitch
+                            className="backgroundswitch"
+                            defaultChecked={data.status === 'active' ? true : false}
+                            id="formSwitchCheckDefault"
+                            onClick={(e) => handleSwitch(e)}
+                            name="status"
+                          />
+                        </CInputGroup>
+                      </div>
 
-                        <div className="classFormBtn">
-                          <CButton
-                            color="primary"
-                            type="submit"
-                            className="bg-darkGreen border-darkGreen"
+                      <div className="classFormBtn">
+                        <CButton
+                          color="primary"
+                          type="submit"
+                          className="bg-darkGreen border-darkGreen"
+                        >
+                          Save
+                        </CButton>
+                      </div>
+                    </CForm>
+                  ) : (
+                    <>
+                      <div className="tutorialDetailsList__item">
+                        <span className="tutorialDetailsList__title">name:</span> {data.name}
+                      </div>
+                      <div className="tutorialDetailsList__item">
+                        <span className="tutorialDetailsList__title">description:</span>
+                        {data.descriptions}
+                      </div>
+                      <div className="tutorialDetailsList__item">
+                        <span className="tutorialDetailsList__title">status:</span> {data.status}
+                      </div>
+                      {user?.role !== '2' ? (
+                        <div className="actionIconBtn">
+                          <span onClick={() => handleEdit(data)}>
+                            <CIcon icon={cilPencil} />
+                          </span>
+                          <span
+                            onClick={() => {
+                              setDeleteClassPopup(true)
+                              setDeleteClassData(data.id)
+                              setModalClassPopup('are you sure delete class')
+                            }}
                           >
-                            Save
+                            <CIcon icon={cilDelete} />
+                          </span>
+                        </div>
+                      ) : (
+                        ''
+                      )}
+
+                      {data.id === classId ? (
+                        <CModal
+                          alignment="center"
+                          visible={visibleLesson}
+                          onClose={() => handleCloseLesson()}
+                        >
+                          <CModalHeader>
+                            <CModalTitle>Create Lesson</CModalTitle>
+                          </CModalHeader>
+                          <CModalBody>
+                            <CForm
+                              className="row g-3 needs-validation"
+                              noValidate
+                              validated={validatedLesson}
+                              onSubmit={handleSubmitLesson}
+                            >
+                              <CCol md={12}>
+                                <CInputGroup className="has-validation">
+                                  <CInputGroupText>
+                                    <CIcon icon={cilUser} />
+                                  </CInputGroupText>
+                                  <CFormInput
+                                    type="text"
+                                    aria-describedby="validationCustom03Feedback"
+                                    feedbackInvalid="Please provide a valid name."
+                                    id="validationCustom03"
+                                    name="name"
+                                    required
+                                    placeholder="Name"
+                                    onChange={handleChangeLesson}
+                                    value={lessonFormData.name || ''}
+                                  />
+                                </CInputGroup>
+                              </CCol>
+                              <CCol md={12}>
+                                <CInputGroup className="has-validation">
+                                  <CInputGroupText>@</CInputGroupText>
+                                  <CFormInput
+                                    type="number"
+                                    aria-describedby="validationCustom03Feedback"
+                                    feedbackInvalid="Please provide a valid description."
+                                    id="validationCustom03"
+                                    name="order"
+                                    placeholder="Order"
+                                    required
+                                    onChange={handleChangeLesson}
+                                    value={lessonFormData.order || ''}
+                                  />
+                                </CInputGroup>
+                              </CCol>
+                              <input
+                                id="contained-button-file"
+                                type="file"
+                                onChange={handleChangeLesson}
+                                value={lessonFormData.audio}
+                                name="audio"
+                              />
+                              <CCol xs={12}>
+                                <CButton className="bg-darkGreen border-darkGreen" type="submit">
+                                  Save lesson
+                                </CButton>
+                              </CCol>
+                            </CForm>
+                          </CModalBody>
+                        </CModal>
+                      ) : (
+                        ''
+                      )}
+                      {user?.role !== '2' ? (
+                        <div className="lassonList-head">
+                          <CButton
+                            onClick={() => {
+                              handleAddLesson(data.id)
+                            }}
+                            className="bg-darkGreen border-darkGreen"
+                            style={{ marginRight: 0, marginLeft: 'auto' }}
+                          >
+                            Add Lesson
                           </CButton>
                         </div>
-                      </CForm>
-                    ) : (
-                      <>
-                        <div className="tutorialDetailsList__item">
-                          <span className="tutorialDetailsList__title">name:</span> {data.name}
-                        </div>
-                        <div className="tutorialDetailsList__item">
-                          <span className="tutorialDetailsList__title">description:</span>
-                          {data.descriptions}
-                        </div>
-                        <div className="tutorialDetailsList__item">
-                          <span className="tutorialDetailsList__title">status:</span> {data.status}
-                        </div>
-                        {user?.role !== '2' ? (
-                          <div className="actionIconBtn">
-                            <span onClick={() => handleEdit(data)}>
-                              <CIcon icon={cilPencil} />
-                            </span>
-                            <span
-                              onClick={() => {
-                                setDeleteClassPopup(true)
-                                setDeleteClassData(data.id)
-                                setModalClassPopup('are you sure delete class')
-                              }}
-                            >
-                              <CIcon icon={cilDelete} />
-                            </span>
-                          </div>
-                        ) : (
-                          ''
-                        )}
-
-                        {data.id === classId ? (
-                          <CModal
-                            alignment="center"
-                            visible={visibleLesson}
-                            onClose={() => handleCloseLesson()}
-                          >
-                            <CModalHeader>
-                              <CModalTitle>Create Lesson</CModalTitle>
-                            </CModalHeader>
-                            <CModalBody>
-                              <CForm
-                                className="row g-3 needs-validation"
-                                noValidate
-                                validated={validatedLesson}
-                                onSubmit={handleSubmitLesson}
-                              >
-                                <CCol md={12}>
-                                  <CInputGroup className="has-validation">
-                                    <CInputGroupText>
-                                      <CIcon icon={cilUser} />
-                                    </CInputGroupText>
-                                    <CFormInput
-                                      type="text"
-                                      aria-describedby="validationCustom03Feedback"
-                                      feedbackInvalid="Please provide a valid name."
-                                      id="validationCustom03"
-                                      name="name"
-                                      required
-                                      placeholder="Name"
-                                      onChange={handleChangeLesson}
-                                      value={lessonFormData.name || ''}
-                                    />
-                                  </CInputGroup>
-                                </CCol>
-                                <CCol md={12}>
-                                  <CInputGroup className="has-validation">
-                                    <CInputGroupText>@</CInputGroupText>
-                                    <CFormInput
-                                      type="number"
-                                      aria-describedby="validationCustom03Feedback"
-                                      feedbackInvalid="Please provide a valid description."
-                                      id="validationCustom03"
-                                      name="order"
-                                      placeholder="Order"
-                                      required
-                                      onChange={handleChangeLesson}
-                                      value={lessonFormData.order || ''}
-                                    />
-                                  </CInputGroup>
-                                </CCol>
-                                <input
-                                  id="contained-button-file"
-                                  type="file"
-                                  onChange={handleChangeLesson}
-                                  value={lessonFormData.audio}
-                                  name="audio"
-                                />
-                                <CCol xs={12}>
-                                  <CButton className="bg-darkGreen border-darkGreen" type="submit">
-                                    Save lesson
-                                  </CButton>
-                                </CCol>
-                              </CForm>
-                            </CModalBody>
-                          </CModal>
-                        ) : (
-                          ''
-                        )}
-                        {user?.role !== '2' ? (
-                          <div className="lassonList-head">
-                            <CButton
-                              onClick={() => {
-                                handleAddLesson(data.id)
-                              }}
-                              className="bg-darkGreen border-darkGreen"
-                              style={{ marginRight: 0, marginLeft: 'auto' }}
-                            >
-                              Add Lesson
-                            </CButton>
-                          </div>
-                        ) : (
-                          ''
-                        )}
-                        <div className="lassonList">
-                          {data.id === classId && (
-                            <div className="table-responsive">
-                              <CTable>
-                                <CTableHead>
-                                  <CTableRow color="dark">
-                                    {lessonData.length > 0 ? (
+                      ) : (
+                        ''
+                      )}
+                      <div className="lassonList">
+                        {data.id === classId && (
+                          <>
+                            {lessonData.length > 0 ? (
+                              <div className="table-responsive">
+                                <CTable>
+                                  <CTableHead>
+                                    <CTableRow color="dark">
                                       <>
                                         <CTableHeaderCell scope="col">Order No.</CTableHeaderCell>
                                         <CTableHeaderCell scope="col">Name</CTableHeaderCell>
@@ -698,79 +699,81 @@ export default function Classes({ classdata, tutorialData, setAlertMessage, setA
                                           ''
                                         )}
                                       </>
-                                    ) : (
-                                      ''
-                                    )}
-                                  </CTableRow>
-                                </CTableHead>
-                                <CTableBody>
-                                  {lessonData.length > 0
-                                    ? lessonData.map((item, idx) => {
-                                        return (
-                                          <CTableRow>
-                                            <>
-                                              <CTableDataCell>
-                                                <div className="tutorialDetailsList__item">
-                                                  {item.order}
+                                    </CTableRow>
+                                  </CTableHead>
+                                  <CTableBody>
+                                    {lessonData.map((item, idx) => {
+                                      return (
+                                        <CTableRow>
+                                          <>
+                                            <CTableDataCell>
+                                              <div className="tutorialDetailsList__item">
+                                                {item.order}
+                                              </div>
+                                            </CTableDataCell>
+                                            <CTableDataCell>
+                                              <div className="tutorialDetailsList__item">
+                                                {item.name}
+                                              </div>
+                                            </CTableDataCell>
+                                            <CTableDataCell>
+                                              <div className="tutorialDetailsList__item">
+                                                <AudioPlayerCustom
+                                                  url={item?.audio_url}
+                                                  leassonIndex={idx}
+                                                  classIndex={index}
+                                                  pauseDuration={item?.pauseDuration}
+                                                  class_id={data?.id}
+                                                  lesson_id={item?.id}
+                                                  user_id={user?.id}
+                                                  TempDuration={item?.duration / 1000}
+                                                  classId={classId}
+                                                  user={user}
+                                                />
+                                              </div>
+                                            </CTableDataCell>
+                                            {user?.role !== '2' ? (
+                                              <CTableDataCell style={{ position: 'relative' }}>
+                                                <div className="actionIconBtn">
+                                                  <span
+                                                    onClick={() => {
+                                                      setDeletePopup(true)
+                                                      setModalPopup(
+                                                        'Are you sure want to delete this tutorial ?',
+                                                      )
+                                                      setDeleteData(item?.id)
+                                                    }}
+                                                  >
+                                                    <CIcon icon={cilDelete} />
+                                                  </span>
                                                 </div>
                                               </CTableDataCell>
-                                              <CTableDataCell>
-                                                <div className="tutorialDetailsList__item">
-                                                  {item.name}
-                                                </div>
-                                              </CTableDataCell>
-                                              <CTableDataCell>
-                                                <div className="tutorialDetailsList__item">
-                                                  <AudioPlayerCustom
-                                                    url={item?.audio_url}
-                                                    leassonIndex={idx}
-                                                    classIndex={index}
-                                                    pauseDuration={item?.pauseDuration}
-                                                    class_id={data?.id}
-                                                    lesson_id={item?.id}
-                                                    user_id={user?.id}
-                                                    TempDuration={item?.duration / 1000}
-                                                    classId={classId}
-                                                    user={user}
-                                                  />
-                                                </div>
-                                              </CTableDataCell>
-                                              {user?.role !== '2' ? (
-                                                <CTableDataCell style={{ position: 'relative' }}>
-                                                  <div className="actionIconBtn">
-                                                    <span
-                                                      onClick={() => {
-                                                        setDeletePopup(true)
-                                                        setModalPopup(
-                                                          'Are you sure want to delete this tutorial ?',
-                                                        )
-                                                        setDeleteData(item?.id)
-                                                      }}
-                                                    >
-                                                      <CIcon icon={cilDelete} />
-                                                    </span>
-                                                  </div>
-                                                </CTableDataCell>
-                                              ) : (
-                                                ''
-                                              )}
-                                            </>
-                                          </CTableRow>
-                                        )
-                                      })
-                                    : 'Lessons not found'}
-                                </CTableBody>
-                              </CTable>
-                            </div>
-                          )}
-                        </div>
-                      </>
-                    )}
-                  </CAccordionBody>
-                </CAccordionItem>
-              ))
-            : 'Classes Not Found'}
-        </CAccordion>
+                                            ) : (
+                                              ''
+                                            )}
+                                          </>
+                                        </CTableRow>
+                                      )
+                                    })}
+                                  </CTableBody>
+                                </CTable>
+                              </div>
+                            ) : (
+                              <div className="blankDataModule">Lessons not found</div>
+                            )}
+                          </>
+                        )}
+                      </div>
+                    </>
+                  )}
+                </CAccordionBody>
+              </CAccordionItem>
+            ))}
+          </CAccordion>
+        ) : (
+          <div className="blankDataModule">Classes Not Found</div>
+        )}
+
         <CModal visible={deletePopup} onClose={() => setDeletePopup(false)}>
           <CModalBody>{modalPopup}</CModalBody>
           <CModalFooter>
