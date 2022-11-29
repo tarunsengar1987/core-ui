@@ -51,7 +51,6 @@ const AudioPlayerCustom = ({
       }
     })
     if (newLessonData.lesson_Id == data.lesson_Id && newLessonData.user_Id == user.id) {
-      console.log(newLessonData.lesson_Id == data.lesson_Id && newLessonData.user_Id == user.id)
       try {
         axios
           .put(`${process.env.REACT_APP_API_URL}/audiorecord/${newLessonData.id}`, data)
@@ -69,7 +68,6 @@ const AudioPlayerCustom = ({
         console.log(' no any audio record ')
       }
     } else {
-      console.log("clicked")
       try {
         axios
           .post(`${process.env.REACT_APP_API_URL}/audiorecord`, data)
@@ -84,7 +82,7 @@ const AudioPlayerCustom = ({
             // },2000)
           })
       } catch {
-        console.log(' no any audio record ')
+        console.log("can't get data from server please try again")
       }
     }
   }

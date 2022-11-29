@@ -1,4 +1,11 @@
-import { CTable, CTableBody, CTableDataCell, CTableHead, CTableHeaderCell, CTableRow } from '@coreui/react'
+import {
+  CTable,
+  CTableBody,
+  CTableDataCell,
+  CTableHead,
+  CTableHeaderCell,
+  CTableRow,
+} from '@coreui/react'
 import { CChart } from '@coreui/react-chartjs'
 import axios from 'axios'
 import React, { useEffect, useState } from 'react'
@@ -20,38 +27,35 @@ export default function UserProgress() {
 
   const getUsersDetails = () => {
     let pauseDurationSum = 0
-    axios
-      .get(`${process.env.REACT_APP_API_URL}/audiorecord/` + location?.state?.userdata?.id)
-      .then((res) => {
-        debugger
-        // res.data.map((item) => {
-        //   axios
-        //   .get(`${process.env.REACT_APP_API_URL}/lesson/` + item.lesson_Id)
-        //   .then((res) => {
-        //     debugger
-        //   })
-        // })
-        setAudioData(res.data)
-        res.data.map((time) => {
-          pauseDurationSum += JSON.parse(time.pauseduration)
+    try {
+      axios
+        .get(`${process.env.REACT_APP_API_URL}/audiorecord/` + location?.state?.userdata?.id)
+        .then((res) => {
+          setAudioData(res.data)
+          res.data.map((time) => {
+            pauseDurationSum += JSON.parse(time.pauseduration)
+          })
+          getLessonDuration(pauseDurationSum)
         })
-        getLessonDuration(pauseDurationSum)
-      })
-      
+    } catch {
+      console.log("can't get data from server please try again ")
+    }
   }
 
- 
-
   const getLessonDuration = (pauseDurationSum) => {
-    axios.get(`${process.env.REACT_APP_API_URL}/lessons`).then(async (res) => {
-      setLessonData(res.data)
-      let sum = 0
-      res?.data?.map((item) => {
-        sum += item.duration
+    try {
+      axios.get(`${process.env.REACT_APP_API_URL}/lessons`).then(async (res) => {
+        setLessonData(res.data)
+        let sum = 0
+        res?.data?.map((item) => {
+          sum += item.duration
+        })
+        setTotalLessonDurationsum(sum)
+        setTotalProgress((pauseDurationSum / sum) * 100)
       })
-      setTotalLessonDurationsum(sum)
-      setTotalProgress((pauseDurationSum / sum) * 100)
-    })
+    } catch {
+      console.log("can't get data from server please try again ")
+    }
   }
 
   console.log('totalProgress', totalProgress)
@@ -62,12 +66,12 @@ export default function UserProgress() {
       <div className="wrapper d-flex flex-column min-vh-100 bg-light dashboardPage">
         <div className="dashboardPage__root">
           <AppHeader />
-          <div className='dashboardPage__inner'>
+          <div className="dashboardPage__inner">
             <div className="user-progress-detail card">
               <CTable>
                 <CTableHead>
                   <CTableRow>
-                  <CTableHeaderCell>Name</CTableHeaderCell>
+                    <CTableHeaderCell>Name</CTableHeaderCell>
                     <CTableHeaderCell>Duration</CTableHeaderCell>
                     <CTableHeaderCell>Pause Duration</CTableHeaderCell>
                     {/* <CTableHeaderCell>totalProgress</CTableHeaderCell> */}
@@ -87,11 +91,12 @@ export default function UserProgress() {
                       </div> */}
 
                             <CTableRow>
-                            <CTableDataCell>asas</CTableDataCell>
+                              <CTableDataCell>asas</CTableDataCell>
                               <CTableDataCell>{item.duration}</CTableDataCell>
                               <CTableDataCell>{item.pauseduration}</CTableDataCell>
                               {/* <CTableDataCell>{totalProgress}</CTableDataCell> */}
-                              <CTableDataCell>{(item.pauseduration/item.duration)*100 }
+                              <CTableDataCell>
+                                {(item.pauseduration / item.duration) * 100}
                               </CTableDataCell>
                             </CTableRow>
                           </>

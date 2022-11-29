@@ -17,12 +17,26 @@ const Setting = () => {
   }, [])
 
   const getSetting = () => {
-    axios.get(`${process.env.REACT_APP_API_URL}/setting`).then((res) => {
-      setSettingData(res.data[0])
-      if (res.data[0] == undefined) {
-        setSettingApiData(true)
-      }
-    })
+    try {
+      axios
+        .get(`${process.env.REACT_APP_API_URL}/setting`)
+        .then((res) => {
+          setSettingData(res.data[0])
+          if (res.data[0] == undefined) {
+            setSettingApiData(true)
+          }
+        })
+        .catch((error) => {
+          setAlert(true)
+          setAlertMessage(error.response.data.message)
+          setTimeout(() => {
+            setAlert(false)
+          }, 2000)
+          console.log(error.response.data.message)
+        })
+    } catch {
+      console.log("can't get data from server please try again ")
+    }
   }
 
   const handleChange = (event) => {
@@ -46,19 +60,63 @@ const Setting = () => {
       setValidated(true)
     } else {
       if (settingApiData == true) {
-        axios
-          .post(`${process.env.REACT_APP_API_URL}/setting`, settingData)
+        try {
+          axios
+            .post(`${process.env.REACT_APP_API_URL}/setting`, settingData)
+            .then((res) => {
+              setLoader(true)
+              setTimeout(() => {
+                setAlert(true)
+                setLoader(false)
+                setAlertMessage(res.data.message)
+              }, 2000)
+              setTimeout(() => {
+                setAlert(false)
+              }, 4000)
+            })
+            .catch((error) => {
+              setLoader(true)
+              setTimeout(() => {
+                setAlert(true)
+                setLoader(false)
+                setAlertMessage(error.response.data.message)
+              }, 2000)
+              setTimeout(() => {
+                setAlert(false)
+              }, 4000)
+            })
+        } catch {
+          console.log("can't get data from server please try again ")
+        }
       } else {
-        axios
-          .put(`${process.env.REACT_APP_API_URL}/setting/` + settingData.id, settingData)
-          .then((res) => {
-            setAlertMessage('Successfully Updated')
-            setAlert(true)
-            getSetting()
-            setTimeout(() => {
-              setAlert(false)
-            }, 3000)
-          })
+        try {
+          axios
+            .put(`${process.env.REACT_APP_API_URL}/setting/` + settingData.id, settingData)
+            .then((res) => {
+              setLoader(true)
+              setTimeout(() => {
+                setAlert(true)
+                setLoader(false)
+                setAlertMessage(res.data.message)
+              }, 2000)
+              setTimeout(() => {
+                setAlert(false)
+              }, 4000)
+            })
+            .catch((error) => {
+              setLoader(true)
+              setTimeout(() => {
+                setAlert(true)
+                setLoader(false)
+                setAlertMessage(error.response.data.message)
+              }, 2000)
+              setTimeout(() => {
+                setAlert(false)
+              }, 4000)
+            })
+        } catch {
+          console.log("can't get data from server please try again ")
+        }
       }
     }
   }

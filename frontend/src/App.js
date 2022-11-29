@@ -39,6 +39,7 @@ class App extends Component {
             <Route element={<Dashboard/>} path="/dashboard" />
             <Route exact path="/profile" name="Profile Page" element={<Profile />} />
             <Route exact path="/user" name="User Page" element={<User />} />
+            <Route exact path="/user/:status" name="User Page" element={<User />} />
             <Route exact path="/classes" name="Classes Page" element={<Class />} />
             <Route exact path="/tutorial" name="Tutorials Page" element={<Tutorials />} />
             <Route exact path="/setting" name="Setting Page" element={<Setting />} />

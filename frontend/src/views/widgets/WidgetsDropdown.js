@@ -46,59 +46,75 @@ const WidgetsDropdown = () => {
   // const navigate = useNavigate()
 
   const getUsers = () => {
-    axios.get(`${process.env.REACT_APP_API_URL}/users`).then((res) => {
-      'length===>', res.data.length
-      setUserCount(res.data.length)
-      res.data.map((users) => {
-        if (users.status == 'active') {
-          if (activeUsers.some((activeUsers) => activeUsers.id === users.id)) {
-          } else {
-            activeUsers.push(users)
+    try {
+      axios.get(`${process.env.REACT_APP_API_URL}/users`).then((res) => {
+        'length===>', res.data.length
+        setUserCount(res.data.length)
+        res.data.map((users) => {
+          if (users.status == 'active') {
+            if (activeUsers.some((activeUsers) => activeUsers.id === users.id)) {
+            } else {
+              activeUsers.push(users)
+            }
+          } else if (users.status == 'Awaiting approval') {
+            if (
+              awaitingAprroveUsers.some(
+                (awaitingAprroveUsers) => awaitingAprroveUsers.id === users.id,
+              )
+            ) {
+            } else {
+              awaitingAprroveUsers.push(users)
+            }
+          } else if (users.status == 'Invited') {
+            if (inviteUsers.some((inviteUsers) => inviteUsers.id != users.id)) {
+            } else {
+              inviteUsers.push(users)
+            }
           }
-        } else if (users.status == 'Awaiting approval') {
-          if (
-            awaitingAprroveUsers.some(
-              (awaitingAprroveUsers) => awaitingAprroveUsers.id === users.id,
-            )
-          ) {
-          } else {
-            awaitingAprroveUsers.push(users)
-          }
-        } else if (users.status == 'Invited') {
-          if (inviteUsers.some((inviteUsers) => inviteUsers.id != users.id)) {
-          } else {
-            inviteUsers.push(users)
-          }
-        }
+        })
       })
-    })
+    } catch {
+      console.log("can't get data from server please try again ")
+    }
   }
   const getTutorials = () => {
-    axios.get(`${process.env.REACT_APP_API_URL}/tutorials`).then((res) => {
-      'length===>', res.data.length
-      setTutorialCount(res.data.length)
-      setTutorialData(res.data)
-    })
+    try {
+      axios.get(`${process.env.REACT_APP_API_URL}/tutorials`).then((res) => {
+        'length===>', res.data.length
+        setTutorialCount(res.data.length)
+        setTutorialData(res.data)
+      })
+    } catch {
+      console.log("can't get data from server please try again ")
+    }
   }
 
   const getClasses = () => {
-    axios.get(`${process.env.REACT_APP_API_URL}/classes`).then((res) => {
-      'length===>', res.data.length
-      setClassCount(res.data.length)
-      setClassData(res.data)
-    })
+    try {
+      axios.get(`${process.env.REACT_APP_API_URL}/classes`).then((res) => {
+        'length===>', res.data.length
+        setClassCount(res.data.length)
+        setClassData(res.data)
+      })
+    } catch {
+      console.log("can't get data from server please try again ")
+    }
   }
 
   const getUsersDetails = () => {
     const data = JSON.parse(localStorage.getItem('userData'))
     let pauseDurationSum = 0
-    axios.get(`${process.env.REACT_APP_API_URL}/audiorecord/` + data?.id).then((res) => {
-      setUserData(res.data)
-      res.data.map((time) => {
-        pauseDurationSum += JSON.parse(time.pauseduration)
+    try {
+      axios.get(`${process.env.REACT_APP_API_URL}/audiorecord/` + data?.id).then((res) => {
+        setUserData(res.data)
+        res.data.map((time) => {
+          pauseDurationSum += JSON.parse(time.pauseduration)
+        })
+        getLessonDuration(pauseDurationSum, res.data)
       })
-      getLessonDuration(pauseDurationSum, res.data)
-    })
+    } catch {
+      console.log("can't get data from server please try again ")
+    }
   }
   useEffect(() => {
     setLoader(true)
@@ -141,25 +157,30 @@ const WidgetsDropdown = () => {
   }
   // console.log(lessonData,"=========================")
   const getLessonDuration = (pauseDurationSum, audioData) => {
-    axios.get(`${process.env.REACT_APP_API_URL}/lessons`).then(async (res) => {
-      let filterAudio = res.data.filter((i) => {
-        return audioData.filter((audio) => {
-          if (i.id === JSON.parse(audio.lesson_Id)) {
-            return i
-          }
+    try {
+      axios.get(`${process.env.REACT_APP_API_URL}/lessons`).then(async (res) => {
+        let filterAudio = res.data.filter((i) => {
+          return audioData.filter((audio) => {
+            if (i.id === JSON.parse(audio.lesson_Id)) {
+              return i
+            }
+          })
         })
-      })
-      // setLessonData(filterAudio)
+        // setLessonData(filterAudio)
 
-      let sum = 0
-      res?.data?.map((item) => {
-        sum += item.duration
+        let sum = 0
+        res?.data?.map((item) => {
+          sum += item.duration
+        })
+        // console.log(lessonData)
+        // console.log({ pauseDurationSum, sum })
+        setTotalLessonDurationsum(sum)
+        var watchDuration = Math.ceil((pauseDurationSum / sum) * 100)
+        setTotalProgress(watchDuration)
       })
-      // console.log(lessonData)
-      // console.log({ pauseDurationSum, sum })
-      setTotalLessonDurationsum(sum)
-      setTotalProgress((pauseDurationSum / sum) * 100)
-    })
+    } catch {
+      console.log("can't get data from server please try again ")
+    }
   }
 
   const handleNavigateRecentAudio = (tutorial) => {
@@ -218,11 +239,7 @@ const WidgetsDropdown = () => {
 
       {user?.role === '1' ? (
         <CCol sm={6} lg={3} className="dashboardCards">
-          <span
-            onClick={() => {
-              navigate(`/user`)
-            }}
-          >
+          <span>
             <CWidgetStatsA
               className="mb-4"
               color="primary"
@@ -238,33 +255,50 @@ const WidgetsDropdown = () => {
               value={
                 <div className="dashboardCards-dataList">
                   {/* {userCount}   */}
-                  <div>
+                  <div
+                    onClick={() => {
+                      navigate(`/user`)
+                    }}
+                  >
                     {/* (-12.4% <CIcon icon={cilArrowBottom} />) */}
                     <span className="dashboardCards-dataList-no">
                       {userCount == 0 ? 0 : userCount}
-                    </span>{' '}
+                    </span>
                     User
                   </div>
-                  <div>
+                  <div
+                    onClick={() => {
+                      navigate(`/user/Active`)
+                    }}
+                  >
                     {/* (-12.4% <CIcon icon={cilArrowBottom} />) */}
                     <span className="dashboardCards-dataList-no">
                       {activeUsers?.length == 0 ? 0 : activeUsers.length}
-                    </span>{' '}
+                    </span>
                     Active
                   </div>
-                  <div className="">
+                  <div
+                    className=""
+                    onClick={() => {
+                      navigate(`/user/Invited`)
+                    }}
+                  >
                     {/* (-12.4% <CIcon icon={cilArrowBottom} />) */}
                     <span className="dashboardCards-dataList-no">
                       {inviteUsers.length == 0 ? 0 : inviteUsers.length}
-                    </span>{' '}
+                    </span>
                     Invited
                   </div>
-                  <div>
+                  <div
+                    onClick={() => {
+                      navigate(`/user/Awaiting approval`)
+                    }}
+                  >
                     {/* (-12.4% <CIcon icon={cilArrowBottom} />) */}
                     <span className="dashboardCards-dataList-no">
                       {awaitingAprroveUsers?.length == 0 ? 0 : awaitingAprroveUsers.length}
-                    </span>{' '}
-                    Awaiting Aprrove
+                    </span>
+                    Awaiting approval
                   </div>
                 </div>
               }
@@ -286,7 +320,7 @@ const WidgetsDropdown = () => {
             color="warning"
             value={
               <>
-                {tutorialCount}{' '}
+                {tutorialCount}
                 <span className="fs-6 fw-normal">{/* (84.7% <CIcon icon={cilArrowTop} />) */}</span>
               </>
             }
@@ -299,7 +333,7 @@ const WidgetsDropdown = () => {
         <CCol sm={6} lg={3}>
           <span
             onClick={() => {
-              navigate(`/tutorial`)
+              navigate(`/setting`)
             }}
           >
             <CWidgetStatsA
@@ -333,12 +367,18 @@ const WidgetsDropdown = () => {
                       type="doughnut"
                       data={{
                         labels: ['TotalProgress', 'Total'],
+                        percentFormatString: '#0.##',
+                        indexLabel: '#percent%',
+                        axisY: {
+                          suffix: '%',
+                        },
                         datasets: [
                           {
                             backgroundColor: ['#41B883', '#E46651'],
                             data: [totalProgress, 100 - totalProgress],
                           },
                         ],
+                        indexLabel: '%',
                       }}
                     />
                   </div>

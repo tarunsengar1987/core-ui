@@ -60,7 +60,9 @@ export default function Forgotpassword() {
       setValidated(true)
     } else {
       event.preventDefault()
-      axios
+      try{
+
+        axios
         .put(`${process.env.REACT_APP_API_URL}/forgetpassword/` + id, {
           password: resetPasswordata.password,
         })
@@ -74,8 +76,19 @@ export default function Forgotpassword() {
             setResetPasswordata({ password: '' })
             navigate('/')
           }, 3000)
+        }).catch((error)=>{
+          setLoader(true)
+          setAlert(true)
+          setAlertMessage(error.data.message)
+          setTimeout(() => {
+            setLoader(false)
+            setAlert(false)
+          }, 3000)
         })
-    }
+      }catch{
+      console.log("can't get data from server please try again ")
+      }
+      }
   }
 
   return (

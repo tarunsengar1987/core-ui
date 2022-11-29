@@ -15,7 +15,7 @@ import { useEffect } from 'react'
 import axios from 'axios'
 import Alert from '../alert/Alert'
 import Loader from '../loader/Loader'
-import  "../../../scss/_custom.scss";
+import '../../../scss/_custom.scss'
 
 const Profile = () => {
   const [oldPassword, setOldPassword] = useState('')
@@ -72,18 +72,36 @@ const Profile = () => {
     } else {
       if (userData.password == oldPassword) {
         if (changePassword.new_password == changePassword.c_password) {
-          axios.put(`${process.env.REACT_APP_API_URL}/forgetpassword/` + userData.id, {
-            password: changePassword.new_password,
-          })
-          setLoader(true)
-          setTimeout(() => {
-            setLoader(false)
-            setAlert(true)
-            setAlertMessage('Password Update Successfully')
-          }, 2000)
-          setTimeout(() => {
-            setAlert(false)
-          }, 3000)
+          try {
+            axios
+              .put(`${process.env.REACT_APP_API_URL}/forgetpassword/` + userData.id, {
+                password: changePassword.new_password,
+              })
+              .then((res) => {
+                setLoader(true)
+                setTimeout(() => {
+                  setLoader(false)
+                  setAlert(true)
+                  setAlertMessage('Password Update Successfully')
+                }, 2000)
+                setTimeout(() => {
+                  setAlert(false)
+                }, 3000)
+              })
+              .catch((error) => {
+                setLoader(true)
+                setTimeout(() => {
+                  setLoader(false)
+                  setAlert(true)
+                  setAlertMessage(error.response.data.message)
+                }, 2000)
+                setTimeout(() => {
+                  setAlert(false)
+                }, 3000)
+              })
+          } catch {
+            console.log("can't get data from server please try again ")
+          }
         } else {
           setErrorMessage('Please Enter Valid confirm Password')
         }
@@ -111,7 +129,7 @@ const Profile = () => {
 
       <div className="wrapper d-flex flex-column min-vh-100 bg-light">
         <AppHeader />
-        <h5 className='text-center my-4'>Change Password</h5>
+        <h5 className="text-center my-4">Change Password</h5>
         <CForm
           className="needs-validation password-form bg-white rounded"
           //   noValidate
@@ -164,7 +182,7 @@ const Profile = () => {
               />
             </CInputGroup>
           </CCol>
-          <CCol className='text-center'>
+          <CCol className="text-center">
             <CButton className="bg-darkGreen border-darkGreen" type="submit">
               Change Password
             </CButton>

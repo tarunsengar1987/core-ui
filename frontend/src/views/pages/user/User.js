@@ -42,7 +42,7 @@ import Pagination from '../pagination/Pagination'
 import moment from 'moment'
 import Alert from '../alert/Alert'
 import Loader from '../loader/Loader'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 export default function User() {
   const [visible, setVisible] = useState(false)
   const [toggle, setToggle] = useState(false)
@@ -65,11 +65,19 @@ export default function User() {
   const navigate = useNavigate()
   const currentRecords = userData.slice(indexOfFirstRecord, indexOfLastRecord)
   const nPages = Math.ceil(userData.length / recordsPerPage)
+  const [statusValue, setStatusValue] = useState('')
+  const { status } = useParams()
+  useEffect(() => {
+    if (status !== undefined) {
+      setStatusValue(status)
+    }
+  }, [])
 
   useEffect(() => {
     getUsers()
   }, [])
 
+  console.log(status, '===============================================')
   useEffect(() => {
     if (currentPage > 1) {
       setIsFilter(false)
@@ -96,10 +104,14 @@ export default function User() {
   // console.log(filteredResults,"filteredResults")/
 
   const getUsers = () => {
-    axios.get(`${process.env.REACT_APP_API_URL}/users`).then((res) => {
-      setUserData(res.data)
-      setFilteredResults(res.data)
-    })
+    try {
+      axios.get(`${process.env.REACT_APP_API_URL}/users`).then((res) => {
+        setUserData(res.data)
+        setFilteredResults(res.data)
+      })
+    } catch {
+      console.log("can't get data from server please try again ")
+    }
   }
 
   const handleChange = (event) => {
@@ -113,42 +125,74 @@ export default function User() {
   const handleBlockUser = (data) => {
     if (data.status === 'active') {
       setToggle(true)
-      axios
-        .put(`${process.env.REACT_APP_API_URL}/user/` + data.id, {
-          status: 'blocked',
-        })
-        .then((res) => {
-          setDeletePopup(false)
-          setLoader(true)
-          getUsers()
-          setTimeout(() => {
-            setLoader(false)
-            setAlert(true)
-            setAlertMessage('User is blocked')
-          }, 2000)
-          setTimeout(() => {
-            setAlert(false)
-          }, 4000)
-        })
+      try {
+        axios
+          .put(`${process.env.REACT_APP_API_URL}/user/` + data.id, {
+            status: 'blocked',
+          })
+          .then((res) => {
+            setDeletePopup(false)
+            setLoader(true)
+            getUsers()
+            setTimeout(() => {
+              setLoader(false)
+              setAlert(true)
+              setAlertMessage('User is blocked')
+            }, 2000)
+            setTimeout(() => {
+              setAlert(false)
+            }, 4000)
+          })
+          .catch((error) => {
+            setDeletePopup(false)
+            setLoader(true)
+            setTimeout(() => {
+              setLoader(false)
+              setAlert(true)
+              setAlertMessage(error.response.data.message)
+            }, 2000)
+            setTimeout(() => {
+              setAlert(false)
+            }, 4000)
+          })
+      } catch {
+        console.log("can't get data from server please try again ")
+      }
     } else {
       setToggle(false)
-      axios
-        .put(`${process.env.REACT_APP_API_URL}/user/` + data.id, {
-          status: 'active',
-        })
-        .then((res) => {
-          setDeletePopup(false)
-          setLoader(true)
-          setTimeout(() => {
-            setLoader(false)
-            setAlert(true)
-            setAlertMessage('User is Activated')
-          }, 2000)
-          getUsers()
-          setTimeout(() => {
-            setAlert(false)
-          }, 4000)
-        })
+      try {
+        axios
+          .put(`${process.env.REACT_APP_API_URL}/user/` + data.id, {
+            status: 'active',
+          })
+          .then((res) => {
+            setDeletePopup(false)
+            setLoader(true)
+            setTimeout(() => {
+              setLoader(false)
+              setAlert(true)
+              setAlertMessage('User is Activated')
+            }, 2000)
+            getUsers()
+            setTimeout(() => {
+              setAlert(false)
+            }, 4000)
+          })
+          .catch((error) => {
+            setDeletePopup(false)
+            setLoader(true)
+            setTimeout(() => {
+              setLoader(false)
+              setAlert(true)
+              setAlertMessage(error.response.data.message)
+            }, 2000)
+            setTimeout(() => {
+              setAlert(false)
+            }, 4000)
+          })
+      } catch {
+        console.log("can't get data from server please try again ")
+      }
     }
   }
 
@@ -162,24 +206,40 @@ export default function User() {
   const handleDelete = (data) => {
     if (data.is_active) {
       setToggle(true)
-      axios
-        .put(`${process.env.REACT_APP_API_URL}/user/` + data.id, {
-          is_active: false,
-        })
-        .then((res) => {
-          setLoader(true)
-          setDeletePopup(false)
-          setTimeout(() => {
-            setLoader(false)
-            setAlert(true)
-            setAlertMessage('Successfully Deleted')
-          }, 2000)
+      try {
+        axios
+          .put(`${process.env.REACT_APP_API_URL}/user/` + data.id, {
+            is_active: false,
+          })
+          .then((res) => {
+            setLoader(true)
+            setDeletePopup(false)
+            setTimeout(() => {
+              setLoader(false)
+              setAlert(true)
+              setAlertMessage('Successfully Deleted')
+            }, 2000)
 
-          getUsers()
-          setTimeout(() => {
-            setAlert(false)
-          }, 4000)
-        })
+            getUsers()
+            setTimeout(() => {
+              setAlert(false)
+            }, 4000)
+          })
+          .catch((error) => {
+            setDeletePopup(false)
+            setLoader(true)
+            setTimeout(() => {
+              setLoader(false)
+              setAlert(true)
+              setAlertMessage(error.response.data.message)
+            }, 2000)
+            setTimeout(() => {
+              setAlert(false)
+            }, 4000)
+          })
+      } catch {
+        console.log("can't get data from server please try again ")
+      }
     }
     // setVisible(false)
     // setValidated(false)
@@ -204,22 +264,40 @@ export default function User() {
       ) {
         setValidated(true)
       } else {
-        axios
-          .put(`${process.env.REACT_APP_API_URL}/user/` + registerData.id, registerData)
-          .then((res) => {
-            setLoader(true)
-            setTimeout(() => {
-              setLoader(false)
-              setAlert(true)
-              setAlertMessage('Successfully Updated')
-            }, 2000)
-            setVisible(false)
-            getUsers()
-            setRegisterData({})
-            setTimeout(() => {
-              setAlert(false)
-            }, 4000)
-          })
+        try {
+          axios
+            .put(`${process.env.REACT_APP_API_URL}/user/` + registerData.id, registerData)
+            .then((res) => {
+              setLoader(true)
+              setTimeout(() => {
+                setLoader(false)
+                setAlert(true)
+                setAlertMessage('Successfully Updated')
+              }, 2000)
+              setVisible(false)
+              getUsers()
+              setRegisterData({})
+              setTimeout(() => {
+                setAlert(false)
+              }, 4000)
+            })
+            .catch((error) => {
+              setLoader(true)
+              setTimeout(() => {
+                setLoader(false)
+                setAlert(true)
+                setAlertMessage(error.response.data.message)
+              }, 2000)
+              setVisible(false)
+              getUsers()
+              setRegisterData({})
+              setTimeout(() => {
+                setAlert(false)
+              }, 4000)
+            })
+        } catch {
+          console.log("can't get data from server please try again ")
+        }
       }
     } else {
       event.preventDefault()
@@ -233,20 +311,40 @@ export default function User() {
         setValidated(true)
       } else {
         if (!validated) {
-          axios.post(`${process.env.REACT_APP_API_URL}/createuser`, registerData).then((res) => {
-            setLoader(true)
-            setTimeout(() => {
-              setLoader(false)
-              setAlert(true)
-              setAlertMessage('Successfully Add')
-            }, 2000)
-            setVisible(false)
-            getUsers()
-            setRegisterData({})
-            setTimeout(() => {
-              setAlert(false)
-            }, 4000)
-          })
+          try {
+            axios
+              .post(`${process.env.REACT_APP_API_URL}/createuser`, registerData)
+              .then((res) => {
+                setLoader(true)
+                setTimeout(() => {
+                  setLoader(false)
+                  setAlert(true)
+                  setAlertMessage('Successfully Add')
+                }, 2000)
+                setVisible(false)
+                getUsers()
+                setRegisterData({})
+                setTimeout(() => {
+                  setAlert(false)
+                }, 4000)
+              })
+              .catch((error) => {
+                setLoader(true)
+                setTimeout(() => {
+                  setLoader(false)
+                  setAlert(true)
+                  setAlertMessage(error.response.data.message)
+                }, 2000)
+                setVisible(false)
+                getUsers()
+                setRegisterData({})
+                setTimeout(() => {
+                  setAlert(false)
+                }, 4000)
+              })
+          } catch {
+            console.log("can't get data from server please try again ")
+          }
         }
       }
     }
@@ -262,35 +360,73 @@ export default function User() {
 
   const handleUserInvite = (data) => {
     if (data.status === 'Awaiting approval') {
-      axios
-        .put(`${process.env.REACT_APP_API_URL}/user/` + data.id, {
-          status: 'active',
-        })
-        .then((res) => {
-          setLoader(true)
-          setTimeout(() => {
-            setLoader(false)
-            setAlert(true)
-            setAlertMessage('User is active')
-          }, 2000)
-          getUsers()
-          setTimeout(() => {
-            setAlert(false)
-          }, 4000)
-        })
+      try {
+        axios
+          .put(`${process.env.REACT_APP_API_URL}/user/` + data.id, {
+            status: 'active',
+          })
+          .then((res) => {
+            setLoader(true)
+            setTimeout(() => {
+              setLoader(false)
+              setAlert(true)
+              setAlertMessage('User is active')
+            }, 2000)
+            getUsers()
+            setTimeout(() => {
+              setAlert(false)
+            }, 4000)
+          })
+          .catch((error) => {
+            setLoader(true)
+            setTimeout(() => {
+              setLoader(false)
+              setAlert(true)
+              setAlertMessage(error.response.data.message)
+            }, 2000)
+            setVisible(false)
+            getUsers()
+            setRegisterData({})
+            setTimeout(() => {
+              setAlert(false)
+            }, 4000)
+          })
+      } catch {
+        console.log("can't get data from server please try again ")
+      }
     } else {
-      axios.post(`${process.env.REACT_APP_API_URL}/sendmail`, data).then((res) => {
-        setLoader(true)
-        setTimeout(() => {
-          setLoader(false)
-          setAlert(true)
-          setAlertMessage('Invitation sended successfully')
-        }, 2000)
-        getUsers()
-        setTimeout(() => {
-          setAlert(false)
-        }, 4000)
-      })
+      try {
+        axios
+          .post(`${process.env.REACT_APP_API_URL}/sendmail`, data)
+          .then((res) => {
+            setLoader(true)
+            setTimeout(() => {
+              setLoader(false)
+              setAlert(true)
+              setAlertMessage('Invitation sended successfully')
+            }, 2000)
+            getUsers()
+            setTimeout(() => {
+              setAlert(false)
+            }, 4000)
+          })
+          .catch((error) => {
+            setLoader(true)
+            setTimeout(() => {
+              setLoader(false)
+              setAlert(true)
+              setAlertMessage(error.response.data.message)
+            }, 2000)
+            setVisible(false)
+            getUsers()
+            setRegisterData({})
+            setTimeout(() => {
+              setAlert(false)
+            }, 4000)
+          })
+      } catch {
+        console.log("can't get data from server please try again ")
+      }
     }
   }
 
@@ -473,173 +609,182 @@ export default function User() {
               </CTableHead>
               <CTableBody>
                 {isFilter
-                  ? filteredResults.map((data) => {
-                    console.log(data)
-                      if (data.role != '1') {
-                        return (
-                          <>
-                            <CTableRow>
-                              <CTableDataCell>{data.username}</CTableDataCell>
-                              <CTableDataCell>{data.email}</CTableDataCell>
-                              <CTableDataCell>{data.status} </CTableDataCell>
-                              <CTableDataCell>
-                                <CFormSwitch
-                                  className="backgroundswitch"
-                                  disabled={data.status === 'Invited' ? true : false}
-                                  defaultChecked={data.status === 'blocked' ? true : false}
-                                  id="formSwitchCheckDefault"
-                                  onClick={() => handleBlockUser(data)}
-                                />
-                              </CTableDataCell>
-                              <CTableDataCell>
-                                {moment(data?.createdAt).format('MM/DD/YYYY')}
-                              </CTableDataCell>
-                              <CTableDataCell>
-                                {moment(data?.updatedAt).format('MM/DD/YYYY')}
-                              </CTableDataCell>
-                              <CTableDataCell>
-                                <div className="actionIconBtn">
-                                  {/* <span onClick={() => setDeletePopup(!deletePopup)}>
+                  ? filteredResults
+                      ?.filter((option) =>
+                        `${option.status}`.toLowerCase().includes(statusValue?.toLowerCase()),
+                      )
+                      .map((data) => {
+                        console.log(data)
+                        if (data.role != '1') {
+                          return (
+                            <>
+                              <CTableRow>
+                                <CTableDataCell>{data.username}</CTableDataCell>
+                                <CTableDataCell>{data.email}</CTableDataCell>
+                                <CTableDataCell>{data.status} </CTableDataCell>
+                                <CTableDataCell>
+                                  <CFormSwitch
+                                    className="backgroundswitch"
+                                    disabled={data.status === 'Invited' ? true : false}
+                                    defaultChecked={data.status === 'blocked' ? true : false}
+                                    id="formSwitchCheckDefault"
+                                    onClick={() => handleBlockUser(data)}
+                                  />
+                                </CTableDataCell>
+                                <CTableDataCell>
+                                  {moment(data?.createdAt).format('MM/DD/YYYY')}
+                                </CTableDataCell>
+                                <CTableDataCell>
+                                  {moment(data?.updatedAt).format('MM/DD/YYYY')}
+                                </CTableDataCell>
+                                <CTableDataCell>
+                                  <div className="actionIconBtn">
+                                    {/* <span onClick={() => setDeletePopup(!deletePopup)}>
                                   <CIcon icon={cilDelete} />
                                 </span> */}
-                                  <span onClick={() => handleEdit(data)}>
-                                    <CIcon icon={cilPencil} />
-                                  </span>
-                                  {data.status === 'active' ? (
-                                    <></>
-                                  ) : (
-                                    <>
-                                      {' '}
-                                      <CButton
-                                        onClick={() => handleUserInvite(data)}
-                                        className="bg-darkGreen border-darkGreen"
-                                      >
-                                        {data.status === 'active' ? (
-                                          <></>
-                                        ) : (
-                                          <>
-                                            {data.status === 'Awaiting approval'
-                                              ? 'Approve'
-                                              : 'Invite'}
-                                          </>
-                                        )}
-                                      </CButton>{' '}
-                                    </>
-                                  )}
-                                </div>
-                              </CTableDataCell>
-                              <CTableDataCell>
-                                {' '}
-                                <CButton
-                                  onClick={() => handleUserViewProgress(data)}
-                                  className="bg-darkGreen border-darkGreen"
-                                >
-                                  View Progress
-                                </CButton>{' '}
-                              </CTableDataCell>
-                              {/* <CTableDataCell>Cell</CTableDataCell> */}
-                            </CTableRow>
-                            <CModal visible={deletePopup} onClose={() => setDeletePopup(false)}>
-                              <CModalBody>Are you sure want to delete?</CModalBody>
-                              <CModalFooter>
-                                <CButton color="secondary" onClick={() => setDeletePopup(false)}>
-                                  Close
-                                </CButton>
-                                <CButton color="primary" onClick={() => handleDelete(data)}>
-                                  Delete
-                                </CButton>
-                              </CModalFooter>
-                            </CModal>
-                          </>
-                        )
-                      }else{
-                        ""
-                      }
-                    })
-                  : currentRecords.map((data) => {
-                    console.log(data)
-                      if (data.role != '1') {
-                        return (
-                          <>
-                            <CTableRow>
-                              <CTableDataCell>{data.username}</CTableDataCell>
-                              <CTableDataCell>{data.email}</CTableDataCell>
-                              <CTableDataCell>{data.status}</CTableDataCell>
-                              <CTableDataCell>
-                                <CFormSwitch
-                                  className="backgroundswitch"
-                                  disabled={
-                                    data.status === 'Invited' || data.status === 'Awaiting approval'
-                                      ? true
-                                      : false
-                                  }
-                                  defaultChecked={data.status === 'blocked' ? true : false}
-                                  id="formSwitchCheckDefault"
-                                  onClick={() => handleBlockUser(data)}
-                                />
-                              </CTableDataCell>
-                              <CTableDataCell>
-                                {moment(data?.createdAt).format('MM/DD/YYYY')}
-                              </CTableDataCell>
-                              <CTableDataCell>
-                                {moment(data?.updatedAt).format('MM/DD/YYYY')}
-                              </CTableDataCell>
+                                    <span onClick={() => handleEdit(data)}>
+                                      <CIcon icon={cilPencil} />
+                                    </span>
+                                    {data.status === 'active' ? (
+                                      <></>
+                                    ) : (
+                                      <>
+                                        {' '}
+                                        <CButton
+                                          onClick={() => handleUserInvite(data)}
+                                          className="bg-darkGreen border-darkGreen"
+                                        >
+                                          {data.status === 'active' ? (
+                                            <></>
+                                          ) : (
+                                            <>
+                                              {data.status === 'Awaiting approval'
+                                                ? 'Approve'
+                                                : 'Invite'}
+                                            </>
+                                          )}
+                                        </CButton>{' '}
+                                      </>
+                                    )}
+                                  </div>
+                                </CTableDataCell>
+                                <CTableDataCell>
+                                  {' '}
+                                  <CButton
+                                    onClick={() => handleUserViewProgress(data)}
+                                    className="bg-darkGreen border-darkGreen"
+                                  >
+                                    View Progress
+                                  </CButton>{' '}
+                                </CTableDataCell>
+                                {/* <CTableDataCell>Cell</CTableDataCell> */}
+                              </CTableRow>
+                              <CModal visible={deletePopup} onClose={() => setDeletePopup(false)}>
+                                <CModalBody>Are you sure want to delete?</CModalBody>
+                                <CModalFooter>
+                                  <CButton color="secondary" onClick={() => setDeletePopup(false)}>
+                                    Close
+                                  </CButton>
+                                  <CButton color="primary" onClick={() => handleDelete(data)}>
+                                    Delete
+                                  </CButton>
+                                </CModalFooter>
+                              </CModal>
+                            </>
+                          )
+                        } else {
+                          ;('')
+                        }
+                      })
+                  : currentRecords
+                      .filter((option) =>
+                        `${option.status}`.toLowerCase().includes(statusValue.toLowerCase()),
+                      )
+                      .map((data) => {
+                        console.log(data)
+                        if (data.role != '1') {
+                          return (
+                            <>
+                              <CTableRow>
+                                <CTableDataCell>{data.username}</CTableDataCell>
+                                <CTableDataCell>{data.email}</CTableDataCell>
+                                <CTableDataCell>{data.status}</CTableDataCell>
+                                <CTableDataCell>
+                                  <CFormSwitch
+                                    className="backgroundswitch"
+                                    disabled={
+                                      data.status === 'Invited' ||
+                                      data.status === 'Awaiting approval'
+                                        ? true
+                                        : false
+                                    }
+                                    defaultChecked={data.status === 'blocked' ? true : false}
+                                    id="formSwitchCheckDefault"
+                                    onClick={() => handleBlockUser(data)}
+                                  />
+                                </CTableDataCell>
+                                <CTableDataCell>
+                                  {moment(data?.createdAt).format('MM/DD/YYYY')}
+                                </CTableDataCell>
+                                <CTableDataCell>
+                                  {moment(data?.updatedAt).format('MM/DD/YYYY')}
+                                </CTableDataCell>
 
-                              <CTableDataCell>
-                                <div className="actionIconBtn">
-                                  {/* <span onClick={() => setDeletePopup(!deletePopup)}>
+                                <CTableDataCell>
+                                  <div className="actionIconBtn">
+                                    {/* <span onClick={() => setDeletePopup(!deletePopup)}>
                                   <CIcon icon={cilDelete} />
                                 </span> */}
-                                  <span onClick={() => handleEdit(data)}>
-                                    <CIcon icon={cilPencil} />
-                                  </span>
-                                  {data.status === 'active' ? (
-                                    <></>
-                                  ) : (
-                                    <>
-                                      {' '}
-                                      <CButton
-                                        onClick={() => handleUserInvite(data)}
-                                        className="bg-darkGreen border-darkGreen"
-                                      >
-                                        {data.status === 'active' ? (
-                                          <></>
-                                        ) : (
-                                          <>
-                                            {data.status === 'Awaiting approval'
-                                              ? 'Approve'
-                                              : 'Invite'}
-                                          </>
-                                        )}
-                                      </CButton>{' '}
-                                    </>
-                                  )}
-                                </div>
-                              </CTableDataCell>
-                              <CTableDataCell>
-                                <CButton
-                                  onClick={() => handleUserViewProgress(data)}
-                                  className="bg-darkGreen border-darkGreen"
-                                >
-                                  View Progress
-                                </CButton>
-                              </CTableDataCell>
-                            </CTableRow>
-                            <CModal visible={deletePopup} onClose={() => setDeletePopup(false)}>
-                              <CModalBody>Are you sure want to delete?</CModalBody>
-                              <CModalFooter>
-                                <CButton color="secondary" onClick={() => setDeletePopup(false)}>
-                                  Close
-                                </CButton>
-                                <CButton color="primary" onClick={() => handleDelete(data)}>
-                                  Delete
-                                </CButton>
-                              </CModalFooter>
-                            </CModal>
-                          </>
-                        )
-                      }
-                    })}
+                                    <span onClick={() => handleEdit(data)}>
+                                      <CIcon icon={cilPencil} />
+                                    </span>
+                                    {data.status === 'active' ? (
+                                      <></>
+                                    ) : (
+                                      <>
+                                        {' '}
+                                        <CButton
+                                          onClick={() => handleUserInvite(data)}
+                                          className="bg-darkGreen border-darkGreen"
+                                        >
+                                          {data.status === 'active' ? (
+                                            <></>
+                                          ) : (
+                                            <>
+                                              {data.status === 'Awaiting approval'
+                                                ? 'Approve'
+                                                : 'Invite'}
+                                            </>
+                                          )}
+                                        </CButton>{' '}
+                                      </>
+                                    )}
+                                  </div>
+                                </CTableDataCell>
+                                <CTableDataCell>
+                                  <CButton
+                                    onClick={() => handleUserViewProgress(data)}
+                                    className="bg-darkGreen border-darkGreen"
+                                  >
+                                    View Progress
+                                  </CButton>
+                                </CTableDataCell>
+                              </CTableRow>
+                              <CModal visible={deletePopup} onClose={() => setDeletePopup(false)}>
+                                <CModalBody>Are you sure want to delete?</CModalBody>
+                                <CModalFooter>
+                                  <CButton color="secondary" onClick={() => setDeletePopup(false)}>
+                                    Close
+                                  </CButton>
+                                  <CButton color="primary" onClick={() => handleDelete(data)}>
+                                    Delete
+                                  </CButton>
+                                </CModalFooter>
+                              </CModal>
+                            </>
+                          )
+                        }
+                      })}
               </CTableBody>
             </CTable>
             <Pagination nPages={nPages} currentPage={currentPage} setCurrentPage={setCurrentPage} />

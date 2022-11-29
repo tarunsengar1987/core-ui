@@ -45,16 +45,30 @@ export default function Resetpassword() {
       setValidated(true)
     } else {
       event.preventDefault()
-      axios.post(`${process.env.REACT_APP_API_URL}/resetpassword`, emaildata).then((res) => {
-        setLoader(true)
-        setAlert(true)
-        setAlertMessage(res.data.message)
-        setTimeout(() => {
-          setLoader(false)
-          setAlert(false)
-          setEmaildata({ email: '' })
-        }, 3000)
-      })
+      try {
+        axios
+          .post(`${process.env.REACT_APP_API_URL}/resetpassword`, emaildata)
+          .then((res) => {
+            setLoader(true)
+            setAlert(true)
+            setAlertMessage(res.data.message)
+            setTimeout(() => {
+              setLoader(false)
+              setAlert(false)
+              setEmaildata({ email: '' })
+            }, 3000)
+          })
+          .catch((error) => {
+            setAlert(true)
+            setAlertMessage(error.response.data.message)
+            setTimeout(() => {
+              setLoader(false)
+              setAlert(false)
+            }, 2000)
+          })
+      } catch {
+        console.log("can't get data from server please try again ")
+      }
     }
   }
 
@@ -95,7 +109,11 @@ export default function Resetpassword() {
                       </CInputGroup>
                     </CCol>
                     <CCol xs={12} style={{ textAlign: 'right' }}>
-                      <CButton type="submit" style={{ backgroundColor: '#227081 ' }} className="border-darkGreen">
+                      <CButton
+                        type="submit"
+                        style={{ backgroundColor: '#227081 ' }}
+                        className="border-darkGreen"
+                      >
                         Submit
                       </CButton>
                     </CCol>
@@ -103,15 +121,23 @@ export default function Resetpassword() {
                 </CCardBody>
               </CCard>
               <CCard style={{ width: '44%', backgroundColor: '#227081' }}>
-                <CCardBody className="text-center" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <CCardBody
+                  className="text-center"
+                  style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+                >
                   <div>
-                    <h2 className='text-white'>Lorem ipsum</h2>
-                    <p className='text-offWhite'>
+                    <h2 className="text-white">Lorem ipsum</h2>
+                    <p className="text-offWhite">
                       Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
                       tempor incididunt ut labore et dolore magna aliqua.
                     </p>
                     <Link to="/">
-                      <CButton color="primary" className="mt-3 bg-white border-white text-darkGreen font-bold" active tabIndex={-1}>
+                      <CButton
+                        color="primary"
+                        className="mt-3 bg-white border-white text-darkGreen font-bold"
+                        active
+                        tabIndex={-1}
+                      >
                         Login Now!
                       </CButton>
                     </Link>

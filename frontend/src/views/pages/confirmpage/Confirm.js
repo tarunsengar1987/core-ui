@@ -15,11 +15,15 @@ const Confirm = () => {
     let { id } = useParams();
 
     useEffect(() => {
+      try{
         axios.put( `${process.env.REACT_APP_API_URL}/auth/user/` + id, {
-            status:"active"
+          status:"active"
         }
         ).then((res) => {
-          })
+        })
+      }catch{
+      console.log("can't get data from server please try again ")
+      }
     }, [])
 
   return (

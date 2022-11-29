@@ -74,20 +74,37 @@ const Register = () => {
           password: registerData.password,
           email: registerData.email,
         }
-        axios.post(`${process.env.REACT_APP_API_URL}/auth/signup`, NewRegisterData).then((res) => {
-
-          setLoader(true)
-          localStorage.setItem('userData', JSON.stringify(res.data))
-          setTimeout(() => {
-            setLoader(false)
-            setAlert(true)
-            setAlertMessage('SuccessFully Login')
-          }, 2000)
-          setTimeout(() => {
-            setAlert(false)
-            navigate('/')
-          }, 3000)
-        })
+        try {
+          axios
+            .post(`${process.env.REACT_APP_API_URL}/auth/signup`, NewRegisterData)
+            .then((res) => {
+              setLoader(true)
+              localStorage.setItem('userData', JSON.stringify(res.data))
+              setTimeout(() => {
+                setLoader(false)
+                setAlert(true)
+                setAlertMessage('SuccessFully User Register')
+              }, 2000)
+              setTimeout(() => {
+                setAlert(false)
+                navigate('/')
+              }, 3000)
+            })
+            .catch((error) => {
+              console.log(error.response.data.message)
+              setLoader(true)
+              setTimeout(() => {
+                setLoader(false)
+                setAlert(true)
+                setAlertMessage(error.response.data.message)
+              }, 2000)
+              setTimeout(() => {
+                setAlert(false)
+              }, 4000)
+            })
+        } catch {
+          console.log("can't get data from server please try again ")
+        }
       } else {
         event.preventDefault()
       }

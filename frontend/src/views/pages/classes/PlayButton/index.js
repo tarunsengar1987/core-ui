@@ -17,10 +17,14 @@ function PlayButton({
   // const [playingIndex, setPlayingIndex] = useState(0)
 
   useEffect(() => {
-    axios.get(`${process.env.REACT_APP_API_URL}/lesson/` + classId).then((res) => {
-      // console.log(res.data)
-      setLessonData(res.data)
-    })
+    try {
+      axios.get(`${process.env.REACT_APP_API_URL}/lesson/` + classId).then((res) => {
+        // console.log(res.data)
+        setLessonData(res.data)
+      })
+    } catch {
+      console.log("can't get data from server please try again ")
+    }
   }, [isPlaying])
 
   useEffect(() => {
@@ -30,13 +34,17 @@ function PlayButton({
     // if (newtemp !== null) {
     //   temp.push(newtemp)
     // }
-    axios.get(`${process.env.REACT_APP_API_URL}/lesson/` + classId).then((res) => {
-      setLessonData(res.data)
-      if (!temp.includes(res.data[0].id)) {
-        temp.push(res.data[0].id)
-      }
-      localStorage.setItem('id', JSON.stringify(temp))
-    })
+    try {
+      axios.get(`${process.env.REACT_APP_API_URL}/lesson/` + classId).then((res) => {
+        setLessonData(res.data)
+        if (!temp.includes(res.data[0].id)) {
+          temp.push(res.data[0].id)
+        }
+        localStorage.setItem('id', JSON.stringify(temp))
+      })
+    } catch {
+      console.log("can't get data from server please try again ")
+    }
     let number = 0
     localStorage.setItem('index', JSON.stringify(number))
   }, [])

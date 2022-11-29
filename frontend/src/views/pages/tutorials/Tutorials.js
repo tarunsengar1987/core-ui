@@ -101,21 +101,29 @@ export default function Tutorials() {
 
   const getProgress = () => {
     const data = JSON.parse(localStorage.getItem('userData'))
-    axios.get(`${process.env.REACT_APP_API_URL}/progress/` + data.id).then((res) => {
-      debugger
-      setTotalProgress(res.data.data)
-    })
+    try {
+      axios.get(`${process.env.REACT_APP_API_URL}/progress/` + data.id).then((res) => {
+        debugger
+        setTotalProgress(res.data.data)
+      })
+    } catch {
+      console.log("can't get data from server please try again ")
+    }
   }
 
   const getTutorials = () => {
-    axios.get(`${process.env.REACT_APP_API_URL}/tutorials`).then((res) => {
-      setLoader(true)
-      setTimeout(() => {
-        setLoader(false)
-      }, 2000)
-      setUserData(res.data)
-      setFilteredResults(res.data)
-    })
+    try {
+      axios.get(`${process.env.REACT_APP_API_URL}/tutorials`).then((res) => {
+        setLoader(true)
+        setTimeout(() => {
+          setLoader(false)
+        }, 2000)
+        setUserData(res.data)
+        setFilteredResults(res.data)
+      })
+    } catch {
+      console.log("can't get data from server please try again ")
+    }
   }
 
   const handleChange = (event) => {
@@ -129,40 +137,72 @@ export default function Tutorials() {
   const handleBlockUser = (data) => {
     if (data.status === 'active') {
       setToggle(true)
-      axios
-        .put(`${process.env.REACT_APP_API_URL}/tutorial/` + data.id, {
-          status: 'inactive',
-        })
-        .then((res) => {
-          setLoader(true)
-          getTutorials()
-          setTimeout(() => {
-            setLoader(false)
-            setAlert(true)
-            setAlertMessage('Totorial is inactived')
-          }, 2000)
-          setTimeout(() => {
-            setAlert(false)
-          }, 4000)
-        })
+      try {
+        axios
+          .put(`${process.env.REACT_APP_API_URL}/tutorial/` + data.id, {
+            status: 'inactive',
+          })
+          .then((res) => {
+            setLoader(true)
+            getTutorials()
+            setTimeout(() => {
+              setLoader(false)
+              setAlert(true)
+              setAlertMessage('Totorial is inactived')
+            }, 2000)
+            setTimeout(() => {
+              setAlert(false)
+            }, 4000)
+          })
+          .catch((error) => {
+            setLoader(true)
+            setTimeout(() => {
+              setLoader(false)
+              setAlert(true)
+              setAlertMessage(error.response.data.message)
+            }, 2000)
+            getTutorials()
+            setTimeout(() => {
+              setAlert(false)
+            }, 4000)
+          })
+      } catch {
+        console.log("can't get data from server please try again ")
+      }
     } else {
       setToggle(false)
-      axios
-        .put(`${process.env.REACT_APP_API_URL}/tutorial/` + data.id, {
-          status: 'active',
-        })
-        .then((res) => {
-          setLoader(true)
-          setTimeout(() => {
-            setLoader(false)
-            setAlert(true)
-            setAlertMessage('Totorial is actived')
-          }, 2000)
-          getTutorials()
-          setTimeout(() => {
-            setAlert(false)
-          }, 4000)
-        })
+      try {
+        axios
+          .put(`${process.env.REACT_APP_API_URL}/tutorial/` + data.id, {
+            status: 'active',
+          })
+          .then((res) => {
+            setLoader(true)
+            setTimeout(() => {
+              setLoader(false)
+              setAlert(true)
+              setAlertMessage('Totorial is actived')
+            }, 2000)
+            getTutorials()
+            setTimeout(() => {
+              setAlert(false)
+            }, 4000)
+          })
+          .catch((error) => {
+            setLoader(true)
+            setTimeout(() => {
+              setLoader(false)
+              setAlert(true)
+              setAlertMessage(error.response.data.message)
+            }, 2000)
+            getTutorials()
+            setTimeout(() => {
+              setAlert(false)
+            }, 4000)
+          })
+      } catch {
+        console.log("can't get data from server please try again ")
+      }
     }
   }
 
@@ -174,19 +214,36 @@ export default function Tutorials() {
   }
 
   const handleDelete = () => {
-    axios.delete(`${process.env.REACT_APP_API_URL}/tutorial/` + deleteData).then((res) => {
-      setDeletePopup(false)
-      getTutorials()
-      setLoader(true)
-      setTimeout(() => {
-        setLoader(false)
-        setAlert(true)
-        setAlertMessage('Successfully Deleted')
-      }, 2000)
-      setTimeout(() => {
-        setAlert(false)
-      }, 4000)
-    })
+    try {
+      axios
+        .delete(`${process.env.REACT_APP_API_URL}/tutorial/` + deleteData)
+        .then((res) => {
+          setDeletePopup(false)
+          getTutorials()
+          setLoader(true)
+          setTimeout(() => {
+            setLoader(false)
+            setAlert(true)
+            setAlertMessage('Successfully Deleted')
+          }, 2000)
+          setTimeout(() => {
+            setAlert(false)
+          }, 4000)
+        })
+        .catch((error) => {
+          setLoader(true)
+          setTimeout(() => {
+            setLoader(false)
+            setAlert(true)
+            setAlertMessage(error.response.data.message)
+          }, 2000)
+          setTimeout(() => {
+            setAlert(false)
+          }, 4000)
+        })
+    } catch {
+      console.log("can't get data from server please try again ")
+    }
   }
 
   const handleEdit = (data) => {
@@ -206,22 +263,37 @@ export default function Tutorials() {
       ) {
         setValidated(true)
       } else {
-        axios
-          .put(`${process.env.REACT_APP_API_URL}/tutorial/` + tutorialsData.id, tutorialsData)
-          .then((res) => {
-            setLoader(true)
-            setVisible(false)
-            getTutorials()
-            setTutorialsData({})
-            setTimeout(() => {
-              setLoader(false)
-              setAlert(true)
-              setAlertMessage('Successfully Updated')
-            }, 2000)
-            setTimeout(() => {
-              setAlert(false)
-            }, 4000)
-          })
+        try {
+          axios
+            .put(`${process.env.REACT_APP_API_URL}/tutorial/` + tutorialsData.id, tutorialsData)
+            .then((res) => {
+              setLoader(true)
+              setVisible(false)
+              getTutorials()
+              setTutorialsData({})
+              setTimeout(() => {
+                setLoader(false)
+                setAlert(true)
+                setAlertMessage('Successfully Updated')
+              }, 2000)
+              setTimeout(() => {
+                setAlert(false)
+              }, 4000)
+            })
+            .catch((error) => {
+              setLoader(true)
+              setTimeout(() => {
+                setLoader(false)
+                setAlert(true)
+                setAlertMessage(error.response.data.message)
+              }, 2000)
+              setTimeout(() => {
+                setAlert(false)
+              }, 4000)
+            })
+        } catch {
+          console.log("can't get data from server please try again ")
+        }
       }
       // }
     } else {
@@ -235,21 +307,38 @@ export default function Tutorials() {
       } else {
         setLoader(true)
         tutorialsData.status = 'active'
-        axios.post(`${process.env.REACT_APP_API_URL}/tutorial/`, tutorialsData).then((res) => {
-          setVisible(false)
-          getTutorials()
-          setTutorialsData({})
-          setTimeout(() => {
-            setLoader(false)
-          }, 2000)
-          setTimeout(() => {
-            setAlert(true)
-            setAlertMessage('Successfully Add')
-          }, 2000)
-          setTimeout(() => {
-            setAlert(false)
-          }, 4000)
-        })
+        try {
+          axios
+            .post(`${process.env.REACT_APP_API_URL}/tutorial/`, tutorialsData)
+            .then((res) => {
+              setVisible(false)
+              getTutorials()
+              setTutorialsData({})
+              setTimeout(() => {
+                setLoader(false)
+              }, 2000)
+              setTimeout(() => {
+                setAlert(true)
+                setAlertMessage('Successfully Add')
+              }, 2000)
+              setTimeout(() => {
+                setAlert(false)
+              }, 4000)
+            })
+            .catch((error) => {
+              setLoader(true)
+              setTimeout(() => {
+                setLoader(false)
+                setAlert(true)
+                setAlertMessage(error.response.data.message)
+              }, 2000)
+              setTimeout(() => {
+                setAlert(false)
+              }, 4000)
+            })
+        } catch {
+          console.log("can't get data from server please try again ")
+        }
       }
     }
   }
@@ -280,26 +369,34 @@ export default function Tutorials() {
   }
 
   const handleView = (data) => {
-    axios.get(`${process.env.REACT_APP_API_URL}/class/` + data.id).then((res) => {
-      navigate('/tutorial/tutorial-details', {
-        state: { classdata: res.data, tutorialData: data },
+    try {
+      axios.get(`${process.env.REACT_APP_API_URL}/class/` + data.id).then((res) => {
+        navigate('/tutorial/tutorial-details', {
+          state: { classdata: res.data, tutorialData: data },
+        })
       })
-    })
+    } catch {
+      console.log("can't get data from server please try again ")
+    }
   }
 
   const checkClsses = (id) => {
-    axios.get(`${process.env.REACT_APP_API_URL}/class/` + id).then((res) => {
-      if (res.data.length > 0) {
-        setDeletePopup(true)
-        setModalPopup(
-          'This tutorial is assosicated with classes ! Are you sure want to delete this ? ',
-        )
-        set
-      } else {
-        setDeletePopup(true)
-        setModalPopup('Are you sure want to delete this tutorial ?')
-      }
-    })
+    try {
+      axios.get(`${process.env.REACT_APP_API_URL}/class/` + id).then((res) => {
+        if (res.data.length > 0) {
+          setDeletePopup(true)
+          setModalPopup(
+            'This tutorial is assosicated with classes ! Are you sure want to delete this ? ',
+          )
+          set
+        } else {
+          setDeletePopup(true)
+          setModalPopup('Are you sure want to delete this tutorial ?')
+        }
+      })
+    } catch {
+      console.log("can't get data from server please try again ")
+    }
   }
 
   return (

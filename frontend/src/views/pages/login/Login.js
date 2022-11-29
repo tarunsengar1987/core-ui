@@ -44,44 +44,55 @@ const Login = () => {
       setValidated(true)
     } else {
       event.preventDefault()
-      axios.post(`${process.env.REACT_APP_API_URL}/auth/signin`, loginData).then((res) => {
-        setLoader(true)
-        if (res.data.status === 'active') {
-
-          localStorage.setItem('userData', JSON.stringify(res.data))
+      try {
+        axios.post(`${process.env.REACT_APP_API_URL}/auth/signin`, loginData).then((res) => {
+          setLoader(true)
+          if (res.data.status === 'active') {
+            localStorage.setItem('userData', JSON.stringify(res.data))
+            setTimeout(() => {
+              setLoader(false)
+              setAlert(true)
+              setAlertMessage('SuccessFully Login')
+            }, 2000)
+            setTimeout(() => {
+              setAlert(false)
+              navigate('/dashboard')
+            }, 3000)
+          } else {
+            if (res.data.status === 'Awaiting approval') {
+              setAlert(true)
+              setAlertMessage('This user is waiting for admin approval')
+              setTimeout(() => {
+                setAlert(false)
+                setLoader(false)
+                setLoginData({ email: '', password: '' })
+              }, 3000)
+            } else {
+              setAlert(true)
+              setAlertMessage('Invalid creadentials')
+              setTimeout(() => {
+                setAlert(false)
+                setLoader(false)
+                navigate('/')
+                setLoginData({ email: '', password: '' })
+              }, 3000)
+            }
+          }
+        }).catch((error)=>{
+          console.log(error.response.data.message)
+          setLoader(true)
           setTimeout(() => {
             setLoader(false)
             setAlert(true)
-            setAlertMessage('SuccessFully Login')
+            setAlertMessage(error.response.data.message)
           }, 2000)
           setTimeout(() => {
             setAlert(false)
-            navigate('/dashboard')
-          }, 3000)
-        }  else {
-          if(res.data.status === 'Awaiting approval'){
-            setAlert(true)
-            setAlertMessage('This user is waiting for admin approval')
-            setTimeout(() => {
-              setAlert(false)
-              setLoader(false)
-              setLoginData({ email: '', password: '' })
-            }, 3000)
-
-          }else{
-            setAlert(true)
-            setAlertMessage('Invalid creadentials')
-            setTimeout(() => {
-              setAlert(false)
-              setLoader(false)
-              navigate('/')
-              setLoginData({ email: '', password: '' })
-            }, 3000)
-          }
-         
-          // navigate('/')
-        }
-      })
+          }, 4000)
+        })
+      } catch {
+      console.log("can't get data from server please try again ")
+      }
     }
   }
 

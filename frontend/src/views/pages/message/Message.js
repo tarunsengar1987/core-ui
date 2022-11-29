@@ -18,9 +18,22 @@ const Message = () => {
   const [alertMessage, setAlertMessage] = useState('')
   const [filterValue, setFilterValue] = useState('')
   function getUser() {
-    axios.get(`${process.env.REACT_APP_API_URL}/users`).then((res) => {
-      setUserData(res.data)
-    })
+    try {
+      axios
+        .get(`${process.env.REACT_APP_API_URL}/users`)
+        .then((res) => {
+          setUserData(res.data)
+        })
+        .catch((error) => {
+          setAlert(true)
+          setAlertMessage(error.response.data.message)
+          setTimeout(() => {
+            setAlert(false)
+          }, 2000)
+        })
+    } catch {
+      console.log("can't get data from server please try again ")
+    }
   }
   useEffect(() => {
     getUser()
@@ -52,22 +65,35 @@ const Message = () => {
     }
     if (isCheck.length !== 0) {
       if (content !== '') {
-        axios.post(`${process.env.REACT_APP_API_URL}/sendmailtousers`, mailData).then((res) => {
-          console.log(res.data)
-          setLoader(true)
-          setAllChecked(false)
-          setTimeout(() => {
-            setLoader(false)
-            setAlert(true)
-            setAlertMessage(res.data.message)
-          }, 2000)
+        try {
+          axios
+            .post(`${process.env.REACT_APP_API_URL}/sendmailtousers`, mailData)
+            .then((res) => {
+              console.log(res.data)
+              setLoader(true)
+              setAllChecked(false)
+              setTimeout(() => {
+                setLoader(false)
+                setAlert(true)
+                setAlertMessage(res.data.message)
+              }, 2000)
 
-          setTimeout(() => {
-            setAlert(false)
-          }, 3000)
-          setIsCheck([])
-          setContent('')
-        })
+              setTimeout(() => {
+                setAlert(false)
+              }, 3000)
+              setIsCheck([])
+              setContent('')
+            })
+            .catch((error) => {
+              setAlert(true)
+              setAlertMessage(error.response.data.message)
+              setTimeout(() => {
+                setAlert(false)
+              }, 2000)
+            })
+        } catch {
+          console.log("can't get data from server please try again ")
+        }
       } else {
         setAlert(true)
         setAlertMessage('please write a message')
