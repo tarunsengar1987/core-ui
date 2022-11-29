@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 import {
   CTable,
   CTableBody,
@@ -7,8 +6,6 @@ import {
   CTableHeaderCell,
   CTableRow,
 } from '@coreui/react'
-=======
->>>>>>> 33d3ee2402f4db645c7e7b4baabf8d61368ff525
 import { CChart } from '@coreui/react-chartjs'
 import axios from 'axios'
 import React, { useEffect, useState } from 'react'
@@ -51,14 +48,9 @@ export default function UserProgress() {
           })
           getLessonDuration(pauseDurationSum)
         })
-<<<<<<< HEAD
     } catch {
       console.log("can't get data from server please try again ")
     }
-=======
-        getLessonDuration(pauseDurationSum)
-      })
->>>>>>> 33d3ee2402f4db645c7e7b4baabf8d61368ff525
   }
 
   const getLessonDuration = (pauseDurationSum) => {
@@ -86,7 +78,6 @@ export default function UserProgress() {
         <div className="dashboardPage__root">
           <AppHeader />
           <div className="dashboardPage__inner">
-<<<<<<< HEAD
             <div className="user-progress-detail card">
               <CTable>
                 <CTableHead>
@@ -125,7 +116,6 @@ export default function UserProgress() {
                     : 'You Did not visit any audio'}
                 </CTableBody>
               </CTable>
-=======
             <div className="userProgressList">
               {console.log('totalProgressUser', totalProgressUser)}
               { totalProgressUser.length > 0
@@ -153,11 +143,11 @@ export default function UserProgress() {
                   </div>
                 </>
               )): <h5 className="userProgressList-itemTitle">This User Did not visit any audio</h5> }
->>>>>>> 33d3ee2402f4db645c7e7b4baabf8d61368ff525
             </div>
           </div>
         </div>
       </div>
+    </div>
     </div>
   )
 }

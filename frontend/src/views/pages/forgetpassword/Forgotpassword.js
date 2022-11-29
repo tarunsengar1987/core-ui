@@ -30,10 +30,10 @@ export default function Forgotpassword() {
   let { id } = useParams()
 
   const handleChange = (event) => {
-    if(event.target.name === 'confirmpassword'){
-      if(resetPasswordata.password !== event.target.value ){
+    if (event.target.name === 'confirmpassword') {
+      if (resetPasswordata.password !== event.target.value) {
         setError('Password and confirm password are not match')
-      }else{
+      } else {
         const { name, value } = event.target
         setResetPasswordata({
           ...resetPasswordata,
@@ -42,16 +42,18 @@ export default function Forgotpassword() {
       }
     }
     const { name, value } = event.target
-      setResetPasswordata({
-        ...resetPasswordata,
-        [name]: value,
-      })
-  
+    setResetPasswordata({
+      ...resetPasswordata,
+      [name]: value,
+    })
   }
 
   const handleSubmit = (event) => {
     event.preventDefault()
-    if (resetPasswordata.password === '' || resetPasswordata.password !== resetPasswordata.confirmpassword) {
+    if (
+      resetPasswordata.password === '' ||
+      resetPasswordata.password !== resetPasswordata.confirmpassword
+    ) {
       const form = event.currentTarget
       if (form.checkValidity() === false) {
         event.preventDefault()
@@ -60,35 +62,37 @@ export default function Forgotpassword() {
       setValidated(true)
     } else {
       event.preventDefault()
-      try{
-
+      try {
         axios
-        .put(`${process.env.REACT_APP_API_URL}/forgetpassword/` + id, {
-          password: resetPasswordata.password,
-        })
-        .then((res) => {
-          setLoader(true)
-          setAlert(true)
-          setAlertMessage(res.data.message)
-          setTimeout(() => {
-            setLoader(false)
-            setAlert(false)
-            setResetPasswordata({ password: '' })
-            navigate('/')
-          }, 3000)
-        }).catch((error)=>{
-          setLoader(true)
-          setAlert(true)
-          setAlertMessage(error.data.message)
-          setTimeout(() => {
-            setLoader(false)
-            setAlert(false)
-          }, 3000)
-        })
-      }catch{
-      console.log("can't get data from server please try again ")
+          .put(`${process.env.REACT_APP_API_URL}/forgetpassword/` + id, {
+            password: resetPasswordata.password,
+          })
+          .then((res) => {
+            setLoader(true)
+            setTimeout(() => {
+              setAlert(true)
+              setLoader(false)
+              setAlertMessage(res.data.message)
+            }, 2000)
+            setTimeout(() => {
+              setAlert(false)
+              setResetPasswordata({ password: '' })
+              navigate('/')
+            }, 3000)
+          })
+          .catch((error) => {
+            setLoader(true)
+            setAlert(true)
+            setAlertMessage(error.data.message)
+            setTimeout(() => {
+              setLoader(false)
+              setAlert(false)
+            }, 3000)
+          })
+      } catch {
+        console.log("can't get data from server please try again ")
       }
-      }
+    }
   }
 
   return (
@@ -144,8 +148,12 @@ export default function Forgotpassword() {
                         />
                       </CInputGroup>
                     </CCol>
-                    {resetPasswordata.password === resetPasswordata.confirmpassword ? <></>  :<div className='errorMsg'>{error}</div>}
-                   
+                    {resetPasswordata.password === resetPasswordata.confirmpassword ? (
+                      <></>
+                    ) : (
+                      <div className="errorMsg">{error}</div>
+                    )}
+
                     <CCol xs={12} style={{ textAlign: 'right' }}>
                       <CButton
                         type="submit"

@@ -50,10 +50,12 @@ export default function Resetpassword() {
           .post(`${process.env.REACT_APP_API_URL}/resetpassword`, emaildata)
           .then((res) => {
             setLoader(true)
-            setAlert(true)
-            setAlertMessage(res.data.message)
-            setTimeout(() => {
+            setTimeout(()=>{
+              setAlert(true)
+              setAlertMessage(res.data.message)
               setLoader(false)
+            },2000)
+            setTimeout(() => {
               setAlert(false)
               setEmaildata({ email: '' })
             }, 3000)
