@@ -67,6 +67,7 @@ export default function Tutorials() {
   const [alert, setAlert] = useState(false)
   const [alertMessage, setAlertMessage] = useState('')
   const [modalPopup, setModalPopup] = useState('')
+  const [searchValue, setSearchValue] = useState('')
   const [deleteData, setDeleteData] = useState()
   const [totalProgress, setTotalProgress] = useState([])
   useEffect(() => {
@@ -357,21 +358,18 @@ export default function Tutorials() {
     else setAssending(true)
   }
 
-  const handleSearchItems = (searchValue) => {
+  const handleSearchItems = (e) => {
+    setSearchValue(e.target.value)
+
     setIsFilter(true)
-    if (searchValue !== '') {
-      const filteredData = userData
-        .slice(indexOfFirstRecord, indexOfLastRecord)
-        .filter(
-          (item) =>
-            item.name.toLowerCase().includes(searchValue.toLowerCase()) ||
-            item.descriptions.toLowerCase().includes(searchValue.toLowerCase()) ||
-            item.status.toLowerCase().includes(searchValue.toLowerCase()),
-        )
-      setFilteredResults(filteredData)
-    } else {
-      setFilteredResults(currentRecords)
-    }
+    // if (searchValue !== '') {
+    //   const filteredData = userData
+
+    //   setFilteredResults(filteredData)
+
+    // } else {
+    //   setFilteredResults(currentRecords)
+    // }
   }
 
   const handleView = (data) => {
@@ -504,8 +502,17 @@ export default function Tutorials() {
                 id="validationCustom03"
                 required
                 placeholder="Search"
-                onChange={(e) => handleSearchItems(e.target.value)}
+                onChange={(e) => handleSearchItems(e)}
                 name="email"
+                value={searchValue}
+              />
+              <button
+                type="button"
+                class="btn-close"
+                aria-label="Close"
+                onClick={() => {
+                  setSearchValue('')
+                }}
               />
             </CInputGroup>
           </CCol>
@@ -554,7 +561,7 @@ export default function Tutorials() {
                     />
                   </CTableHeaderCell>
                   {user?.role === '1' ? (
-                  <CTableHeaderCell scope="col">Actions</CTableHeaderCell>
+                    <CTableHeaderCell scope="col">Actions</CTableHeaderCell>
                   ) : (
                     ''
                   )}
@@ -569,14 +576,127 @@ export default function Tutorials() {
               </CTableHead>
               <CTableBody>
                 {isFilter
-                  ? filteredResults.map((data, index) => (
-                      <React.Fragment key={index}>
-                        <CTableRow>
-                          <CTableDataCell>{data.name}</CTableDataCell>
-                          {/* <CTableDataCell>{data.descriptions}</CTableDataCell> */}
-                          <CTableDataCell>{data.status}</CTableDataCell>
+                  ? filteredResults
+                      .slice(indexOfFirstRecord, indexOfLastRecord)
+                      .filter(
+                        (item) =>
+                          item.name.toLowerCase().includes(searchValue.toLowerCase()) ||
+                          item.descriptions.toLowerCase().includes(searchValue.toLowerCase()) ||
+                          item.status.toLowerCase().includes(searchValue.toLowerCase()),
+                      )
+                      .map((data, index) => (
+                        <React.Fragment key={index}>
+                          <CTableRow>
+                            <CTableDataCell>{data.name}</CTableDataCell>
+                            {/* <CTableDataCell>{data.descriptions}</CTableDataCell> */}
+                            <CTableDataCell>{data.status}</CTableDataCell>
 
-                          <>
+                            <>
+                              {user.role === '1' ? (
+                                <CTableDataCell>
+                                  <CFormSwitch
+                                    className="backgroundswitch"
+                                    defaultChecked={data.status === 'active' ? true : false}
+                                    id="formSwitchCheckDefault"
+                                    onClick={() => handleBlockUser(data)}
+                                  />
+                                </CTableDataCell>
+                              ) : (
+                                ''
+                              )}
+                            </>
+
+                            <CTableDataCell>
+                              {moment(data?.createdAt).format('MM/DD/YYYY')}
+                            </CTableDataCell>
+                            <CTableDataCell>
+                              {moment(data?.updatedAt).format('MM/DD/YYYY')}
+                            </CTableDataCell>
+
+                            {user?.role === '2' ? (
+                              <CTableDataCell>
+                                {totalProgress.map((item) => (
+                                  <>
+                                    {data.id === item.tutorial_id ? (
+                                      <div className="card card tutorial-progress-report h-100">
+                                        <h4>Line</h4>
+                                        <div className="chart-wrapper halfChart">
+                                          <CChart
+                                            type="doughnut"
+                                            data={{
+                                              // labels: ['TotalProgress', 'Total'],
+                                              datasets: [
+                                                {
+                                                  backgroundColor: ['#41B883', '#E46651'],
+                                                  data: [
+                                                    data.id === item.tutorial_id
+                                                      ? item.completed_percentage
+                                                      : '',
+                                                    100 - item.completed_percentage,
+                                                  ],
+                                                },
+                                              ],
+                                            }}
+                                          />
+                                        </div>
+                                      </div>
+                                    ) : (
+                                      ''
+                                    )}
+                                  </>
+                                ))}
+                              </CTableDataCell>
+                            ) : (
+                              ''
+                            )}
+                            {user.role === '1' ? (
+                              <CTableDataCell>
+                                <div className="actionIconBtn">
+                                  <span
+                                    onClick={() => {
+                                      setDeleteData(data.id)
+                                      checkClsses(data.id)
+                                      //  setDeletePopup(!deletePopup)
+                                    }}
+                                  >
+                                    <CIcon icon={cilDelete} />
+                                  </span>
+
+                                  <span onClick={() => handleEdit(data)}>
+                                    <CIcon icon={cilPencil} />
+                                  </span>
+                                </div>
+                              </CTableDataCell>
+                            ) : (
+                              ''
+                            )}
+                            <CTableDataCell>
+                              <div className="actionIconBtn">
+                                <CButton
+                                  onClick={() => handleView(data)}
+                                  className="bg-darkGreen border-darkGreen"
+                                >
+                                  View Classes
+                                </CButton>
+                              </div>
+                            </CTableDataCell>
+                          </CTableRow>
+                        </React.Fragment>
+                      ))
+                  : currentRecords
+                      .slice(indexOfFirstRecord, indexOfLastRecord)
+                      .filter(
+                        (item) =>
+                          item.name.toLowerCase().includes(searchValue.toLowerCase()) ||
+                          item.descriptions.toLowerCase().includes(searchValue.toLowerCase()) ||
+                          item.status.toLowerCase().includes(searchValue.toLowerCase()),
+                      )
+                      .map((data, index) => (
+                        <React.Fragment key={index}>
+                          <CTableRow>
+                            <CTableDataCell>{data.name}</CTableDataCell>
+                            {/* <CTableDataCell>{data.descriptions}</CTableDataCell> */}
+                            <CTableDataCell>{data.status}</CTableDataCell>
                             {user.role === '1' ? (
                               <CTableDataCell>
                                 <CFormSwitch
@@ -589,179 +709,82 @@ export default function Tutorials() {
                             ) : (
                               ''
                             )}
-                          </>
-
-                          <CTableDataCell>
-                            {moment(data?.createdAt).format('MM/DD/YYYY')}
-                          </CTableDataCell>
-                          <CTableDataCell>
-                            {moment(data?.updatedAt).format('MM/DD/YYYY')}
-                          </CTableDataCell>
-
-                          {user?.role === '2' ? (
                             <CTableDataCell>
-                              {totalProgress.map((item) => (
-                                <>
-                                  {data.id === item.tutorial_id ? (
-                                    <div className="card card tutorial-progress-report h-100">
-                                      <h4>Line</h4>
-                                      <div className="chart-wrapper halfChart">
-                                        <CChart
-                                          type="doughnut"
-                                          data={{
-                                            // labels: ['TotalProgress', 'Total'],
-                                            datasets: [
-                                              {
-                                                backgroundColor: ['#41B883', '#E46651'],
-                                                data: [
-                                                  data.id === item.tutorial_id
-                                                    ? item.completed_percentage
-                                                    : '',
-                                                  100 - item.completed_percentage,
-                                                ],
-                                              },
-                                            ],
-                                          }}
-                                        />
-                                      </div>
-                                    </div>
-                                  ) : (
-                                    ''
-                                  )}
-                                </>
-                              ))}
+                              {moment(data?.createdAt).format('MM/DD/YYYY')}
                             </CTableDataCell>
-                          ) : (
-                            ''
-                          )}
-                          {user.role === '1' ? (
+                            <CTableDataCell>
+                              {moment(data?.updatedAt).format('MM/DD/YYYY')}
+                            </CTableDataCell>
+                            {user?.role === '2' ? (
+                              <CTableDataCell>
+                                {totalProgress.map((item) => (
+                                  <>
+                                    {' '}
+                                    {data.id === item.tutorial_id ? (
+                                      <div className="card tutorial-progress-report h-100">
+                                        <div className="chart-wrapper halfChart">
+                                          <CChart
+                                            type="doughnut"
+                                            data={{
+                                              // labels: ['TotalProgress', 'Total'],
+                                              datasets: [
+                                                {
+                                                  backgroundColor: ['#41B883', '#E46651'],
+                                                  data: [
+                                                    data.id === item.tutorial_id
+                                                      ? item.completed_percentage
+                                                      : '',
+                                                    100 - item.completed_percentage,
+                                                  ],
+                                                },
+                                              ],
+                                            }}
+                                          />
+                                        </div>
+                                      </div>
+                                    ) : (
+                                      ''
+                                    )}
+                                  </>
+                                ))}
+                              </CTableDataCell>
+                            ) : (
+                              ''
+                            )}
+                            {user.role === '1' ? (
+                              <CTableDataCell>
+                                <>
+                                  <div className="actionIconBtn">
+                                    <span
+                                      onClick={() => {
+                                        setDeleteData(data.id)
+                                        checkClsses(data.id)
+                                      }}
+                                    >
+                                      <CIcon icon={cilDelete} />
+                                    </span>
+                                    <span onClick={() => handleEdit(data)}>
+                                      <CIcon icon={cilPencil} />
+                                    </span>
+                                  </div>
+                                </>
+                              </CTableDataCell>
+                            ) : (
+                              ''
+                            )}{' '}
                             <CTableDataCell>
                               <div className="actionIconBtn">
-                                <span
-                                  onClick={() => {
-                                    setDeleteData(data.id)
-                                    checkClsses(data.id)
-                                    //  setDeletePopup(!deletePopup)
-                                  }}
+                                <CButton
+                                  onClick={() => handleView(data)}
+                                  className="bg-darkGreen border-darkGreen"
                                 >
-                                  <CIcon icon={cilDelete} />
-                                </span>
-
-                                <span onClick={() => handleEdit(data)}>
-                                  <CIcon icon={cilPencil} />
-                                </span>
+                                  View Classes
+                                </CButton>
                               </div>
                             </CTableDataCell>
-                          ) : (
-                            ''
-                          )}
-                          <CTableDataCell>
-                            <div className="actionIconBtn">
-                              <CButton
-                                onClick={() => handleView(data)}
-                                className="bg-darkGreen border-darkGreen"
-                              >
-                                View Classes
-                              </CButton>
-                            </div>
-                          </CTableDataCell>
-                        </CTableRow>
-                      </React.Fragment>
-                    ))
-                  : currentRecords.map((data, index) => (
-                      <React.Fragment key={index}>
-                        <CTableRow>
-                          <CTableDataCell>{data.name}</CTableDataCell>
-                          {/* <CTableDataCell>{data.descriptions}</CTableDataCell> */}
-                          <CTableDataCell>{data.status}</CTableDataCell>
-                          {user.role === '1' ? (
-                            <CTableDataCell>
-                              <CFormSwitch
-                                className="backgroundswitch"
-                                defaultChecked={data.status === 'active' ? true : false}
-                                id="formSwitchCheckDefault"
-                                onClick={() => handleBlockUser(data)}
-                              />
-                            </CTableDataCell>
-                          ) : (
-                            ''
-                          )}
-                          <CTableDataCell>
-                            {moment(data?.createdAt).format('MM/DD/YYYY')}
-                          </CTableDataCell>
-                          <CTableDataCell>
-                            {moment(data?.updatedAt).format('MM/DD/YYYY')}
-                          </CTableDataCell>
-                          {user?.role === '2' ? (
-                            <CTableDataCell>
-                              {totalProgress.map((item) => (
-                                <>
-                                  {' '}
-                                  {data.id === item.tutorial_id ? (
-                                    <div className="card tutorial-progress-report h-100">
-                                      <div className="chart-wrapper halfChart">
-                                        <CChart
-                                          type="doughnut"
-                                          data={{
-                                            // labels: ['TotalProgress', 'Total'],
-                                            datasets: [
-                                              {
-                                                backgroundColor: ['#41B883', '#E46651'],
-                                                data: [
-                                                  data.id === item.tutorial_id
-                                                    ? item.completed_percentage
-                                                    : '',
-                                                  100 - item.completed_percentage,
-                                                ],
-                                              },
-                                            ],
-                                          }}
-                                        />
-                                      </div>
-                                    </div>
-                                  ) : (
-                                    ''
-                                  )}
-                                </>
-                              ))}
-                            </CTableDataCell>
-                          ) : (
-                            ''
-                          )}
-                          {user.role === '1' ? (
-                            <CTableDataCell>
-                              <>
-                                <div className="actionIconBtn">
-                                  <span
-                                    onClick={() => {
-                                      setDeleteData(data.id)
-                                      checkClsses(data.id)
-                                    }}
-                                  >
-                                    <CIcon icon={cilDelete} />
-                                  </span>
-                                  <span onClick={() => handleEdit(data)}>
-                                    <CIcon icon={cilPencil} />
-                                  </span>
-                                </div>
-                              </>
-                            </CTableDataCell>
-                          ) : (
-                            ''
-                          )}{' '}
-                          <CTableDataCell>
-                            <div className="actionIconBtn">
-                              <CButton
-                                onClick={() => handleView(data)}
-                                className="bg-darkGreen border-darkGreen"
-                              >
-                                View Classes
-                              </CButton>
-                            </div>
-                          </CTableDataCell>
-                        </CTableRow>
-                      </React.Fragment>
-                    ))}
+                          </CTableRow>
+                        </React.Fragment>
+                      ))}
               </CTableBody>
             </CTable>
           </div>

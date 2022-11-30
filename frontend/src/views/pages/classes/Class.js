@@ -312,7 +312,7 @@ export default function Classes({ classdata, tutorialData, setAlertMessage, setA
           })
           .catch((error) => {
             setAlert(true)
-            setAlertMessage(error.data.message)
+            setAlertMessage("select only mp3 file")
             setTimeout(() => {
               setAlert(false)
             }, 2000)
@@ -666,6 +666,7 @@ export default function Classes({ classdata, tutorialData, setAlertMessage, setA
                                   onChange={handleChangeLesson}
                                   value={lessonFormData.audio}
                                   name="audio"
+                                  accept='.mp3'
                                 />
                                 <CCol xs={12}>
                                   <CButton className="bg-darkGreen border-darkGreen" type="submit">

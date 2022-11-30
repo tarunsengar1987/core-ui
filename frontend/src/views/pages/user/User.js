@@ -67,6 +67,8 @@ export default function User() {
   const nPages = Math.ceil(userData.length / recordsPerPage)
   const [statusValue, setStatusValue] = useState('')
   const { status } = useParams()
+  const [searchValue, setSearchValue] = useState('')
+
   useEffect(() => {
     if (status !== undefined) {
       setStatusValue(status)
@@ -430,21 +432,22 @@ export default function User() {
     }
   }
 
-  const handleSearchItems = (searchValue) => {
+  const handleSearchItems = (e) => {
     setIsFilter(true)
-    if (searchValue !== '') {
-      const filteredData = userData
-        .slice(indexOfFirstRecord, indexOfLastRecord)
-        .filter(
-          (item) =>
-            item.username.toLowerCase().includes(searchValue.toLowerCase()) ||
-            item.email.toLowerCase().includes(searchValue.toLowerCase()) ||
-            item.status.toLowerCase().includes(searchValue.toLowerCase()),
-        )
-      setFilteredResults(filteredData)
-    } else {
-      setFilteredResults(currentRecords)
-    }
+    setSearchValue(e.target.value)
+    // if (searchValue !== '') {
+    //   const filteredData = userData
+    //     .slice(indexOfFirstRecord, indexOfLastRecord)
+    //     .filter(
+    //       (item) =>
+    //         item.username.toLowerCase().includes(searchValue.toLowerCase()) ||
+    //         item.email.toLowerCase().includes(searchValue.toLowerCase()) ||
+    //         item.status.toLowerCase().includes(searchValue.toLowerCase()),
+    //     )
+    //   setFilteredResults(filteredData)
+    // } else {
+    //   setFilteredResults(currentRecords)
+    // }
   }
 
   const handleUserViewProgress = (data) => {
@@ -559,8 +562,17 @@ export default function User() {
                   id="validationCustom03"
                   required
                   placeholder="Search"
-                  onChange={(e) => handleSearchItems(e.target.value)}
+                  onChange={(e) => handleSearchItems(e)}
                   name="email"
+                  value={searchValue}
+                />
+                <button
+                  type="button"
+                  class="btn-close"
+                  aria-label="Close"
+                  onClick={() => {
+                    setSearchValue('')
+                  }}
                 />
               </CInputGroup>
             </CCol>
@@ -701,8 +713,12 @@ export default function User() {
                           }
                         })
                     : currentRecords
-                        .filter((option) =>
-                          `${option.status}`.toLowerCase().includes(statusValue.toLowerCase()),
+                        .slice(indexOfFirstRecord, indexOfLastRecord)
+                        .filter(
+                          (item) =>
+                            item.username.toLowerCase().includes(searchValue.toLowerCase()) ||
+                            item.email.toLowerCase().includes(searchValue.toLowerCase()) ||
+                            item.status.toLowerCase().includes(searchValue.toLowerCase()),
                         )
                         .map((data) => {
                           console.log(data)

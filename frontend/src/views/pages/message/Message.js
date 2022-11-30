@@ -17,12 +17,14 @@ const Message = () => {
   const [alert, setAlert] = useState(false)
   const [alertMessage, setAlertMessage] = useState('')
   const [filterValue, setFilterValue] = useState('')
+  const [user, setUser] = useState()
   function getUser() {
     try {
       axios
         .get(`${process.env.REACT_APP_API_URL}/users`)
         .then((res) => {
           setUserData(res.data)
+          setContent('')
         })
         .catch((error) => {
           setAlert(true)
@@ -37,6 +39,8 @@ const Message = () => {
   }
   useEffect(() => {
     getUser()
+    const data = JSON.parse(localStorage.getItem('userData'))
+    setUser(data)
   }, [])
   const handleEmailAll = (e) => {
     setAllChecked(!allChecked)
@@ -70,6 +74,7 @@ const Message = () => {
           axios
             .post(`${process.env.REACT_APP_API_URL}/sendmailtousers`, mailData)
             .then((res) => {
+              setContent('')
               console.log(res.data)
               setLoader(true)
               setAllChecked(false)
@@ -130,9 +135,6 @@ const Message = () => {
         <div className="dashboardPage__root">
           <AppHeader />
           <div className="dashboardPage__inner">
-            <div className="dashboardPage__head">
-              <h1 className="dashboardPage__title">User List</h1>
-            </div>
             <div className="custom-search">
               <CFormInput
                 type="text"
@@ -145,11 +147,20 @@ const Message = () => {
                 onChange={handleSearchItems}
                 name="search"
               />
+              <button
+                type="button"
+                class="btn-close"
+                aria-label="Close"
+                onClick={() => setFilterValue('')}
+              />
             </div>
             <div className="massageList">
               <div className="row">
                 <div className="col-12 col-md-6 col-xl-4">
                   <div className="massageList__checkbox rounded bg-white">
+                  <div className="dashboardPage__head">
+                      <h1 className="dashboardPage__title">User List</h1>
+                    </div>
                     <div className="form-check">
                       <input
                         onChange={handleEmailAll}
@@ -162,25 +173,32 @@ const Message = () => {
                         All Select
                       </label>
                     </div>
+                 
                     {userData
                       ?.filter((option) =>
                         `${option.email}`.toLowerCase().includes(filterValue.toLowerCase()),
                       )
                       .map((data) => {
                         return (
-                          <div className="form-check">
-                            <input
-                              onChange={handleEmail}
-                              className="form-check-input"
-                              name={data.email}
-                              type="checkbox"
-                              value=""
-                              checked={isCheck.includes(data.email) || false}
-                            />
-                            <label className="form-check-label" htmlFor="flexCheckDefault">
-                              {data.email}
-                            </label>
-                          </div>
+                          <>
+                            {user.id != data.id ? (
+                              <div className="form-check">
+                                <input
+                                  onChange={handleEmail}
+                                  className="form-check-input"
+                                  name={data.email}
+                                  type="checkbox"
+                                  value=""
+                                  checked={isCheck.includes(data.email) || false}
+                                />
+                                <label className="form-check-label" htmlFor="flexCheckDefault">
+                                  {data.email}
+                                </label>
+                              </div>
+                            ) : (
+                              ''
+                            )}
+                          </>
                         )
                       })}
                   </div>

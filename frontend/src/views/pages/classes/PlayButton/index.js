@@ -11,6 +11,8 @@ function PlayButton({
   leassonIndex,
   classId,
   lesson_id,
+  setAlert,
+  setAlertMessage
 }) {
   // const [playingId, setPlayingId] = useState([25])
   const [lessonData, setLessonData] = useState([])
@@ -69,7 +71,11 @@ function PlayButton({
           }
         })
       } else {
-        alert('hello')
+        setAlert(true)
+        setAlertMessage("please play previous audio")
+        setTimeout(()=>{
+          setAlert(false)
+        },2000)
       }
     }
     // setIsPlaying(!isPlaying)

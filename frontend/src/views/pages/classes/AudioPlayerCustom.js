@@ -116,6 +116,8 @@ const AudioPlayerCustom = ({
           lesson_id={lesson_id}
           leassonIndex={leassonIndex}
           classId={classId}
+          setAlert={setAlert}
+          setAlertMessage={setAlertMessage}
         />
         <Seeker
           currentTime={seekDuration == '' ? currentTime : seekDuration}
