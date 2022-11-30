@@ -16,7 +16,7 @@ const Confirm = () => {
 
     useEffect(() => {
       try{
-        axios.put( `${process.env.REACT_APP_API_URL}/auth/user/` + id, {
+        axios.put( `${process.env.REACT_APP_API_URL}/user/` + id, {
           status:"active"
         }
         ).then((res) => {

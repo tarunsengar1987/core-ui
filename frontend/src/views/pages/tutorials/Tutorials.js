@@ -553,7 +553,12 @@ export default function Tutorials() {
                       onClick={() => handleSort('updatedAt')}
                     />
                   </CTableHeaderCell>
+                  {user?.role === '1' ? (
                   <CTableHeaderCell scope="col">Actions</CTableHeaderCell>
+                  ) : (
+                    ''
+                  )}
+
                   {user?.role === '2' ? (
                     <CTableHeaderCell scope="col">Progress</CTableHeaderCell>
                   ) : (

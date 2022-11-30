@@ -33,7 +33,7 @@ import Loader from '../loader/Loader'
 import { duration } from 'moment'
 import AudioPlayerCustom from './AudioPlayerCustom'
 
-export default function Classes({ classdata, tutorialData, setAlertMessage, setAlert }) {
+export default function Classes({ classdata, tutorialData, setAlertMessage, setAlert,alert }) {
   const [visible, setVisible] = useState(false)
   const [visibleLesson, setVisibleLesson] = useState(false)
   const [loader, setLoader] = useState(false)
@@ -70,7 +70,7 @@ export default function Classes({ classdata, tutorialData, setAlertMessage, setA
   const [modalClassPopup, setModalClassPopup] = useState('')
   const [playDuration, setPlayDuration] = useState()
   const [audioData, setAudioData] = useState([])
-const [isSuccess,setIsSuccess]= useState(false)
+  const [isSuccess,setIsSuccess]= useState(false)
   useEffect(() => {
     setClassData(classdata)
     getClasses()

@@ -76,7 +76,7 @@ const WidgetsDropdown = () => {
               inviteUsers.push(users)
             }
           }
-          if (users.status == 'Block') {
+          if (users.status == 'blocked') {
             if (blockUser.some((blockUser) => blockUser.id === users.id)) {
             } else {
               blockUser.push(users)
