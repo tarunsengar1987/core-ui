@@ -42,6 +42,7 @@ export default function TutorialClassDetails() {
                     tutorialData={location?.state?.tutorialData}
                     setAlertMessage={setAlertMessage}
                     setAlert={setAlert}
+                    alert={alert}
                   />
                 </div>
               </div>

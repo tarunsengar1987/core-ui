@@ -35,7 +35,7 @@ const WidgetsDropdown = () => {
   const [active, setActive] = useState()
   const [tutorialData, setTutorialData] = useState([])
   // const [audioFilterData, setAudioFilterData] = useState([])
-  console.log(activeUsers.length, inviteUsers.length, awaitingAprroveUsers.length)
+  // console.log(activeUsers.length, inviteUsers.length, awaitingAprroveUsers.length)
   const navigate = useNavigate()
   useEffect(() => {
     getTutorials()
@@ -52,13 +52,15 @@ const WidgetsDropdown = () => {
       axios.get(`${process.env.REACT_APP_API_URL}/users`).then((res) => {
         'length===>', res.data.length
         setUserCount(res.data.length)
+        // console.log(res.data, '=============================')
         res.data.map((users) => {
           if (users.status == 'active') {
             if (activeUsers.some((activeUsers) => activeUsers.id === users.id)) {
             } else {
               activeUsers.push(users)
             }
-          } else if (users.status == 'Awaiting approval') {
+          }
+          if (users.status == 'Awaiting approval') {
             if (
               awaitingAprroveUsers.some(
                 (awaitingAprroveUsers) => awaitingAprroveUsers.id === users.id,
@@ -67,40 +69,25 @@ const WidgetsDropdown = () => {
             } else {
               awaitingAprroveUsers.push(users)
             }
-          } else if (users.status == 'Invited') {
-            if (inviteUsers.some((inviteUsers) => inviteUsers.id != users.id)) {
+          }
+          if (users.status == 'Invited') {
+            if (inviteUsers.some((inviteUsers) => inviteUsers.id === users.id)) {
             } else {
               inviteUsers.push(users)
             }
-          } else if (users.status == 'Block') {
-            if (blockUser.some((blockUser) => blockUser.id != users.id)) {
+          }
+          if (users.status == 'Block') {
+            if (blockUser.some((blockUser) => blockUser.id === users.id)) {
             } else {
               blockUser.push(users)
             }
           }
-        } )
-         if (users.status == 'Awaiting approval') {
-          if (
-            awaitingAprroveUsers.some(
-              (awaitingAprroveUsers) => awaitingAprroveUsers.id === users.id,
-            )
-          ) {
-          } else {
-            awaitingAprroveUsers.push(users)
-          }
-        } else if (users.status == 'Invited') {
-          if (inviteUsers.some((inviteUsers) => inviteUsers.id != users.id)) {
-          } else {
-            inviteUsers.push(users)
-          }
-        }
+        })
       })
-    }
-    catch{}
-
+    } catch {}
   }
 
-
+  // console.log('===', inviteUsers, '==',  '-===', )
   const getTutorials = () => {
     axios.get(`${process.env.REACT_APP_API_URL}/tutorials`).then((res) => {
       'length===>', res.data.length
@@ -139,7 +126,7 @@ const WidgetsDropdown = () => {
       getUserTutorial()
     }, 3000)
   }, [classData])
-  
+
   const getUserTutorial = () => {
     let filterClasses = []
     userData.filter((audio) => {
@@ -171,7 +158,7 @@ const WidgetsDropdown = () => {
     //               return filterClasses
     //             }
     //             // filterClasses.latesUpdate=audio?.updatedAt
-              
+
     //           } else {
     //             // filterClasses[i]['latestUpdate']=audio?.updatedAt
     //             tutorial['latestUpdate']=audio?.updatedAt
@@ -194,8 +181,10 @@ const WidgetsDropdown = () => {
     //     }
     //   })
     // })
-    const sortedActivities = filterClasses.sort((a, b) => new Date(a.latestUpdate) - new Date(b.latestUpdate));
-    console.log({sortedActivities})
+    const sortedActivities = filterClasses.sort(
+      (a, b) => new Date(a.latestUpdate) - new Date(b.latestUpdate),
+    )
+    // console.log({ sortedActivities })
     // const sortedActivities = filterClasses.sort((a, b) => b.latestUpdate - a.latestUpdate)
     setLessonData(sortedActivities)
   }
@@ -223,7 +212,7 @@ const WidgetsDropdown = () => {
   }
 
   const handleNavigateRecentAudio = (tutorial) => {
-    setActive(tutorial.name);
+    setActive(tutorial.name)
     setLoader(true)
     setTimeout(() => {
       setLoader(false)
@@ -233,7 +222,7 @@ const WidgetsDropdown = () => {
     }, 3000)
   }
 
-  console.log(lessonData, 'lessonData')
+  // console.log(lessonData, 'lessonData')
   return (
     <CRow className="dashboardCards">
       <Loader isLoader={loader} />
@@ -276,7 +265,7 @@ const WidgetsDropdown = () => {
                     >
                       {/* (-12.4% <CIcon icon={cilArrowBottom} />) */}
                       <span className="dashboardCards-dataList-no">
-                        {activeUsers?.length == 0 ? 0 : activeUsers.length}
+                        {activeUsers?.length == 0 ? 0 : activeUsers.length - 1}
                       </span>
                       Active
                     </div>
@@ -401,7 +390,7 @@ const WidgetsDropdown = () => {
                   {/* {console.log('lessonData', lessonData)} */}
                   <h4 className="mb-3 visitedVideoTitle">Recently Visited Audio</h4>
                   <ul className="visitedVideoList">
-                    {console.log({ active })}
+                    {/* {console.log({ active })} */}
                     {lessonData.length > 0
                       ? lessonData.map((item, index) => (
                           <li

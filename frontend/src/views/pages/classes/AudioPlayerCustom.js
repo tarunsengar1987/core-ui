@@ -88,7 +88,7 @@ const AudioPlayerCustom = ({
     } catch {
       console.log("can't get data from server please try again ")
     }
-  }, [])
+  }, [isPlaying,class_id])
 
 
   useEffect(() => {
