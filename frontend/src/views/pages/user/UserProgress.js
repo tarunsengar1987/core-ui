@@ -84,7 +84,7 @@ export default function UserProgress() {
         <div className="dashboardPage__root">
           <AppHeader />
           <div className="dashboardPage__inner">
-            <div className="user-progress-detail card">
+            <div className="user-progress-detail">
               <div className="table-responsive">
                 <CTable>
                   <CTableHead>
@@ -96,32 +96,34 @@ export default function UserProgress() {
                       <CTableHeaderCell>Progress</CTableHeaderCell>
                     </CTableRow>
                   </CTableHead>
-                  <CTableBody>
-                    {audioData.length > 0
-                      ? audioData.map((item, index) => {
-                          return (
-                            <>
-                              {/* <div className="">
+                  {audioData.length > 0 ? (
+                    <CTableBody>
+                      {audioData.map((item, index) => {
+                        return (
+                          <>
+                            {/* <div className="">
                         {' '}
                         <div style={{ color: 'black' }}>Duration:{item.duration}</div>
                         <div style={{ color: 'black' }}>Pause Duration:{item.pauseduration}</div>
                         <div style={{ color: 'black' }}>totalProgress:{totalProgress}</div>
                       </div> */}
 
-                              <CTableRow>
-                                <CTableDataCell>asas</CTableDataCell>
-                                <CTableDataCell>{item.duration}</CTableDataCell>
-                                <CTableDataCell>{item.pauseduration}</CTableDataCell>
-                                {/* <CTableDataCell>{totalProgress}</CTableDataCell> */}
-                                <CTableDataCell>
-                                  {(item.pauseduration / item.duration) * 100}
-                                </CTableDataCell>
-                              </CTableRow>
-                            </>
-                          )
-                        })
-                      : 'You Did not visit any audio'}
-                  </CTableBody>
+                            <CTableRow>
+                              <CTableDataCell>asas</CTableDataCell>
+                              <CTableDataCell>{item.duration}</CTableDataCell>
+                              <CTableDataCell>{item.pauseduration}</CTableDataCell>
+                              {/* <CTableDataCell>{totalProgress}</CTableDataCell> */}
+                              <CTableDataCell>
+                                {(item.pauseduration / item.duration) * 100}
+                              </CTableDataCell>
+                            </CTableRow>
+                          </>
+                        )
+                      })}
+                    </CTableBody>
+                  ) : (
+                    <div className="blankDataModule">You Did not visit any audio</div>
+                  )}
                 </CTable>
               </div>
               <div className="userProgressList">

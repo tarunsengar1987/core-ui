@@ -148,7 +148,7 @@ const Message = () => {
             </div>
             <div className="massageList">
               <div className="row">
-                <div className="col-12 col-md-6 col-lg-4">
+                <div className="col-12 col-md-6 col-xl-4">
                   <div className="massageList__checkbox rounded bg-white">
                     <div className="form-check">
                       <input
@@ -185,7 +185,7 @@ const Message = () => {
                       })}
                   </div>
                 </div>
-                <div className="col-12 col-md-6 col-lg-8">
+                <div className="col-12 col-md-6 col-xl-8">
                   <div className="p-4 rounded bg-white">
                     <CKEditor
                       activeclassName="p10"
