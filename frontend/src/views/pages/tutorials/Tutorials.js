@@ -15,6 +15,7 @@ import {
   CForm,
   CFormInput,
   CFormSwitch,
+  CFormTextarea,
   CInputGroup,
   CInputGroupText,
   CModal,
@@ -153,7 +154,7 @@ export default function Tutorials() {
             setTimeout(() => {
               setLoader(false)
               setAlert(true)
-              setAlertMessage('Totorial is inactived')
+              setAlertMessage('Tutorial is inactived')
             }, 2000)
             setTimeout(() => {
               setAlert(false)
@@ -186,7 +187,7 @@ export default function Tutorials() {
             setTimeout(() => {
               setLoader(false)
               setAlert(true)
-              setAlertMessage('Totorial is actived')
+              setAlertMessage('Tutorial is actived')
             }, 2000)
             getTutorials()
             setTimeout(() => {
@@ -457,7 +458,7 @@ export default function Tutorials() {
                     <CCol md={12}>
                       <CInputGroup className="has-validation">
                         <CInputGroupText>@</CInputGroupText>
-                        <CFormInput
+                        <CFormTextarea
                           type="text"
                           aria-describedby="validationCustom03Feedback"
                           feedbackInvalid="Please provide a valid Description."

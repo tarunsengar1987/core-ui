@@ -144,7 +144,7 @@ const Profile = () => {
                 aria-describedby="validationCustom03Feedback"
                 feedbackInvalid="Please provide a valid Username."
                 id="validationCustom03"
-                placeholder="Please Ender Old Password"
+                placeholder="Please Enter Old Password"
                 onChange={handleChangeOldPassword}
                 // value={settingData?.smtp}
                 name="old_password"
@@ -160,7 +160,7 @@ const Profile = () => {
                 aria-describedby="validationCustom03Feedback"
                 feedbackInvalid="Please provide a valid Username."
                 id="validationCustom03"
-                placeholder="Please Ender New Password"
+                placeholder="Please Enter New Password"
                 onChange={handleChange}
                 // value={settingData?.smtp}
                 name="new_password"
@@ -175,7 +175,7 @@ const Profile = () => {
                 aria-describedby="validationCustom03Feedback"
                 feedbackInvalid="Please provide a valid Username."
                 id="validationCustom03"
-                placeholder="Please Ender Confirm  Password"
+                placeholder="Please Enter Confirm  Password"
                 onChange={handleChange}
                 // value={settingData?.smtp}
                 name="c_password"

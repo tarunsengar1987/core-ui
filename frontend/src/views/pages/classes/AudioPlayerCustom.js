@@ -58,11 +58,7 @@ const AudioPlayerCustom = ({
             console.log(res.data, 'update')
           })
           .catch((error) => {
-            // setAlert(true)
-            // setAlertMessage('no any audio data')
-            // setTimeout(() => {
-            //   setAlert(false)
-            // },2000)
+        
           })
       } catch {
         console.log(' no any audio record ')
@@ -75,17 +71,15 @@ const AudioPlayerCustom = ({
             console.log(res.data, 'neww')
           })
           .catch((error) => {
-            // setAlert(true)
-            // setAlertMessage('no any audio data')
-            // setTimeout(() => {
-            //   setAlert(false)
-            // },2000)
+         
           })
       } catch {
         console.log("can't get data from server please try again")
       }
     }
   }
+
+  
   useEffect(() => {
     try {
       axios.get(`${process.env.REACT_APP_API_URL}/audiorecord`).then((res) => {
@@ -94,7 +88,8 @@ const AudioPlayerCustom = ({
     } catch {
       console.log("can't get data from server please try again ")
     }
-  }, [handlePuase])
+  }, [])
+
 
   useEffect(() => {
     if (isPlaying) {

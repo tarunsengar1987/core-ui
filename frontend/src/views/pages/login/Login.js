@@ -121,9 +121,9 @@ const Login = () => {
                           <CIcon icon={cilUser} />
                         </CInputGroupText>
                         <CFormInput
-                          type="text"
+                          type="email"
                           aria-describedby="validationCustom03Feedback"
-                          feedbackInvalid="Please provide a valid email."
+                          feedbackInvalid="Please provide a email."
                           id="validationCustom03"
                           required
                           placeholder="Email"
@@ -141,7 +141,7 @@ const Login = () => {
                         <CFormInput
                           type="password"
                           aria-describedby="validationCustom05Feedback"
-                          feedbackInvalid="Please provide a valid Password."
+                          feedbackInvalid="Please provide a Password."
                           id="validationCustom05"
                           required
                           placeholder="Password"

@@ -78,50 +78,59 @@ const WidgetsDropdown = () => {
               blockUser.push(users)
             }
           }
-        })
+        } )
+         if (users.status == 'Awaiting approval') {
+          if (
+            awaitingAprroveUsers.some(
+              (awaitingAprroveUsers) => awaitingAprroveUsers.id === users.id,
+            )
+          ) {
+          } else {
+            awaitingAprroveUsers.push(users)
+          }
+        } else if (users.status == 'Invited') {
+          if (inviteUsers.some((inviteUsers) => inviteUsers.id != users.id)) {
+          } else {
+            inviteUsers.push(users)
+          }
+        }
       })
-    } catch {
-      console.log("can't get data from server please try again ")
     }
+    catch{}
+
   }
+
+
   const getTutorials = () => {
-    try {
-      axios.get(`${process.env.REACT_APP_API_URL}/tutorials`).then((res) => {
-        'length===>', res.data.length
-        setTutorialCount(res.data.length)
-        setTutorialData(res.data)
-      })
-    } catch {
-      console.log("can't get data from server please try again ")
-    }
+    axios.get(`${process.env.REACT_APP_API_URL}/tutorials`).then((res) => {
+      'length===>', res.data.length
+      setTutorialCount(res.data.length)
+      setTutorialData(res.data)
+    })
   }
 
   const getClasses = () => {
-    try {
-      axios.get(`${process.env.REACT_APP_API_URL}/classes`).then((res) => {
-        'length===>', res.data.length
-        setClassCount(res.data.length)
-        setClassData(res.data)
-      })
-    } catch {
-      console.log("can't get data from server please try again ")
-    }
+    axios.get(`${process.env.REACT_APP_API_URL}/classes`).then((res) => {
+      'length===>', res.data.length
+      setClassCount(res.data.length)
+      setClassData(res.data)
+    })
   }
 
   const getUsersDetails = () => {
     const data = JSON.parse(localStorage.getItem('userData'))
     let pauseDurationSum = 0
-    try {
-      axios.get(`${process.env.REACT_APP_API_URL}/audiorecord/` + data?.id).then((res) => {
-        setUserData(res.data)
-        res.data.map((time) => {
-          pauseDurationSum += JSON.parse(time.pauseduration)
-        })
-        getLessonDuration(pauseDurationSum, res.data)
+    axios.get(`${process.env.REACT_APP_API_URL}/audiorecord/` + data?.id).then((res) => {
+      // setUserData(res.data)
+      let sorted = res.data.sort(function (a, b) {
+        return new Date(b.updatedAt) - new Date(a.updatedAt)
       })
-    } catch {
-      console.log("can't get data from server please try again ")
-    }
+      setUserData(sorted)
+      res.data.map((time) => {
+        pauseDurationSum += JSON.parse(time.pauseduration)
+      })
+      getLessonDuration(pauseDurationSum, res.data)
+    })
   }
   useEffect(() => {
     setLoader(true)
@@ -130,12 +139,12 @@ const WidgetsDropdown = () => {
       getUserTutorial()
     }, 3000)
   }, [classData])
+  
   const getUserTutorial = () => {
     let filterClasses = []
-    tutorialData.filter((tutorial) => {
+    userData.filter((audio) => {
       return classData.filter((classes) => {
-        return userData.filter((audio) => {
-          // console.log(audio, 'audio')
+        return tutorialData.filter((tutorial) => {
           if (classes.id === JSON.parse(audio.class_Id)) {
             if (tutorial.id === JSON.parse(classes.tutorial_id)) {
               if (filterClasses.some((filterClasses) => filterClasses.id === tutorial.id)) {
@@ -148,6 +157,32 @@ const WidgetsDropdown = () => {
         })
       })
     })
+    // tutorialData.filter((tutorial,i) => {
+    //   return classData.filter((classes) => {
+    //     return userData.filter((audio) => {
+
+    //       if (classes.id === JSON.parse(audio.class_Id)) {
+    //         if (tutorial.id === JSON.parse(classes.tutorial_id)) {
+    //           if (filterClasses.some((filterClasses) => filterClasses.id === tutorial.id)) {
+    //             console.log({filterClasses})
+    //             if(filterClasses.length>0){
+    //               console.log("audio?.updatedAt",audio?.updatedAt)
+    //               filterClasses[i]['latestUpdate']=audio?.updatedAt
+    //               return filterClasses
+    //             }
+    //             // filterClasses.latesUpdate=audio?.updatedAt
+              
+    //           } else {
+    //             // filterClasses[i]['latestUpdate']=audio?.updatedAt
+    //             tutorial['latestUpdate']=audio?.updatedAt
+
+    //             return filterClasses.push(tutorial)
+    //           }
+    //         }
+    //       }
+    //     })
+    //   })
+    // })
 
     // console.log(filterClasses, ':filterClasses')
     // tutorialData.filter((tutorial) => {
@@ -159,50 +194,43 @@ const WidgetsDropdown = () => {
     //     }
     //   })
     // })
-    // console.log(filterClasses, ':filterClasses=====================================  ')
-    setLessonData(filterClasses)
+    const sortedActivities = filterClasses.sort((a, b) => new Date(a.latestUpdate) - new Date(b.latestUpdate));
+    console.log({sortedActivities})
+    // const sortedActivities = filterClasses.sort((a, b) => b.latestUpdate - a.latestUpdate)
+    setLessonData(sortedActivities)
   }
   // console.log(lessonData,"=========================")
   const getLessonDuration = (pauseDurationSum, audioData) => {
-    try {
-      axios.get(`${process.env.REACT_APP_API_URL}/lessons`).then(async (res) => {
-        let filterAudio = res.data.filter((i) => {
-          return audioData.filter((audio) => {
-            if (i.id === JSON.parse(audio.lesson_Id)) {
-              return i
-            }
-          })
+    axios.get(`${process.env.REACT_APP_API_URL}/lessons`).then(async (res) => {
+      let filterAudio = res.data.filter((i) => {
+        return audioData.filter((audio) => {
+          if (i.id === JSON.parse(audio.lesson_Id)) {
+            return i
+          }
         })
-        // setLessonData(filterAudio)
-
-        let sum = 0
-        res?.data?.map((item) => {
-          sum += item.duration
-        })
-        // console.log(lessonData)
-        // console.log({ pauseDurationSum, sum })
-        setTotalLessonDurationsum(sum)
-        var watchDuration = Math.ceil((pauseDurationSum / sum) * 100)
-        setTotalProgress(watchDuration)
       })
-    } catch {
-      console.log("can't get data from server please try again ")
-    }
+      // setLessonData(filterAudio)
+
+      let sum = 0
+      res?.data?.map((item) => {
+        sum += item.duration
+      })
+      // console.log(lessonData)
+      // console.log({ pauseDurationSum, sum })
+      setTotalLessonDurationsum(sum)
+      setTotalProgress((pauseDurationSum / sum) * 100)
+    })
   }
 
   const handleNavigateRecentAudio = (tutorial) => {
-    setActive(0)
+    setActive(tutorial.name);
     setLoader(true)
     setTimeout(() => {
       setLoader(false)
-
       navigate('/tutorial/tutorial-details', {
         state: { classdata: classData, tutorialData: tutorial },
       })
     }, 3000)
-
-    //     })
-    // })
   }
 
   console.log(lessonData, 'lessonData')
@@ -357,18 +385,12 @@ const WidgetsDropdown = () => {
                       type="doughnut"
                       data={{
                         labels: ['TotalProgress', 'Total'],
-                        percentFormatString: '#0.##',
-                        indexLabel: '#percent%',
-                        axisY: {
-                          suffix: '%',
-                        },
                         datasets: [
                           {
                             backgroundColor: ['#41B883', '#E46651'],
                             data: [totalProgress, 100 - totalProgress],
                           },
                         ],
-                        indexLabel: '%',
                       }}
                     />
                   </div>

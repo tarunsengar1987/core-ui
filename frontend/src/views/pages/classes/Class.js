@@ -23,6 +23,7 @@ import {
   CTableHeaderCell,
   CTableRow,
   CModalFooter,
+  CFormTextarea,
 } from '@coreui/react'
 import axios from 'axios'
 import React, { useEffect, useRef, useState } from 'react'
@@ -69,6 +70,11 @@ export default function Classes({ classdata, tutorialData, setAlertMessage, setA
   const [deleteClassPopup, setDeleteClassPopup] = useState(false)
   const [modalClassPopup, setModalClassPopup] = useState('')
   const [playDuration, setPlayDuration] = useState()
+  const [audioData, setAudioData] = useState([])
+  
+  const [isLessonValueExist, setLessonValueExist] = useState(false)
+
+ 
 
   useEffect(() => {
     setClassData(classdata)
@@ -80,7 +86,7 @@ export default function Classes({ classdata, tutorialData, setAlertMessage, setA
   useEffect(() => {
     getLessons()
   }, [classId])
-
+  
   const getLessons = () => {
     try {
       axios.get(`${process.env.REACT_APP_API_URL}/lesson/` + classId).then((res) => {
@@ -103,6 +109,8 @@ export default function Classes({ classdata, tutorialData, setAlertMessage, setA
       console.log("can't get data from server please try again ")
     }
   }
+
+ 
 
   useEffect(() => {
     if (currentPage > 1) {
@@ -233,7 +241,7 @@ export default function Classes({ classdata, tutorialData, setAlertMessage, setA
       axios
         .delete(`${process.env.REACT_APP_API_URL}/lesson/` + deleteData)
         .then((res) => {
-          getLessons()
+          // getLessons()
           setDeletePopup(false)
           setLoader(true)
           setTimeout(() => {
@@ -288,7 +296,7 @@ export default function Classes({ classdata, tutorialData, setAlertMessage, setA
           .then((res) => {
             setLoader(true)
             setVisibleLesson(false)
-            getLessons()
+            // getLessons()
             setLessonFormData({})
             setTimeout(() => {
               setLoader(false)
@@ -415,8 +423,10 @@ export default function Classes({ classdata, tutorialData, setAlertMessage, setA
   }
 
   const handleChangetab = (name) => {
+    // debugger
     setIsEdit(false)
     setLessonData([])
+    // getLessons()
   }
 
   return (
@@ -468,7 +478,7 @@ export default function Classes({ classdata, tutorialData, setAlertMessage, setA
               <CCol md={12}>
                 <CInputGroup className="has-validation">
                   <CInputGroupText>@</CInputGroupText>
-                  <CFormInput
+                  <CFormTextarea
                     type="text"
                     aria-describedby="validationCustom03Feedback"
                     feedbackInvalid="Please provide a valid description."
@@ -751,7 +761,7 @@ export default function Classes({ classdata, tutorialData, setAlertMessage, setA
                                             ) : (
                                               ''
                                             )}
-                                          </>
+                                          </>     
                                         </CTableRow>
                                       )
                                     })}
