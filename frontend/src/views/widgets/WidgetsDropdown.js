@@ -207,7 +207,7 @@ const WidgetsDropdown = () => {
       // console.log(lessonData)
       // console.log({ pauseDurationSum, sum })
       setTotalLessonDurationsum(sum)
-      setTotalProgress((pauseDurationSum / sum) * 100)
+      setTotalProgress(Math.ceil( (pauseDurationSum / sum) * 100))
     })
   }
 

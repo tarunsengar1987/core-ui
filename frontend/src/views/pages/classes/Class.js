@@ -71,6 +71,9 @@ export default function Classes({ classdata, tutorialData, setAlertMessage, setA
   const [playDuration, setPlayDuration] = useState()
   const [audioData, setAudioData] = useState([])
   const [isSuccess,setIsSuccess]= useState(false)
+  const [checkFileExtention,setCheckFileExtention] = useState(false)
+
+
   useEffect(() => {
     setClassData(classdata)
     getClasses()
@@ -90,16 +93,18 @@ export default function Classes({ classdata, tutorialData, setAlertMessage, setA
   useEffect(() => {
     getLessons()
   }, [classId])
+  
   useEffect(() => {
     getLessons()
     setIsSuccess(false)
   }, [isSuccess])
+
   const getLessons = () => {
     try {
       axios.get(`${process.env.REACT_APP_API_URL}/lesson/` + classId).then((res) => {
-        const numAscending = [...res.data].sort((a, b) => JSON.parse(a.order) - JSON.parse(b.order))
+        // const numAscending = [...res.data].sort((a, b) => JSON.parse(a.order) - JSON.parse(b.order))
         axios.get(`${process.env.REACT_APP_API_URL}/audiorecord`).then((audioRecord) => {
-          let data = numAscending?.filter((i) => {
+          let data = res.data?.filter((i) => {
             return audioRecord?.data?.filter((x) => {
               if (i.id == JSON.parse(x.lesson_Id)) {
                 i.pauseDuration = x.pauseduration
@@ -177,19 +182,35 @@ export default function Classes({ classdata, tutorialData, setAlertMessage, setA
       reader.onerror = (error) => reject(error)
     })
 
-  const handleChangeLesson = async (event) => {
-    if (event.target.name === 'audio') {
-      setFileData(event.target?.files[0])
-      const duration = await getVideoDuration(event.target?.files[0])
-      setFileDuration(duration)
-    } else {
-      const { name, value } = event.target
-      setLessonFormData({
-        ...lessonFormData,
-        [name]: value,
-      })
+    const handleChangeLesson = async (event) => {
+      function getExtension(filename) {
+        return filename.split('.').pop()
+      }
+      var fileExtention = getExtension(event.target.value).toLowerCase() === 'mp3'
+      console.log(fileExtention)
+      if (event.target.name === 'audio') {
+        if (fileExtention) {
+          setCheckFileExtention(true)
+          setFileData(event.target?.files[0])
+          const duration = await getVideoDuration(event.target?.files[0])
+          setFileDuration(duration)
+        }else{
+          setCheckFileExtention(false)
+          setAlert(true)
+          setAlertMessage("Please upload mp3 file")
+          setTimeout(() => {
+             setAlert(false)
+          }, 2000);
+        }
+      } else {
+        const { name, value } = event.target
+        setLessonFormData({
+          ...lessonFormData,
+          [name]: value,
+        })
+      }
+      console.log(lessonFormData,"lessonFormData")
     }
-  }
 
   const handleSwitch = (e) => {
     const { name, checked } = e.target
@@ -664,7 +685,7 @@ export default function Classes({ classdata, tutorialData, setAlertMessage, setA
                                   id="contained-button-file"
                                   type="file"
                                   onChange={handleChangeLesson}
-                                  value={lessonFormData.audio}
+                                  value={checkFileExtention?lessonFormData.audio:''}
                                   name="audio"
                                   accept='.mp3'
                                 />
