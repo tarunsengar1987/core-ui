@@ -7,6 +7,7 @@ import Loader from '../loader/Loader'
 import Alert from '../alert/Alert'
 import { Button } from '@coreui/coreui'
 import { CButton, CFormInput } from '@coreui/react'
+// import ReactHtmlParser from 'react-html-parser'
 const Message = () => {
   const [userData, setUserData] = useState([])
   const [userEmail, setUserEmail] = useState([])
@@ -61,6 +62,7 @@ const Message = () => {
     debugger
     console.log('onChange fired with event info: ', evt.editor.getData())
     var newContent = evt.editor.getData()
+    // var netContent1 = ReactHtmlParser(newContent)
     setContent(newContent)
   }
   const handleSendMail = () => {

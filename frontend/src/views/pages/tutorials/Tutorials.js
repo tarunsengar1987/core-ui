@@ -491,7 +491,7 @@ export default function Tutorials() {
             </div>
           </div>
           <CCol xs={12}>
-            <CInputGroup className="has-validation">
+            <CInputGroup className="has-validation custom-search">
               <CInputGroupText>
                 <CIcon icon={cilSearch} />
               </CInputGroupText>

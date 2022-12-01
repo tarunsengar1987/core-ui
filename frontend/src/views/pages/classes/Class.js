@@ -93,7 +93,7 @@ export default function Classes({ classdata, tutorialData, setAlertMessage, setA
   useEffect(() => {
     getLessons()
   }, [classId])
-  
+
   useEffect(() => {
     getLessons()
     setIsSuccess(false)
@@ -107,8 +107,11 @@ export default function Classes({ classdata, tutorialData, setAlertMessage, setA
           let data = res.data?.filter((i) => {
             return audioRecord?.data?.filter((x) => {
               if (i.id == JSON.parse(x.lesson_Id)) {
-                i.pauseDuration = x.pauseduration
-                return i
+                if(x.user_Id == user.id){
+                  i.pauseDuration = x.pauseduration
+                  return i
+                }
+               
               }
             })
           })

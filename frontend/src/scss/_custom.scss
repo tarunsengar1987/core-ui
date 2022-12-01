@@ -44,7 +44,7 @@
   border-color: #2470815c;
 }
 
-.cardTitle+p {
+.cardTitle + p {
   font-weight: 600;
   color: #17505c !important;
   opacity: 80%;
@@ -176,7 +176,7 @@ table {
     padding: 8px 15px !important;
     vertical-align: middle;
 
-    &>div {
+    & > div {
       margin-bottom: 0 !important;
     }
   }
@@ -202,7 +202,6 @@ table {
       }
 
       &:nth-child(odd) {
-
         td,
         th {
           background-color: rgb(36 112 129 / 11%);
@@ -409,6 +408,16 @@ table {
 .custom-search {
   max-width: 510px;
   margin-bottom: 25px;
+  position: relative;
+  & > button {
+    bottom: 0;
+    position: absolute;
+    right: 0;
+    height: 38px;
+    width: 38px;
+    box-sizing: border-box;
+    background-size: 12px;
+  }
 }
 
 .massageList {
@@ -433,7 +442,7 @@ table {
     }
   }
 
-  .col-12>div {
+  .col-12 > div {
     background: #fff !important;
     box-shadow: 0px 0px 9px 0px rgb(0 0 0 / 8%);
     border: 1px solid #fff;
@@ -491,7 +500,7 @@ div.vr:empty {
 }
 
 .dashboardCards {
-  .card-body>div {
+  .card-body > div {
     width: 100%;
   }
 
@@ -511,21 +520,19 @@ div.vr:empty {
       display: block;
     }
 
-    &>div {
+    & > div {
       transition: all 0.2s ease;
-
 
       &:first-child:hover {
         color: #000;
       }
 
-      &>div {
+      & > div {
         display: flex;
         align-items: center;
         justify-content: space-between;
         flex-direction: row-reverse;
         transition: all 0.2s ease;
-
 
         &:hover {
           color: #000;
@@ -556,7 +563,6 @@ div.vr:empty {
         border-left: 6px solid #1e89a1;
         padding: 25px !important;
       }
-
 
       .dashboardCards-dataList-head {
         display: flex;
@@ -637,7 +643,7 @@ div.vr:empty {
           color: #1e89a1;
 
           .dashboardCards-dataList-no {
-            box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.10);
+            box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.1);
           }
         }
       }
@@ -719,7 +725,6 @@ div.vr:empty {
   padding: 0 5px;
 
   table {
-
     td,
     th {
       white-space: nowrap;
@@ -760,7 +765,7 @@ div.vr:empty {
 }
 
 @media only screen and (max-width: 767px) {
-  .massageList .col-12>div.massageList__checkbox {
+  .massageList .col-12 > div.massageList__checkbox {
     height: auto;
   }
 }
